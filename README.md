@@ -1,7 +1,7 @@
 
 # api-platform-application-domain
 
-Library of common Api Platform application models used for currently used in commands and events.
+Library of common Api Platform application models currently used in commands and events processed and produced by third party application.
 
 ## Running the tests
 
