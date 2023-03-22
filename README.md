@@ -1,7 +1,11 @@
 
 # api-platform-application-domain
 
-This is a placeholder README.md for a new repository
+Library of common Api Platform application models currently used in commands and events processed and produced by third party application.
+
+## Running the tests
+
+    run_all_tests.sh
 
 ### License
 
