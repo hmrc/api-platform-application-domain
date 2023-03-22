@@ -18,9 +18,6 @@ package uk.gov.hmrc.apiplatform.modules.apis.domain.models
 
 import play.api.libs.json.Json
 
-/** This file should be in some API based library
-  */
-
 final case class ApiIdentifier(context: ApiContext, version: ApiVersion) {
     def asText(separator: String): String = s"${context.value}$separator${version.value}"
 }
