@@ -1,7 +1,7 @@
 
 # api-platform-application-domain
 
-Library of Api Platform events used for third party applications.
+Library of common Api Platform application models used for currently used in commands and events.
 
 ## Running the tests
 
