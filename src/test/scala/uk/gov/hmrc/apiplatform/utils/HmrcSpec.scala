@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.domain.services
+package uk.gov.hmrc.apiplatform.utils
 
-import play.api.libs.json.EnvReads
-import java.time.format.DateTimeFormatter
+import org.mockito.{ArgumentMatchersSugar, MockitoSugar}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.{EitherValues, Inside, OptionValues}
 
-trait CommonJsonFormatters {
-
-  private object READS extends EnvReads
-
-  implicit val tolerantInstantReader = READS.instantReads(DateTimeFormatter.ISO_INSTANT, (in) => if(in.last == 'Z') in else s"${in}Z")
-}
-
-object CommonJsonFormatters extends CommonJsonFormatters
+abstract class HmrcSpec extends AnyWordSpec with Matchers with OptionValues with EitherValues with Inside with MockitoSugar with ArgumentMatchersSugar
