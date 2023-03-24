@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.domain.services
+package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import play.api.libs.json._
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-import java.time.ZoneOffset
+import play.api.libs.json.{JsString, Json}
 
-trait LocalDateTimeFormatter extends EnvReads with EnvWrites {
+import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
 
-  implicit val localDateTimeWrites: Writes[LocalDateTime] = DefaultInstantWrites.contramap( (ldt) => ldt.toInstant(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS))
+class ClientSecretIdSpec extends JsonFormattersSpec {
+  val aClientSecretId = ClientSecret.Id.random
 
-  implicit val localDateTimeFormat: Format[LocalDateTime] = Format(DefaultLocalDateTimeReads, localDateTimeWrites)
+  "ClientSecretId" should {
+    "convert to json" in {
+
+      Json.toJson(aClientSecretId) shouldBe JsString(aClientSecretId.value.toString())
+    }
+
+    "read from json" in {
+      testFromJson[ClientSecret.Id](s""""${aClientSecretId.value.toString}"""")(aClientSecretId)
+    }
+  }
 }
-
-object LocalDateTimeFormatter extends LocalDateTimeFormatter
