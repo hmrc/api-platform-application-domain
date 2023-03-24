@@ -31,7 +31,6 @@ trait FixedClock extends ClockNow {
   val nowAsText: String = "2020-01-02T03:04:05.006Z"
 
   val clock: Clock = Clock.fixed(instant, utc)
-
   
   // TODO - remove once the user takes ownership of this or reworks their needs
   // def clockMinusHours(hours: Long) = {
