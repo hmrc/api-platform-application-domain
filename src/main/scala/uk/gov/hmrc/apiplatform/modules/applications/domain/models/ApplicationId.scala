@@ -20,7 +20,9 @@ import java.util.UUID
 
 import play.api.libs.json.Json
 
-final case class ApplicationId(value: UUID) extends AnyVal
+final case class ApplicationId(value: UUID) extends AnyVal {
+  def text(): String = value.toString()
+}
 
 object ApplicationId {
   def random: ApplicationId = ApplicationId(java.util.UUID.randomUUID)
