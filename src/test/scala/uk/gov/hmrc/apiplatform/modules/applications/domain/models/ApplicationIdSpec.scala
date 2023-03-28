@@ -24,6 +24,10 @@ class ApplicationIdSpec extends JsonFormattersSpec {
   val anAppId = ApplicationId.random
 
   "ApplicationId" should {
+    "convert to text" in {
+      anAppId.text() shouldBe anAppId.value.toString()
+    }
+    
     "convert to json" in {
 
       Json.toJson(anAppId) shouldBe JsString(anAppId.value.toString())
