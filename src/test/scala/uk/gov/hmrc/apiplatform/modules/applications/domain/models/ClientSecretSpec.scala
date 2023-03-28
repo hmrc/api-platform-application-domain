@@ -16,22 +16,21 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
-import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
+import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, JsonFormattersSpec}
 
 class ClientSecretSpec extends JsonFormattersSpec with FixedClock {
-  val anId = "someId"
+  val anId             = "someId"
   val fakeHashedSecret = "blahblahblah"
-  val aClientSecret = ClientSecret(anId, "bob", now, None)
+  val aClientSecret    = ClientSecret(anId, "bob", now, None)
 
   "ClientSecret" should {
     val expectedJsonText = s"""{"name":"bob","createdOn":"$nowAsText","id":"$anId"}"""
-    
+
     "convert to json" in {
       testToJson(aClientSecret)(
-        "name" -> "bob",
+        "name"      -> "bob",
         "createdOn" -> s"$nowAsText",
-        "id" -> s"$anId"
+        "id"        -> s"$anId"
       )
     }
 

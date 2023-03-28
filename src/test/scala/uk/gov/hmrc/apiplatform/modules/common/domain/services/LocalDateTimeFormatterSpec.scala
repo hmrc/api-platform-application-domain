@@ -16,28 +16,28 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.domain.services
 
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
-import play.api.libs.json.Json
-import play.api.libs.json.JsString
 import java.time.LocalDateTime
+
+import play.api.libs.json.{JsString, Json}
+import uk.gov.hmrc.apiplatform.utils.HmrcSpec
 
 class LocalDateTimeFormatterSpec extends HmrcSpec {
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
-  
+
   "LocalDateTimeFormatter" when {
-    val aTimestamp = LocalDateTime.of(2020,1,1,12,1,2)
-    val threeMillis = 3 * 1000 * 1000
+    val aTimestamp              = LocalDateTime.of(2020, 1, 1, 12, 1, 2)
+    val threeMillis             = 3 * 1000 * 1000
     val threeMillisAndFourNanos = 3 * 1000 * 1000 + 3
-    
+
     "writing json" should {
       "for no millis" in {
         Json.toJson(aTimestamp) shouldBe JsString("2020-01-01T12:01:02Z")
       }
 
       "for three millis" in {
-          Json.toJson(aTimestamp.withNano(threeMillis)) shouldBe JsString("2020-01-01T12:01:02.003Z")
-        }
-  
+        Json.toJson(aTimestamp.withNano(threeMillis)) shouldBe JsString("2020-01-01T12:01:02.003Z")
+      }
+
       "for three millis and four nanos" in {
         Json.toJson(aTimestamp.withNano(threeMillisAndFourNanos)) shouldBe JsString("2020-01-01T12:01:02.003Z")
       }

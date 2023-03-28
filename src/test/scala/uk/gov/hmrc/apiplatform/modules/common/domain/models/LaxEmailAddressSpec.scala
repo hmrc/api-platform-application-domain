@@ -18,8 +18,9 @@ package uk.gov.hmrc.apiplatform.modules.common.domain.models
 
 import play.api.libs.json._
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax
 import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
-import LaxEmailAddress.StringSyntax
+
 class LaxEmailAddressSpec extends JsonFormattersSpec {
 
   val bobSmithEmailAddress = LaxEmailAddress("bob@smith.com")

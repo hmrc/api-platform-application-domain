@@ -16,19 +16,16 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.domain.services
 
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
-import play.api.libs.json.Json
-import play.api.libs.json.JsString
-import java.time.LocalDateTime
-
 import java.time.temporal.ChronoUnit
-import java.time.Instant
-import java.time.ZoneOffset
+import java.time.{Instant, LocalDateTime, ZoneOffset}
+
+import play.api.libs.json.{JsString, Json}
+import uk.gov.hmrc.apiplatform.utils.HmrcSpec
 
 class InstantFormatterSpec extends HmrcSpec {
-  val sixMillisInNanos = 6 * 1000 * 1000
-  val aLocalDateTime = LocalDateTime.of(2020,1,2,3,4,5, sixMillisInNanos)
-  val anInstant: Instant = aLocalDateTime.toInstant(ZoneOffset.UTC)
+  val sixMillisInNanos             = 6 * 1000 * 1000
+  val aLocalDateTime               = LocalDateTime.of(2020, 1, 2, 3, 4, 5, sixMillisInNanos)
+  val anInstant: Instant           = aLocalDateTime.toInstant(ZoneOffset.UTC)
   val anInstantJustMillis: Instant = anInstant.truncatedTo(ChronoUnit.MILLIS)
 
   val instantText = "2020-01-02T03:04:05.006"

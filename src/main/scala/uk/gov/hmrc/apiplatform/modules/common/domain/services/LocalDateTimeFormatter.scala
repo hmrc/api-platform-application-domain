@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.domain.services
 
-import play.api.libs.json._
-import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.time.ZoneOffset
+import java.time.{LocalDateTime, ZoneOffset}
+
+import play.api.libs.json._
 
 trait LocalDateTimeFormatter extends EnvReads with EnvWrites {
 
-  implicit val localDateTimeWrites: Writes[LocalDateTime] = DefaultInstantWrites.contramap( (ldt) => ldt.toInstant(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS))
+  implicit val localDateTimeWrites: Writes[LocalDateTime] = DefaultInstantWrites.contramap((ldt) => ldt.toInstant(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS))
 
   implicit val localDateTimeFormat: Format[LocalDateTime] = Format(DefaultLocalDateTimeReads, localDateTimeWrites)
 }

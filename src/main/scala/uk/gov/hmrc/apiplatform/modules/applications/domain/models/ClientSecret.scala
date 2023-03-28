@@ -16,9 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import java.{util => ju}
 import java.time.LocalDateTime
-
+import java.{util => ju}
 
 // TODO - make id use clientSecret.Id
 //
@@ -36,5 +35,5 @@ object ClientSecret {
   }
 
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
-  implicit val format     = Json.format[ClientSecret]
+  implicit val format = Json.format[ClientSecret]
 }

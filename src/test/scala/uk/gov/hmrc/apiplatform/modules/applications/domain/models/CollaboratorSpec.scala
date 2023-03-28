@@ -16,19 +16,20 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
-import uk.gov.hmrc.apiplatform.modules.developers.domain.models.UserId
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
-import play.api.libs.json.Json
-import play.api.libs.json.JsString
+import org.scalatest.wordspec.AnyWordSpec
 
-class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec{
+import play.api.libs.json.{JsString, Json}
+
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
+import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.developers.domain.models.UserId
+
+class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec {
 
   "Collborator" when {
     "creating" should {
-      val email = LaxEmailAddress("bob")
+      val email  = LaxEmailAddress("bob")
       val userId = UserId.random
 
       "create an administrator" in {
@@ -56,9 +57,9 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
     }
 
     "given an administrator" should {
-      val anId     = UserId.random
-      val idAsText = anId.value.toString()
-      val anEmail  = LaxEmailAddress("bob@smith.com")
+      val anId                = UserId.random
+      val idAsText            = anId.value.toString()
+      val anEmail             = LaxEmailAddress("bob@smith.com")
       val admin: Collaborator = Collaborators.Administrator(anId, anEmail)
 
       "describe it's role" in {
@@ -70,7 +71,7 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
       }
 
       "normalise an email address" in {
-        val mixedCaseEmail = LaxEmailAddress(anEmail.text.capitalize)
+        val mixedCaseEmail      = LaxEmailAddress(anEmail.text.capitalize)
         val admin: Collaborator = Collaborators.Administrator(anId, mixedCaseEmail)
 
         admin.normalise.emailAddress shouldBe anEmail
@@ -86,8 +87,8 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
 
       "produce json" in {
         testToJson[Collaborator](admin)(
-          ("role"  -> "ADMINISTRATOR"),
-          ("userId"    -> idAsText),
+          ("role"         -> "ADMINISTRATOR"),
+          ("userId"       -> idAsText),
           ("emailAddress" -> "bob@smith.com")
         )
       }
@@ -99,9 +100,9 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
     }
 
     "given an developer" should {
-      val anId     = UserId.random
-      val idAsText = anId.value.toString()
-      val anEmail  = LaxEmailAddress("bob@smith.com")
+      val anId                    = UserId.random
+      val idAsText                = anId.value.toString()
+      val anEmail                 = LaxEmailAddress("bob@smith.com")
       val developer: Collaborator = Collaborators.Developer(anId, anEmail)
 
       "describe it's role" in {
@@ -113,7 +114,7 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
       }
 
       "normalise an email address" in {
-        val mixedCaseEmail = LaxEmailAddress(anEmail.text.capitalize)
+        val mixedCaseEmail          = LaxEmailAddress(anEmail.text.capitalize)
         val developer: Collaborator = Collaborators.Developer(anId, mixedCaseEmail)
 
         developer.normalise.emailAddress shouldBe anEmail
@@ -130,8 +131,8 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
 
       "produce json" in {
         testToJson[Collaborator](developer)(
-          ("role"  -> "DEVELOPER"),
-          ("userId"    -> idAsText),
+          ("role"         -> "DEVELOPER"),
+          ("userId"       -> idAsText),
           ("emailAddress" -> "bob@smith.com")
         )
       }
@@ -154,7 +155,7 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
         Collaborator.Roles.ADMINISTRATOR.isDeveloper shouldBe false
         Collaborator.Roles.DEVELOPER.isDeveloper shouldBe true
       }
-      
+
       "write admin to json" in {
         val admin: Collaborator.Role = Collaborator.Roles.ADMINISTRATOR
         Json.toJson(admin) shouldBe JsString("ADMINISTRATOR")
