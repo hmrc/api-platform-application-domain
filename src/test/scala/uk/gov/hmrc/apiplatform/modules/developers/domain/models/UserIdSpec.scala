@@ -30,5 +30,9 @@ class UserIdSpec extends AnyWordSpec with Matchers {
 
       UserId.fromString(in.asText) shouldBe Some(in)
     }
+
+    "convert when not valid" in {
+      UserId.fromString("not-a-uuid") shouldBe None
+    }
   }
 }

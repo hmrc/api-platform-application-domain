@@ -26,7 +26,7 @@ trait FixedClock extends ClockNow {
   
   override val now: LocalDateTime = LocalDateTime.of(2020,1,2,3,4,5,6 *1000 * 1000).truncatedTo(ChronoUnit.MILLIS)
 
-  val instant: Instant = now.toInstant(utc)
+  override val instant: Instant = now.toInstant(utc)
 
   val nowAsText: String = "2020-01-02T03:04:05.006Z"
 

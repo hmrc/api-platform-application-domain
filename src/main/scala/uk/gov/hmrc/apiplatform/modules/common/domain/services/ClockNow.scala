@@ -32,5 +32,7 @@ trait ClockNow {
 
   def clock: Clock
 
-  def now(): LocalDateTime = LocalDateTime.now(clock).truncatedTo(ChronoUnit.MILLIS)
+  def now(): LocalDateTime = LocalDateTime.now(clock).truncate()
+
+  def instant(): Instant = Instant.now(clock).truncate()
 }

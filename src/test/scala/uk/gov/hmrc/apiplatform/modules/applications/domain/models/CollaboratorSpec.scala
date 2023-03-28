@@ -21,6 +21,8 @@ import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 import uk.gov.hmrc.apiplatform.modules.developers.domain.models.UserId
 import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import play.api.libs.json.Json
+import play.api.libs.json.JsString
 
 class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec{
 
@@ -144,6 +146,28 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
         Collaborator.Role("DEVELOPER") shouldBe Some(Collaborator.Roles.DEVELOPER)
         Collaborator.Role("ADMINISTRATOR") shouldBe Some(Collaborator.Roles.ADMINISTRATOR)
         Collaborator.Role("bobbins") shouldBe None
+      }
+
+      "return the appropriate flags" in {
+        Collaborator.Roles.ADMINISTRATOR.isAdministrator shouldBe true
+        Collaborator.Roles.DEVELOPER.isAdministrator shouldBe false
+        Collaborator.Roles.ADMINISTRATOR.isDeveloper shouldBe false
+        Collaborator.Roles.DEVELOPER.isDeveloper shouldBe true
+      }
+      
+      "write admin to json" in {
+        val admin: Collaborator.Role = Collaborator.Roles.ADMINISTRATOR
+        Json.toJson(admin) shouldBe JsString("ADMINISTRATOR")
+      }
+      "write developer to json" in {
+        val admin: Collaborator.Role = Collaborator.Roles.DEVELOPER
+        Json.toJson(admin) shouldBe JsString("DEVELOPER")
+      }
+      "read admin from json" in {
+        Json.fromJson[Collaborator.Role](JsString("ADMINISTRATOR")).get shouldBe Collaborator.Roles.ADMINISTRATOR
+      }
+      "read developer from json" in {
+        Json.fromJson[Collaborator.Role](JsString("DEVELOPER")).get shouldBe Collaborator.Roles.DEVELOPER
       }
     }
   }
