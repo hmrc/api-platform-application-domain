@@ -20,7 +20,6 @@ import java.util.UUID
 
 import play.api.libs.json.Json
 
-
 final case class ApplicationId(value: UUID) extends AnyVal
 
 object ApplicationId {

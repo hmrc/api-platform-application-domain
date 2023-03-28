@@ -16,16 +16,12 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import java.{util => ju}
 import java.time.LocalDateTime
+import java.{util => ju}
 
-case class ClientSecret(
-    name: String,
-    createdOn: LocalDateTime,
-    lastAccess: Option[LocalDateTime] = None,
-    id: ClientSecret.Id = ClientSecret.Id.random,
-    hashedSecret: String
-  )
+// TODO - make id use clientSecret.Id
+//
+case class ClientSecret(id: String, name: String, createdOn: LocalDateTime, lastAccess: Option[LocalDateTime] = None)
 
 object ClientSecret {
   import play.api.libs.json.Json
@@ -39,5 +35,5 @@ object ClientSecret {
   }
 
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
-  implicit val format     = Json.format[ClientSecret]
+  implicit val format = Json.format[ClientSecret]
 }

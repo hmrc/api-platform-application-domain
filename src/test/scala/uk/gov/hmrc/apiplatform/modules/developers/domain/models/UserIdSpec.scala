@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.developers.domain.models
 
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 class UserIdSpec extends AnyWordSpec with Matchers {
   "UserId" should {
@@ -29,6 +29,10 @@ class UserIdSpec extends AnyWordSpec with Matchers {
       val in = UserId.random
 
       UserId.fromString(in.asText) shouldBe Some(in)
+    }
+
+    "convert when not valid" in {
+      UserId.fromString("not-a-uuid") shouldBe None
     }
   }
 }

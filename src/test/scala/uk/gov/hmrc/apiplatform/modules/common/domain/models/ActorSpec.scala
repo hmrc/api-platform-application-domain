@@ -39,7 +39,7 @@ class ActorSpec extends JsonFormattersSpec with OptionValues {
 
       "produce type only json" in {
         testToJson[Actors.GatekeeperUser](Actors.GatekeeperUser(bobSmithUserName))(
-          ("user"      -> bobSmithUserName)
+          ("user" -> bobSmithUserName)
         )
       }
 
@@ -66,7 +66,7 @@ class ActorSpec extends JsonFormattersSpec with OptionValues {
 
       "produce type only json" in {
         testToJson[Actors.AppCollaborator](Actors.AppCollaborator(bobSmithEmailAddress))(
-          ("email"     -> "bob@smith.com")
+          ("email" -> "bob@smith.com")
         )
       }
 

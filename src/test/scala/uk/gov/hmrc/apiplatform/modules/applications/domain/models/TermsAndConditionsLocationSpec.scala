@@ -68,9 +68,9 @@ class TermsAndConditionsLocationSpec extends JsonFormattersSpec {
 
   "TermsAndConditionsLocations" should {
     "describe a location correctly" in {
-        TermsAndConditionsLocations.InDesktopSoftware.describe() shouldBe "In desktop software"
-        TermsAndConditionsLocations.NoneProvided.describe() shouldBe "None provided"
-        TermsAndConditionsLocations.Url("http://yo.com").describe() shouldBe "http://yo.com"
+      TermsAndConditionsLocations.InDesktopSoftware.describe() shouldBe "In desktop software"
+      TermsAndConditionsLocations.NoneProvided.describe() shouldBe "None provided"
+      TermsAndConditionsLocations.Url("http://yo.com").describe() shouldBe "http://yo.com"
     }
   }
 }

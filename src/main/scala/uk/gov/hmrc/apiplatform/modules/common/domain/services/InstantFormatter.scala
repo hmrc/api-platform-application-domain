@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.domain.services
 
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
+import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
 import java.time.temporal.ChronoField._
-import java.time.ZoneId
+import java.time.{Instant, ZoneId}
+
 import play.api.libs.json._
-import java.time.Instant
 
 object InstantFormatter {
 
@@ -39,23 +38,25 @@ object InstantFormatter {
   val reads: Reads[Instant] = Reads.instantReads(lenientFormatter)
 
   object WithTimeZone {
+
     val writes: Writes[Instant] = Writes.temporalWrites(
       new DateTimeFormatterBuilder()
         .appendPattern("uuuu-MM-dd'T'HH:mm:ss.SSSZ")
         .toFormatter
         .withZone(ZoneId.of("UTC"))
-      )
+    )
 
     implicit val format: Format[Instant] = Format(reads, writes)
   }
-  
+
   object NoTimeZone {
+
     val writes: Writes[Instant] = Writes.temporalWrites(
       new DateTimeFormatterBuilder()
         .appendPattern("uuuu-MM-dd'T'HH:mm:ss.SSS")
         .toFormatter
         .withZone(ZoneId.of("UTC"))
-      )
+    )
 
     implicit val format: Format[Instant] = Format(reads, writes)
   }

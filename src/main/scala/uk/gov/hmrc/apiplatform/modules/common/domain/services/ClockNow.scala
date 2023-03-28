@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.domain.services
 
-import java.time.Clock
-import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.time.Instant
+import java.time.{Clock, Instant, LocalDateTime}
 
 trait ClockNow {
+
   implicit class LocalDateTimeTruncateSyntax(me: LocalDateTime) {
     def truncate() = me.truncatedTo(ChronoUnit.MILLIS)
   }
@@ -32,5 +31,7 @@ trait ClockNow {
 
   def clock: Clock
 
-  def now(): LocalDateTime = LocalDateTime.now(clock).truncatedTo(ChronoUnit.MILLIS)
+  def now(): LocalDateTime = LocalDateTime.now(clock).truncate()
+
+  def instant(): Instant = Instant.now(clock).truncate()
 }

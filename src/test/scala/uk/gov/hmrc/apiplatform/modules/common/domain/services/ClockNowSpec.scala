@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.domain.services
+package uk.gov.hmrc.apiplatform.modules.common.domain.services
 
-import java.time.Clock
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
-import java.time.Instant
-import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
-import java.time.LocalDateTime
+import java.time.{Clock, Instant, LocalDateTime, ZoneOffset}
+
+import uk.gov.hmrc.apiplatform.utils.HmrcSpec
 
 class ClockNowSpec extends HmrcSpec {
   import ZoneOffset.UTC
@@ -31,15 +28,39 @@ class ClockNowSpec extends HmrcSpec {
 
   "ClockNow" should {
     "provide a now for a clock" in {
-      val myInstant = Instant.now()
+      val myInstant   = Instant.now()
       val aFixedClock = Clock.fixed(myInstant, UTC)
-      val ch = new ClockHolder(aFixedClock)
-      val MILLION = 1000 * 1000
+      val ch          = new ClockHolder(aFixedClock)
+      val MILLION     = 1000 * 1000
 
       // Should only have complete milliseconds
       ch.now().getNano().%(MILLION) shouldBe 0
-      
+
       ch.now() shouldBe LocalDateTime.ofInstant(myInstant.truncatedTo(ChronoUnit.MILLIS), UTC)
+    }
+
+    "truncate a LocalDateTime" in new ClockNow {
+      val clock = Clock.systemUTC()
+
+      LocalDateTime.now().withNano(1).truncate().getNano() shouldBe 0
+      LocalDateTime.now().withNano(1100100).truncate().getNano() shouldBe 1 * 1000 * 1000
+    }
+
+    "provide an instant for a clock" in {
+      val myInstant   = Instant.now()
+      val aFixedClock = Clock.fixed(myInstant, UTC)
+      val ch          = new ClockHolder(aFixedClock)
+      val MILLION     = 1000 * 1000
+
+      // Should only have complete milliseconds
+      ch.instant().getNano().%(MILLION) shouldBe 0
+    }
+
+    "truncate an Instant" in new ClockNow {
+      val clock = Clock.systemUTC()
+      val ch    = new ClockHolder(clock)
+
+      clock.instant().truncate() shouldBe ch.instant()
     }
   }
 }
