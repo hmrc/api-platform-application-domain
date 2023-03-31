@@ -18,6 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
 import scala.util.Try
 import java.net.URL
+import play.api.libs.json.Json
 
 case class RedirectUri private(uri: String) extends AnyVal
 
@@ -44,4 +45,5 @@ object RedirectUri {
     apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
 
   implicit val JsonFormat = Json.valueFormat[RedirectUri]
+  
 }
