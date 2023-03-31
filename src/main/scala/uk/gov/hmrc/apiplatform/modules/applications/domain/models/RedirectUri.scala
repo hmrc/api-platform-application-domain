@@ -42,4 +42,6 @@ object RedirectUri {
 
   def unsafeApply(uri: String): RedirectUri = 
     apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
+
+  implicit val JsonFormat = Json.valueFormat[RedirectUri]
 }
