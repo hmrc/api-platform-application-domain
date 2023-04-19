@@ -28,7 +28,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 class SimpleTimerSpec extends AnyWordSpec with Matchers {
 
   class ClockWithInstants(instants: Queue[Instant]) extends ClockNow {
-    val clock                       = FixedClock.clock
+    val clock = FixedClock.clock
 
     override def precise(): Instant = {
       instants.dequeue()

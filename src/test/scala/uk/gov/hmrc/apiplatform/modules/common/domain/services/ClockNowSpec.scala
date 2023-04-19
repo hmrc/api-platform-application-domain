@@ -62,7 +62,7 @@ class ClockNowSpec extends HmrcSpec {
       val MILLION     = 1000 * 1000
 
       ch.precise().getNano().%(MILLION) shouldBe 1
-      ch.precise() shouldNot (be(ch.instant()))
+      ch.precise() shouldNot be(ch.instant())
     }
 
     "truncate an Instant" in new ClockNow {

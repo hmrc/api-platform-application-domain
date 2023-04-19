@@ -32,7 +32,7 @@ class SecretsHashingServiceSpec extends AnyWordSpec with Matchers {
       "hash a string" in {
         val output = service.hashSecret(input)
 
-        output shouldNot (be(input))
+        output shouldNot be(input)
       }
 
       "secret can be compared to hashedSecret safely" in {
@@ -47,7 +47,7 @@ class SecretsHashingServiceSpec extends AnyWordSpec with Matchers {
       "generate a secret and hash" in {
         val (secret, hash) = service.generateSecretAndHash()
 
-        secret shouldNot (be(hash))
+        secret shouldNot be(hash)
       }
     }
 
@@ -76,13 +76,13 @@ class SecretsHashingServiceSpec extends AnyWordSpec with Matchers {
         val newWorkFactorConfig = new HasWorkFactor {
           val workFactor = 8
         }
-        val newService            = new SecretsHashingService(newWorkFactorConfig)
-        
+        val newService          = new SecretsHashingService(newWorkFactorConfig)
+
         newService.requiresRehash(hash) shouldBe true
 
         val rehashed = newService.hashSecret(secret)
-        rehashed shouldNot(be(hash))
-        
+        rehashed shouldNot be(hash)
+
         // Once rehashed it should not require another rehashing
         newService.requiresRehash(rehashed) shouldBe false
 
