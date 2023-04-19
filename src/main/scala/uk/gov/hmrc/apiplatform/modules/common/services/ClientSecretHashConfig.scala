@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.domain.services
+package uk.gov.hmrc.apiplatform.modules.common.services
 
-import java.time.temporal.ChronoUnit
-import java.time.{Clock, Instant, LocalDateTime}
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
 
-trait ClockNow {
+case class ClientSecretHashConfig (config: Config) extends HasWorkFactor {
+  config.checkValid(ConfigFactory.defaultReference(), "application-domain-lib.client-secret-hashing")
 
-  implicit class LocalDateTimeTruncateSyntax(me: LocalDateTime) {
-    def truncate() = me.truncatedTo(ChronoUnit.MILLIS)
-  }
-
-  implicit class InstantTruncateSyntax(me: Instant) {
-    def truncate() = me.truncatedTo(ChronoUnit.MILLIS)
-  }
-
-  def precise(): Instant = Instant.now(clock)
-  
-  def clock: Clock
-
-  def now(): LocalDateTime = LocalDateTime.now(clock).truncate()
-
-  def instant(): Instant = Instant.now(clock).truncate()
+  val workFactor: Int = config.getInt("application-domain-lib.client-secret-hashing.work-factor")
 }

@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.domain.services
+package uk.gov.hmrc.apiplatform.modules.common.services
 
-import java.time.temporal.ChronoUnit
-import java.time.{Clock, Instant, LocalDateTime}
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
+import java.time.Instant
 
-trait ClockNow {
-
-  implicit class LocalDateTimeTruncateSyntax(me: LocalDateTime) {
-    def truncate() = me.truncatedTo(ChronoUnit.MILLIS)
+// NOT FOR USE WITH FUTURES
+//
+trait SimpleTimer {
+  self: ClockNow =>
+    
+  def millisTimeFn[A](fn: () => A): (A, Long) = {
+    val startTime: Instant   = precise()
+    val output: A = fn()
+    val endTime: Instant    = precise()
+    val duration = endTime.toEpochMilli() - startTime.toEpochMilli()
+    
+    (output, duration)    
   }
-
-  implicit class InstantTruncateSyntax(me: Instant) {
-    def truncate() = me.truncatedTo(ChronoUnit.MILLIS)
-  }
-
-  def precise(): Instant = Instant.now(clock)
-  
-  def clock: Clock
-
-  def now(): LocalDateTime = LocalDateTime.now(clock).truncate()
-
-  def instant(): Instant = Instant.now(clock).truncate()
 }
