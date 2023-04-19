@@ -47,5 +47,11 @@ class HashSecretServiceSpec extends AnyWordSpec with Matchers {
       secret shouldNot(be(hash))
       service.checkAgainstHash(secret, hash) shouldBe true
     }
+
+    "ensure failure in bcrypt is handled" in {
+      val (secret, hash) = service.generateSecretAndHash()
+
+      service.checkAgainstHash(secret, "") shouldBe false
+    }
   }
 }

@@ -20,10 +20,10 @@ import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, LocalDateTime, ZoneOffset}
 
 import uk.gov.hmrc.apiplatform.utils.HmrcSpec
+import java.time.temporal.ChronoField
 
 class ClockNowSpec extends HmrcSpec {
   import ZoneOffset.UTC
-
   case class ClockHolder(clock: Clock) extends ClockNow
 
   "ClockNow" should {
@@ -56,8 +56,18 @@ class ClockNowSpec extends HmrcSpec {
       ch.instant().getNano().%(MILLION) shouldBe 0
     }
 
+    "provide a precise instant for a clock" in {
+      val myInstant   = Instant.now().`with`(ChronoField.NANO_OF_SECOND, 1L)
+      val aFixedClock = Clock.fixed(myInstant, UTC)
+      val ch          = new ClockHolder(aFixedClock)
+      val MILLION     = 1000 * 1000
+
+      ch.precise().getNano().%(MILLION) shouldBe 1
+      ch.precise() shouldNot(be(ch.instant()))
+    }
+
     "truncate an Instant" in new ClockNow {
-      val clock = Clock.systemUTC()
+      val clock = Clock.fixed(Instant.now, UTC)
       val ch    = new ClockHolder(clock)
 
       clock.instant().truncate() shouldBe ch.instant()
