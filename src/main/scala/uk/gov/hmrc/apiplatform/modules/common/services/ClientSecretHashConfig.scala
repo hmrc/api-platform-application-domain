@@ -14,27 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.domain.models
+package uk.gov.hmrc.apiplatform.modules.common.services
 
-import play.api.libs.json.{JsString, Json}
+import com.typesafe.config.{Config, ConfigFactory}
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+case class ClientSecretHashConfig(config: Config) extends HasWorkFactor {
+  config.checkValid(ConfigFactory.defaultReference(), "application-domain-lib.client-secret-hashing")
 
-class ApplicationIdSpec extends JsonFormattersSpec {
-  val anAppId = ApplicationId.random
-
-  "ApplicationId" should {
-    "convert to text" in {
-      anAppId.text() shouldBe anAppId.value.toString()
-    }
-
-    "convert to json" in {
-
-      Json.toJson(anAppId) shouldBe JsString(anAppId.value.toString())
-    }
-
-    "read from json" in {
-      testFromJson[ApplicationId](s""""${anAppId.value.toString}"""")(anAppId)
-    }
-  }
+  val workFactor: Int = config.getInt("application-domain-lib.client-secret-hashing.work-factor")
 }

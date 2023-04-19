@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.domain.models
+package uk.gov.hmrc.apiplatform.modules.common.services
 
-import play.api.libs.json.{JsString, Json}
+import java.time.{Duration, Instant}
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
 
-class ApplicationIdSpec extends JsonFormattersSpec {
-  val anAppId = ApplicationId.random
+// NOT FOR USE WITH FUTURES
+//
+trait SimpleTimer {
+  self: ClockNow =>
 
-  "ApplicationId" should {
-    "convert to text" in {
-      anAppId.text() shouldBe anAppId.value.toString()
-    }
+  def timeThis[A](fn: () => A): (A, Duration) = {
+    val startTime: Instant = precise()
+    val output: A          = fn()
+    val endTime: Instant   = precise()
+    val duration           = Duration.between(startTime, endTime)
 
-    "convert to json" in {
-
-      Json.toJson(anAppId) shouldBe JsString(anAppId.value.toString())
-    }
-
-    "read from json" in {
-      testFromJson[ApplicationId](s""""${anAppId.value.toString}"""")(anAppId)
-    }
+    (output, duration)
   }
 }

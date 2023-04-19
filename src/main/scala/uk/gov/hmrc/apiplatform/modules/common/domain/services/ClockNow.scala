@@ -29,6 +29,8 @@ trait ClockNow {
     def truncate() = me.truncatedTo(ChronoUnit.MILLIS)
   }
 
+  def precise(): Instant = Instant.now(clock)
+
   def clock: Clock
 
   def now(): LocalDateTime = LocalDateTime.now(clock).truncate()

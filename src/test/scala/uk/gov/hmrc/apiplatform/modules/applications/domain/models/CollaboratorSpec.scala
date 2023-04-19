@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
+import org.scalatest.EitherValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -25,7 +26,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
 import uk.gov.hmrc.apiplatform.modules.developers.domain.models.UserId
 
-class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec {
+class CollaboratorSpec extends AnyWordSpec with Matchers with EitherValues with JsonFormattersSpec {
 
   "Collborator" when {
     "creating" should {
@@ -169,6 +170,9 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with JsonFormattersSpec
       }
       "read developer from json" in {
         Json.fromJson[Collaborator.Role](JsString("DEVELOPER")).get shouldBe Collaborator.Roles.DEVELOPER
+      }
+      "handle bad json" in {
+        Json.fromJson[Collaborator.Role](JsString("bobbins")).asOpt shouldBe None
       }
     }
   }
