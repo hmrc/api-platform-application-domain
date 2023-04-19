@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.services
+package uk.gov.hmrc.apiplatform.modules.crypto.services
 
 import java.util.UUID
 import scala.util.{Failure, Success}
 
 import com.github.t3hnar.bcrypt._
 
-trait HasWorkFactor {
-  def workFactor: Int
-}
+class SecretsHashingService(config: HasWorkFactor) {
 
-class HashSecretService(config: HasWorkFactor) {
-
-  def generateSecretAndHash(): (String, String) = {
+  final def generateSecretAndHash(): (String, String) = {
     val secret = UUID.randomUUID().toString
     (secret, hashSecret(secret))
   }
 
-  def hashSecret(secret: String): String = secret.bcrypt(config.workFactor)
+  final def hashSecret(secret: String): String = secret.bcrypt(config.workFactor)
 
-  def checkAgainstHash(secret: String, hashedSecret: String): Boolean = {
+  final def checkAgainstHash(secret: String, hashedSecret: String): Boolean = {
     secret.isBcryptedSafe(hashedSecret) match {
       case Success(result) => result
       case Failure(_)      => false
     }
   }
+
+  final def requiresRehash(hashedSecret: String): Boolean = workFactorOfHash(hashedSecret) < config.workFactor
+
+  final def workFactorOfHash(hashedSecret: String): Int = hashedSecret.split("\\$")(2).toInt
 }

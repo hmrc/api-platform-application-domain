@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.services
+package uk.gov.hmrc.apiplatform.modules.crypto.services
 
-import com.typesafe.config.{Config, ConfigFactory}
-
-case class ClientSecretHashConfig(config: Config) extends HasWorkFactor {
-  config.checkValid(ConfigFactory.defaultReference(), "application-domain-lib.client-secret-hashing")
-
-  val workFactor: Int = config.getInt("application-domain-lib.client-secret-hashing.work-factor")
+trait HasWorkFactor {
+  def workFactor: Int
 }
