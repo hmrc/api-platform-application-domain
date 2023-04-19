@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.services
+package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
 import com.typesafe.config.{Config, ConfigFactory}
+import uk.gov.hmrc.apiplatform.modules.crypto.services.HasWorkFactor
 
-case class ClientSecretHashConfig(config: Config) extends HasWorkFactor {
-  config.checkValid(ConfigFactory.defaultReference(), "application-domain-lib.client-secret-hashing")
+case class ClientSecretsHashingConfig(config: Config) extends HasWorkFactor {
+  config.checkValid(ConfigFactory.defaultReference(), "application-domain-lib.client-secrets-hashing")
 
-  val workFactor: Int = config.getInt("application-domain-lib.client-secret-hashing.work-factor")
+  val workFactor: Int = config.getInt("application-domain-lib.client-secrets-hashing.work-factor")
 }

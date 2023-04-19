@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.common.services
+package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
 import com.typesafe.config.{ConfigException, ConfigFactory}
 import org.scalatest.matchers.should.Matchers
@@ -26,20 +26,20 @@ class ClientSecretHashConfigSpec extends AnyWordSpec with Matchers {
     "read the reference.conf successfully" in {
       val config = ConfigFactory.load()
 
-      ClientSecretHashConfig(config).workFactor shouldBe 6
+      ClientSecretsHashingConfig(config).workFactor shouldBe 6
     }
 
     "read the config from text" in {
-      val myConfig = ConfigFactory.parseString("application-domain-lib.client-secret-hashing.work-factor : 8")
+      val myConfig = ConfigFactory.parseString("application-domain-lib.client-secrets-hashing.work-factor : 8")
 
-      ClientSecretHashConfig(myConfig).workFactor shouldBe 8
+      ClientSecretsHashingConfig(myConfig).workFactor shouldBe 8
     }
 
     "fail on bad config" in {
-      val myConfig = ConfigFactory.parseString("application-domain-lib.client-secret-hashing { }")
+      val myConfig = ConfigFactory.parseString("application-domain-lib.client-secrets-hashing { }")
 
       intercept[ConfigException] {
-        ClientSecretHashConfig(myConfig)
+        ClientSecretsHashingConfig(myConfig)
       }
     }
   }
