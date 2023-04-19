@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
-import com.github.t3hnar.bcrypt._
-import scala.util.{Failure, Success}
 import java.util.UUID
+import scala.util.{Failure, Success}
+
+import com.github.t3hnar.bcrypt._
 
 trait HasWorkFactor {
   def workFactor: Int
@@ -40,5 +41,3 @@ class HashSecretService(config: HasWorkFactor) {
     }
   }
 }
-
-

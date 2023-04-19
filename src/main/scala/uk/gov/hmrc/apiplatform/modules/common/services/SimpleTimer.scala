@@ -16,21 +16,21 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
+import java.time.{Duration, Instant}
+
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
-import java.time.Instant
-import java.time.Duration
 
 // NOT FOR USE WITH FUTURES
-// 
+//
 trait SimpleTimer {
   self: ClockNow =>
 
   def timeThis[A](fn: () => A): (A, Duration) = {
-    val startTime: Instant   = precise()
-    val output: A = fn()
-    val endTime: Instant    = precise()
-    val duration = Duration.between(startTime, endTime)
-    
-    (output, duration)    
+    val startTime: Instant = precise()
+    val output: A          = fn()
+    val endTime: Instant   = precise()
+    val duration           = Duration.between(startTime, endTime)
+
+    (output, duration)
   }
 }

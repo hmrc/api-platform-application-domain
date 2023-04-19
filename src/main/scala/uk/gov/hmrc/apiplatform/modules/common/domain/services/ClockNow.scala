@@ -30,7 +30,7 @@ trait ClockNow {
   }
 
   def precise(): Instant = Instant.now(clock)
-  
+
   def clock: Clock
 
   def now(): LocalDateTime = LocalDateTime.now(clock).truncate()

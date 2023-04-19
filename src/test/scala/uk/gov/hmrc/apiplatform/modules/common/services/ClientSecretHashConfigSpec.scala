@@ -16,13 +16,12 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
-import org.scalatest.wordspec.AnyWordSpec
+import com.typesafe.config.{ConfigException, ConfigFactory}
 import org.scalatest.matchers.should.Matchers
-import com.typesafe.config.ConfigFactory
-import com.typesafe.config.ConfigException
+import org.scalatest.wordspec.AnyWordSpec
 
 class ClientSecretHashConfigSpec extends AnyWordSpec with Matchers {
-  
+
   "ClientSecretHashConfig" should {
     "read the reference.conf successfully" in {
       val config = ConfigFactory.load()
@@ -35,13 +34,13 @@ class ClientSecretHashConfigSpec extends AnyWordSpec with Matchers {
 
       ClientSecretHashConfig(myConfig).workFactor shouldBe 8
     }
-  
+
     "fail on bad config" in {
       val myConfig = ConfigFactory.parseString("application-domain-lib.client-secret-hashing { }")
 
       intercept[ConfigException] {
         ClientSecretHashConfig(myConfig)
-      } 
+      }
     }
   }
 }

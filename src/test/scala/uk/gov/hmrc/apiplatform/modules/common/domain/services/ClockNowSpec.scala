@@ -16,11 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.domain.services
 
-import java.time.temporal.ChronoUnit
+import java.time.temporal.{ChronoField, ChronoUnit}
 import java.time.{Clock, Instant, LocalDateTime, ZoneOffset}
 
 import uk.gov.hmrc.apiplatform.utils.HmrcSpec
-import java.time.temporal.ChronoField
 
 class ClockNowSpec extends HmrcSpec {
   import ZoneOffset.UTC
@@ -63,7 +62,7 @@ class ClockNowSpec extends HmrcSpec {
       val MILLION     = 1000 * 1000
 
       ch.precise().getNano().%(MILLION) shouldBe 1
-      ch.precise() shouldNot(be(ch.instant()))
+      ch.precise() shouldNot (be(ch.instant()))
     }
 
     "truncate an Instant" in new ClockNow {

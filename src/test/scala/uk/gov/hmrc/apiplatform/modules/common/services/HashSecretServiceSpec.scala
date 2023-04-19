@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 class HashSecretServiceSpec extends AnyWordSpec with Matchers {
 
@@ -25,13 +25,13 @@ class HashSecretServiceSpec extends AnyWordSpec with Matchers {
     val myWorkFactorConfig = new HasWorkFactor {
       val workFactor = 6
     }
-    val service = new HashSecretService(myWorkFactorConfig)
-    val input = "bob"
+    val service            = new HashSecretService(myWorkFactorConfig)
+    val input              = "bob"
 
     "hash a string" in {
       val output = service.hashSecret(input)
 
-      output shouldNot(be(input))
+      output shouldNot (be(input))
     }
 
     "secret can be compared to hashedSecret safely" in {
@@ -44,7 +44,7 @@ class HashSecretServiceSpec extends AnyWordSpec with Matchers {
     "generate a secret and hash" in {
       val (secret, hash) = service.generateSecretAndHash()
 
-      secret shouldNot(be(hash))
+      secret shouldNot (be(hash))
       service.checkAgainstHash(secret, hash) shouldBe true
     }
 

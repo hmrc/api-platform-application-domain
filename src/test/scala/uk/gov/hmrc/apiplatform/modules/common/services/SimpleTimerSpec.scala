@@ -16,17 +16,20 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatest.matchers.should.Matchers
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
 import java.time.Instant
 import scala.collection.mutable.Queue
+
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 class SimpleTimerSpec extends AnyWordSpec with Matchers {
 
   class ClockWithInstants(instants: Queue[Instant]) extends ClockNow {
-    val clock = FixedClock.clock
+    val clock                       = FixedClock.clock
+
     override def precise(): Instant = {
       instants.dequeue()
     }
@@ -38,10 +41,10 @@ class SimpleTimerSpec extends AnyWordSpec with Matchers {
     "capture a duration" in {
       val fakedClockTimer = new FakedClockTimer(Queue(FixedClock.instant, FixedClock.instant.plusNanos(10000)))
 
-      val (_, duration) = fakedClockTimer.timeThis( () => true )
+      val (_, duration) = fakedClockTimer.timeThis(() => true)
 
       duration.getSeconds() shouldBe 0
       duration.getNano() shouldBe 10000
     }
-  }  
+  }
 }
