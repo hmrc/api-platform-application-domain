@@ -22,8 +22,8 @@ import org.scalatest.wordspec.AnyWordSpec
 class SecretsHashingServiceSpec extends AnyWordSpec with Matchers {
 
   "SecretsHashingService" when {
-    val service            = new SecretsHashingService{ val workFactor = 6 }
-    val input              = "bob"
+    val service = new SecretsHashingService { val workFactor = 6 }
+    val input   = "bob"
 
     "calling hashSecret" should {
       "hash a string" in {
@@ -69,7 +69,7 @@ class SecretsHashingServiceSpec extends AnyWordSpec with Matchers {
 
       "with a greater work factor returns true" in {
         val (secret, hash) = service.generateSecretAndHash()
-        val newService          = new SecretsHashingService { val workFactor = 8 }
+        val newService     = new SecretsHashingService { val workFactor = 8 }
 
         newService.requiresRehash(hash) shouldBe true
 
