@@ -18,9 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
 import com.typesafe.config.{Config, ConfigFactory}
 
-import uk.gov.hmrc.apiplatform.modules.crypto.services.HasWorkFactor
-
-case class ClientSecretsHashingConfig(config: Config) extends HasWorkFactor {
+case class ClientSecretsHashingConfig(config: Config) {
   config.checkValid(ConfigFactory.defaultReference(), "application-domain-lib.client-secrets-hashing")
 
   val workFactor: Int = config.getInt("application-domain-lib.client-secrets-hashing.work-factor")

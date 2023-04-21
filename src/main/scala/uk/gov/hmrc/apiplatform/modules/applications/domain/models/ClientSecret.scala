@@ -21,7 +21,7 @@ import java.{util => ju}
 
 // TODO - make id use clientSecret.Id
 //
-case class ClientSecret(id: String, name: String, createdOn: LocalDateTime, lastAccess: Option[LocalDateTime] = None)
+case class ClientSecret(id: ClientSecret.Id, name: String, createdOn: LocalDateTime, lastAccess: Option[LocalDateTime] = None)
 
 object ClientSecret {
   import play.api.libs.json.Json

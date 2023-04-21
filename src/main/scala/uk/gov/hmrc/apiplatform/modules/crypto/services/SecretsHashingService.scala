@@ -21,14 +21,15 @@ import scala.util.{Failure, Success}
 
 import com.github.t3hnar.bcrypt._
 
-class SecretsHashingService(config: HasWorkFactor) {
+abstract class SecretsHashingService() {
+  def workFactor: Int
 
   final def generateSecretAndHash(): (String, String) = {
     val secret = UUID.randomUUID().toString
     (secret, hashSecret(secret))
   }
 
-  final def hashSecret(secret: String): String = secret.bcrypt(config.workFactor)
+  final def hashSecret(secret: String): String = secret.bcrypt(workFactor)
 
   final def checkAgainstHash(secret: String, hashedSecret: String): Boolean = {
     secret.isBcryptedSafe(hashedSecret) match {
@@ -37,7 +38,7 @@ class SecretsHashingService(config: HasWorkFactor) {
     }
   }
 
-  final def requiresRehash(hashedSecret: String): Boolean = workFactorOfHash(hashedSecret) < config.workFactor
+  final def requiresRehash(hashedSecret: String): Boolean = workFactorOfHash(hashedSecret) < workFactor
 
   final def workFactorOfHash(hashedSecret: String): Int = hashedSecret.split("\\$")(2).toInt
 }
