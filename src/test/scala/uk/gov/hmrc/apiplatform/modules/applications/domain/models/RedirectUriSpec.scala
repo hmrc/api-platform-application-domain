@@ -46,7 +46,7 @@ class RedirectUriSpec extends AnyWordSpec with Matchers with OptionValues with A
         RedirectUri(v) shouldBe None withClue(s"$k: $v should be Invalid")
       }
     }
-
+    
     for ((k, v) <- validCases) {
       s"accept redirect uri for $k" in {
         RedirectUri(v).value.uri shouldBe v withClue(s"$k: $v should be Valid")

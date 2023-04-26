@@ -24,20 +24,14 @@ case class RedirectUri private(uri: String) extends AnyVal
 
 object RedirectUri {
   private def isValidRedirectUri(s: String): Boolean = {
+    def isNotBlankString: String => Boolean = s => s.trim.length > 0
+    def hasNoFragments(s: String) = s.contains("#") == false
+    def isLocalhostUrl: String => Boolean = s => Try(new URL(s.trim).getHost == "localhost").getOrElse(false)
+    def isHttpsUrl: String => Boolean = s => Try(new URL(s.trim).getProtocol == "https").getOrElse(false)
+    def isOutOfBoundsRedirectUrl: String => Boolean = s => s == "urn:ietf:wg:oauth:2.0:oob:auto" || s == "urn:ietf:wg:oauth:2.0:oob"
+
     isNotBlankString(s) && hasNoFragments(s) && (isLocalhostUrl(s) || isHttpsUrl(s) || isOutOfBoundsRedirectUrl(s))
   }
-
-  private def isNotBlankString: String => Boolean = s => s.trim.length > 0
-
-  private def hasNoFragments(s: String) = s.contains("#") == false
-
-  def isValidUrl: String => Boolean = s => Try(new URL(s.trim)).isSuccess
-
-  private def isLocalhostUrl: String => Boolean = s => Try(new URL(s.trim).getHost == "localhost").getOrElse(false)
-
-  private def isHttpsUrl: String => Boolean = s => Try(new URL(s.trim).getProtocol == "https").getOrElse(false)
-
-  private def isOutOfBoundsRedirectUrl: String => Boolean = s => s == "urn:ietf:wg:oauth:2.0:oob:auto" || s == "urn:ietf:wg:oauth:2.0:oob"
 
   def apply(uri:String): Option[RedirectUri] = Some(new RedirectUri(uri)).filter(_ => isValidRedirectUri(uri))
 
