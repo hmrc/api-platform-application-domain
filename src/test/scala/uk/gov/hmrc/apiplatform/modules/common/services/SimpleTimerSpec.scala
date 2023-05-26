@@ -22,18 +22,10 @@ import scala.collection.mutable.Queue
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
+import org.scalatest.Inside
 
-class SimpleTimerSpec extends AnyWordSpec with Matchers {
-
-  class ClockWithInstants(instants: Queue[Instant]) extends ClockNow {
-    val clock = FixedClock.clock
-
-    override def precise(): Instant = {
-      instants.dequeue()
-    }
-  }
+class SimpleTimerSpec extends AnyWordSpec with Matchers with Inside {
 
   class FakedClockTimer(instants: Queue[Instant]) extends ClockWithInstants(instants) with SimpleTimer
 
@@ -41,10 +33,10 @@ class SimpleTimerSpec extends AnyWordSpec with Matchers {
     "capture a duration" in {
       val fakedClockTimer = new FakedClockTimer(Queue(FixedClock.instant, FixedClock.instant.plusNanos(10000)))
 
-      val (_, duration) = fakedClockTimer.timeThis(() => true)
-
-      duration.getSeconds() shouldBe 0
-      duration.getNano() shouldBe 10000
+      inside(fakedClockTimer.timeThis(() => true)) { case TimedValue(value, duration) =>
+        duration.getSeconds() shouldBe 0
+        duration.getNano() shouldBe 10000
+      }
     }
   }
 }
