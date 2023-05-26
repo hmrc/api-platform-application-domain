@@ -16,23 +16,15 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
-import java.time.{Duration, Instant}
-
+import scala.collection.mutable.Queue
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
+import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
+import java.time.Instant
 
-// NOT FOR USE WITH FUTURES
-//
-trait SimpleTimer {
-  self: ClockNow =>
+class ClockWithInstants(instants: Queue[Instant]) extends ClockNow {
+  val clock = FixedClock.clock
 
-  def timeThis[A](fn: () => A): TimedValue[A] = {
-    val startTime: Instant = precise()
-    val output: A          = fn()
-    val endTime: Instant   = precise()
-    val duration           = Duration.between(startTime, endTime)
-
-    TimedValue(output, duration)
+  override def precise(): Instant = {
+    instants.dequeue()
   }
 }
-
-
