@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.OptionValues
-import org.scalatest.AppendedClues
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.{AppendedClues, OptionValues}
 
 class RedirectUriSpec extends AnyWordSpec with Matchers with OptionValues with AppendedClues {
   "redirectUri validation" should {
@@ -43,13 +42,13 @@ class RedirectUriSpec extends AnyWordSpec with Matchers with OptionValues with A
 
     for ((k, v) <- invalidCases) {
       s"reject redirect uri for $k url" in {
-        RedirectUri(v) shouldBe None withClue(s"$k: $v should be Invalid")
+        RedirectUri(v) shouldBe None withClue (s"$k: $v should be Invalid")
       }
     }
-    
+
     for ((k, v) <- validCases) {
       s"accept redirect uri for $k" in {
-        RedirectUri(v).value.uri shouldBe v withClue(s"$k: $v should be Valid")
+        RedirectUri(v).value.uri shouldBe v withClue (s"$k: $v should be Valid")
       }
     }
   }

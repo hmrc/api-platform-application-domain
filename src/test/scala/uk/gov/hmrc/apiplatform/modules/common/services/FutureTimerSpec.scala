@@ -16,21 +16,18 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
-import java.time.Instant
+import java.time.{Clock, Instant, ZoneOffset}
 import scala.collection.mutable.Queue
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
+import org.scalatest.Inside
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
-import org.scalatest.Inside
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Await
-import scala.concurrent.duration._
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
-import java.time.Clock
-import java.time.ZoneOffset
+import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 class FutureTimerSpec extends AnyWordSpec with Matchers with Inside {
 
@@ -52,7 +49,7 @@ class FutureTimerSpec extends AnyWordSpec with Matchers with Inside {
     }
 
     "capture a real duration" in {
-      val timer = new FutureTimer with ClockNow { def clock = Clock.system(ZoneOffset.UTC)}
+      val timer = new FutureTimer with ClockNow { def clock = Clock.system(ZoneOffset.UTC) }
 
       lazy val makeDelayedFuture = Future {
         println("Running future")

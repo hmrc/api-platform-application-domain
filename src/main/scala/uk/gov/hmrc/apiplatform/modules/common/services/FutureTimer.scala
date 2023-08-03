@@ -16,23 +16,22 @@
 
 package uk.gov.hmrc.apiplatform.modules.common.services
 
+import java.time.{Duration, Instant}
+import scala.concurrent.{ExecutionContext, Future}
+
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.ClockNow
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext
-import java.time.Instant
-import java.time.Duration
 
 trait FutureTimer {
   self: ClockNow =>
-  
+
   def timeThisFuture[T](f: => Future[T])(implicit ec: ExecutionContext): Future[TimedValue[T]] = {
     println("Starting timer")
     val startTime: Instant = precise()
 
-    f.map( value => {
+    f.map(value => {
       println("Mapping")
       val endTime: Instant = precise()
-      val duration = Duration.between(startTime, endTime)
+      val duration         = Duration.between(startTime, endTime)
       TimedValue(value, duration)
     })
   }

@@ -34,5 +34,3 @@ trait SimpleTimer {
     TimedValue(output, duration)
   }
 }
-
-
