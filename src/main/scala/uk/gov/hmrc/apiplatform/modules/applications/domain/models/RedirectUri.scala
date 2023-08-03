@@ -16,28 +16,30 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import scala.util.Try
 import java.net.URL
+import scala.util.Try
+
 import play.api.libs.json.Json
 
-case class RedirectUri private(uri: String) extends AnyVal
+case class RedirectUri private (uri: String) extends AnyVal
 
 object RedirectUri {
+
   private def isValidRedirectUri(s: String): Boolean = {
-    def isNotBlankString: String => Boolean = s => s.trim.length > 0
-    def hasNoFragments(s: String) = s.contains("#") == false
-    def isLocalhostUrl: String => Boolean = s => Try(new URL(s.trim).getHost == "localhost").getOrElse(false)
-    def isHttpsUrl: String => Boolean = s => Try(new URL(s.trim).getProtocol == "https").getOrElse(false)
+    def isNotBlankString: String => Boolean         = s => s.trim.length > 0
+    def hasNoFragments(s: String)                   = s.contains("#") == false
+    def isLocalhostUrl: String => Boolean           = s => Try(new URL(s.trim).getHost == "localhost").getOrElse(false)
+    def isHttpsUrl: String => Boolean               = s => Try(new URL(s.trim).getProtocol == "https").getOrElse(false)
     def isOutOfBoundsRedirectUrl: String => Boolean = s => s == "urn:ietf:wg:oauth:2.0:oob:auto" || s == "urn:ietf:wg:oauth:2.0:oob"
 
     isNotBlankString(s) && hasNoFragments(s) && (isLocalhostUrl(s) || isHttpsUrl(s) || isOutOfBoundsRedirectUrl(s))
   }
 
-  def apply(uri:String): Option[RedirectUri] = Some(new RedirectUri(uri)).filter(_ => isValidRedirectUri(uri))
+  def apply(uri: String): Option[RedirectUri] = Some(new RedirectUri(uri)).filter(_ => isValidRedirectUri(uri))
 
-  def unsafeApply(uri: String): RedirectUri = 
+  def unsafeApply(uri: String): RedirectUri =
     apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
 
   implicit val JsonFormat = Json.valueFormat[RedirectUri]
-  
+
 }

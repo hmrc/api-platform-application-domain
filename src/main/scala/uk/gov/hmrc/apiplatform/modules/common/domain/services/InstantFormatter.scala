@@ -39,14 +39,14 @@ object InstantFormatter {
 
   object WithTimeZone {
 
-    val instantWithTimeZoneWrites : Writes[Instant] = Writes.temporalWrites(
+    val instantWithTimeZoneWrites: Writes[Instant] = Writes.temporalWrites(
       new DateTimeFormatterBuilder()
         .appendPattern("uuuu-MM-dd'T'HH:mm:ss.SSSZ")
         .toFormatter
         .withZone(ZoneId.of("UTC"))
     )
 
-    implicit val instantWithTimeZoneFormat : Format[Instant] = Format(lenientInstantReads, instantWithTimeZoneWrites)
+    implicit val instantWithTimeZoneFormat: Format[Instant] = Format(lenientInstantReads, instantWithTimeZoneWrites)
   }
 
   object NoTimeZone {
