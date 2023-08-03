@@ -70,7 +70,6 @@ object GrantLength {
 
   implicit val writesGrantLength = Json.valueWrites[GrantLength]
 
-  // implicit val readsGrantLength: Reads[GrantLength] = IntReads.filter(JsonValidationError("Invalid grant length"))((i : Int) => values.map(_.days).contains(i)).map(unsafeFrom(_))
   implicit val readsGrantLength: Reads[GrantLength] = implicitly[Reads[Int]].flatMapResult {
     case i if (allowedIntegerValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))
     case i                                       => JsError(s"Invalid grant length $i")
