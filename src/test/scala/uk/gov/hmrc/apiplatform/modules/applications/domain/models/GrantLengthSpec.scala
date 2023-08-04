@@ -34,7 +34,7 @@ class GrantLengthSpec extends JsonFormattersSpec with TableDrivenPropertyChecks 
       }
     }
 
-    "unsafeFrom succeds for valid value" in {
+    "unsafeFrom succeeds for valid value" in {
       GrantLength.unsafeApply(30) shouldBe GrantLength.ONE_MONTH
     }
 
@@ -45,8 +45,8 @@ class GrantLengthSpec extends JsonFormattersSpec with TableDrivenPropertyChecks 
     }
 
     "convert to json" in {
-      Json.toJson(GrantLength.ONE_DAY) shouldBe JsNumber(1)
-      Json.toJson(GrantLength.ONE_MONTH) shouldBe JsNumber(30)
+      Json.toJson[GrantLength](GrantLength.ONE_DAY) shouldBe JsNumber(1)
+      Json.toJson[GrantLength](GrantLength.ONE_MONTH) shouldBe JsNumber(30)
     }
 
     "read from json" in {

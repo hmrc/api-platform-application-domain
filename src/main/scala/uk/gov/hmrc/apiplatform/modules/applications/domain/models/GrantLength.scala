@@ -20,25 +20,26 @@ import scala.collection.immutable.SortedSet
 
 import play.api.libs.json._
 
-case class GrantLength private (days: Int) extends AnyVal {
+sealed trait GrantLength {
+  val days: Int
+  
   override def toString() = GrantLength.show(this)
 }
 
 object GrantLength {
-  // new required to avoid apply returning Option
-  val ONE_DAY           = new GrantLength(1)
-  val ONE_MONTH         = new GrantLength(30)
-  val THREE_MONTHS      = new GrantLength(90)
-  val SIX_MONTHS        = new GrantLength(180)
-  val ONE_YEAR          = new GrantLength(365)
-  val EIGHTEEN_MONTHS   = new GrantLength(547)
-  val THREE_YEARS       = new GrantLength(1095)
-  val FIVE_YEARS        = new GrantLength(1825)
-  val TEN_YEARS         = new GrantLength(3650)
-  val ONE_HUNDRED_YEARS = new GrantLength(36500)
+  case object ONE_DAY extends GrantLength { val days = 1 }
+  case object ONE_MONTH extends GrantLength { val days = 30 }
+  case object THREE_MONTHS extends GrantLength { val days = 90 }
+  case object SIX_MONTHS extends GrantLength { val days = 180 }
+  case object ONE_YEAR extends GrantLength { val days = 365 }
+  case object EIGHTEEN_MONTHS extends GrantLength { val days = 547 }
+  case object THREE_YEARS extends GrantLength { val days = 1095 }
+  case object FIVE_YEARS extends GrantLength { val days = 1825 }
+  case object TEN_YEARS extends GrantLength { val days = 3650 }
+  case object ONE_HUNDRED_YEARS extends GrantLength { val days = 36500 }
 
-  implicit val ordering: Ordering[GrantLength] = Ordering.by(unapply)
-  val values                                   = SortedSet(ONE_DAY, ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR, EIGHTEEN_MONTHS, THREE_YEARS, FIVE_YEARS, TEN_YEARS, ONE_HUNDRED_YEARS)
+  implicit val ordering: Ordering[GrantLength] = Ordering.by(_.days)
+  val values                                   = SortedSet[GrantLength](ONE_DAY, ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR, EIGHTEEN_MONTHS, THREE_YEARS, FIVE_YEARS, TEN_YEARS, ONE_HUNDRED_YEARS)
 
   private val allowedIntegerValues = values.map(_.days)
 
@@ -68,7 +69,7 @@ object GrantLength {
 
   import play.api.libs.json.Reads._
 
-  implicit val writesGrantLength = Json.valueWrites[GrantLength]
+  implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Int]].contramap(_.days)
 
   implicit val readsGrantLength: Reads[GrantLength] = implicitly[Reads[Int]].flatMapResult {
     case i if (allowedIntegerValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))
