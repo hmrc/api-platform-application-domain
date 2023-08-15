@@ -20,21 +20,23 @@ import scala.collection.immutable.SortedSet
 
 import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
 
-sealed trait RateLimitTier
+sealed trait RateLimitTier {
+  val orderIndex: Int
+}
 
 object RateLimitTier {
 
-  case object RHODIUM  extends RateLimitTier
-  case object PLATINUM extends RateLimitTier
-  case object GOLD     extends RateLimitTier
-  case object SILVER   extends RateLimitTier
-  case object BRONZE   extends RateLimitTier
+  case object BRONZE   extends RateLimitTier { override val orderIndex = 5 }
+  case object SILVER   extends RateLimitTier { override val orderIndex = 4 }
+  case object GOLD     extends RateLimitTier { override val orderIndex = 3 }
+  case object PLATINUM extends RateLimitTier { override val orderIndex = 2 }
+  case object RHODIUM  extends RateLimitTier { override val orderIndex = 1 }
 
-  implicit val ordering: Ordering[RateLimitTier] = Ordering.by(_.toString)
+  implicit val ordering: Ordering[RateLimitTier] = Ordering.by(_.orderIndex)
 
   val values: SortedSet[RateLimitTier] = SortedSet[RateLimitTier](RHODIUM, PLATINUM, GOLD, SILVER, BRONZE)
 
-  lazy val asOrderedList: List[RateLimitTier] = RateLimitTier.values.toList.sorted
+  val orderedForDisplay: Seq[RateLimitTier] = values.toSeq.reverse
 
   def apply(rateLimitTier: String): Option[RateLimitTier] = {
     RateLimitTier.values.find(e => e.toString == rateLimitTier.toUpperCase)

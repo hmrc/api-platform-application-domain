@@ -24,7 +24,6 @@ import uk.gov.hmrc.apiplatform.modules.applications.domain.models.RateLimitTier.
 import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
 
 class RateLimitTierSpec extends JsonFormattersSpec with TableDrivenPropertyChecks {
-
   "RateLimitTier" should {
     "toString should provide some text" in {
       RateLimitTier.BRONZE.toString() shouldBe "BRONZE"
@@ -50,6 +49,16 @@ class RateLimitTierSpec extends JsonFormattersSpec with TableDrivenPropertyCheck
         case e: JsError if (JsError.Message.unapply(e) == Some("Invalid rate Limit tier UNKNOWN")) => succeed
         case _                                                                                     => fail("Should have failed validation")
       }
+    }
+
+    "order for display should be correct" in {
+      RateLimitTier.orderedForDisplay.head shouldBe RateLimitTier.BRONZE
+      RateLimitTier.orderedForDisplay.last shouldBe RateLimitTier.RHODIUM
+    }
+
+    "order of values should be correct" in {
+      RateLimitTier.values.head shouldBe RateLimitTier.RHODIUM
+      RateLimitTier.values.last shouldBe RateLimitTier.BRONZE
     }
   }
 }
