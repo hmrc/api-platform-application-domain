@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
-
 import scala.collection.immutable.SortedSet
+
+import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
 
 sealed trait RateLimitTier
 
@@ -53,11 +53,10 @@ object RateLimitTier {
   implicit val rateLimitTierWrites: Writes[RateLimitTier] = implicitly[Writes[String]].contramap(_.toString)
 
   implicit val readsRateLimitTier: Reads[RateLimitTier] = implicitly[Reads[String]].flatMapResult { x =>
-
     apply(x) match {
       case Some(rlt: RateLimitTier) => JsSuccess(rlt)
-      case None => JsError(s"Invalid rate Limit tier $x")
+      case None                     => JsError(s"Invalid rate Limit tier $x")
     }
-    
+
   }
 }

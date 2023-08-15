@@ -32,7 +32,7 @@ trait JsonFormattersSpec extends AnyWordSpec with Matchers {
     Json.parse(text).validate[T] match {
       case JsSuccess(found, _) if (found == expected) => succeed
       case JsSuccess(found, _)                        => fail(s"Did not get $expected (got $found instead)")
-      case JsError(errors)  =>                                         fail(s"Did not succeed ${errors}")
+      case JsError(errors)                            => fail(s"Did not succeed ${errors}")
     }
 
 }

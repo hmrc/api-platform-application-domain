@@ -20,8 +20,8 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 
 import play.api.libs.json._
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
 import uk.gov.hmrc.apiplatform.modules.applications.domain.models.RateLimitTier._
+import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
 
 class RateLimitTierSpec extends JsonFormattersSpec with TableDrivenPropertyChecks {
 
@@ -48,7 +48,7 @@ class RateLimitTierSpec extends JsonFormattersSpec with TableDrivenPropertyCheck
     "not read invalid json but return a JsError instead" in {
       Json.fromJson[RateLimitTier](JsString("UNKNOWN")) match {
         case e: JsError if (JsError.Message.unapply(e) == Some("Invalid rate Limit tier UNKNOWN")) => succeed
-        case _                                                                            => fail("Should have failed validation")
+        case _                                                                                     => fail("Should have failed validation")
       }
     }
   }
