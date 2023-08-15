@@ -22,20 +22,20 @@ import play.api.libs.json._
 
 sealed trait GrantLength {
   val days: Int
-  
+
   override def toString() = GrantLength.show(this)
 }
 
 object GrantLength {
-  case object ONE_DAY extends GrantLength { val days = 1 }
-  case object ONE_MONTH extends GrantLength { val days = 30 }
-  case object THREE_MONTHS extends GrantLength { val days = 90 }
-  case object SIX_MONTHS extends GrantLength { val days = 180 }
-  case object ONE_YEAR extends GrantLength { val days = 365 }
-  case object EIGHTEEN_MONTHS extends GrantLength { val days = 547 }
-  case object THREE_YEARS extends GrantLength { val days = 1095 }
-  case object FIVE_YEARS extends GrantLength { val days = 1825 }
-  case object TEN_YEARS extends GrantLength { val days = 3650 }
+  case object ONE_DAY           extends GrantLength { val days = 1     }
+  case object ONE_MONTH         extends GrantLength { val days = 30    }
+  case object THREE_MONTHS      extends GrantLength { val days = 90    }
+  case object SIX_MONTHS        extends GrantLength { val days = 180   }
+  case object ONE_YEAR          extends GrantLength { val days = 365   }
+  case object EIGHTEEN_MONTHS   extends GrantLength { val days = 547   }
+  case object THREE_YEARS       extends GrantLength { val days = 1095  }
+  case object FIVE_YEARS        extends GrantLength { val days = 1825  }
+  case object TEN_YEARS         extends GrantLength { val days = 3650  }
   case object ONE_HUNDRED_YEARS extends GrantLength { val days = 36500 }
 
   implicit val ordering: Ordering[GrantLength] = Ordering.by(_.days)
