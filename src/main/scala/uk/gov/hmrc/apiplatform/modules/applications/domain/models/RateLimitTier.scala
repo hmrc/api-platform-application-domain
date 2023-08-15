@@ -53,7 +53,7 @@ object RateLimitTier {
   implicit val rateLimitTierWrites: Writes[RateLimitTier] = implicitly[Writes[String]].contramap(_.toString)
 
   implicit val readsRateLimitTier: Reads[RateLimitTier] = implicitly[Reads[String]].flatMapResult { x =>
-    println(s"*** HELP $x***")
+
     apply(x) match {
       case Some(rlt: RateLimitTier) => JsSuccess(rlt)
       case None => JsError(s"Invalid rate Limit tier $x")
