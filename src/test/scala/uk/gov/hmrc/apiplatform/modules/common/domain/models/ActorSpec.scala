@@ -17,9 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.common.domain.models
 
 import org.scalatest.OptionValues
-
 import play.api.libs.json._
-
 import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
 
 class ActorSpec extends JsonFormattersSpec with OptionValues {
@@ -54,6 +52,10 @@ class ActorSpec extends JsonFormattersSpec with OptionValues {
       "read as just a gatekeeper user" in {
         testFromJson[Actors.GatekeeperUser]("""{"id":"bob smith"}""")(Actors.GatekeeperUser(bobSmithUserName))
       }
+
+      "return correct actor type" in {
+        ActorTypes.actorType(Actors.GatekeeperUser(bobSmithUserName)) shouldBe ActorTypes.GATEKEEPER
+      }
     }
 
     "given a collaborator actor" should {
@@ -81,6 +83,10 @@ class ActorSpec extends JsonFormattersSpec with OptionValues {
       "read as just an app collaborator" in {
         testFromJson[Actors.AppCollaborator]("""{"id":"bob@smith.com"}""")(Actors.AppCollaborator(bobSmithEmailAddress))
       }
+
+      "return correct actor type" in {
+        ActorTypes.actorType(Actors.AppCollaborator(bobSmithEmailAddress)) shouldBe ActorTypes.COLLABORATOR
+      }
     }
 
     "given a scheduled job actor" should {
@@ -98,6 +104,10 @@ class ActorSpec extends JsonFormattersSpec with OptionValues {
       "read old style json" in {
         testFromJson[Actor]("""{"actorType":"SCHEDULED_JOB","id":"DeleteAllAppsBwaHaHa"}""")(Actors.ScheduledJob("DeleteAllAppsBwaHaHa"))
       }
+
+      "return correct actor type" in {
+        ActorTypes.actorType(Actors.ScheduledJob("DeleteAllAppsBwaHaHa")) shouldBe ActorTypes.SCHEDULED_JOB
+      }
     }
 
     "given an unknown actor" should {
@@ -109,6 +119,10 @@ class ActorSpec extends JsonFormattersSpec with OptionValues {
 
       "read json" in {
         testFromJson[Actor]("""{"actorType":"UNKNOWN"}""")(Actors.Unknown)
+      }
+
+      "return correct actor type" in {
+        ActorTypes.actorType(Actors.Unknown) shouldBe ActorTypes.UNKNOWN
       }
     }
 
