@@ -17,8 +17,8 @@
 package uk.gov.hmrc.apiplatform.modules.common.domain.models
 
 import org.scalatest.OptionValues
-import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+
 
 class ActorTypeSpec extends JsonFormattersSpec with OptionValues {
   "ActorTypes" when {
