@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-final case class CidrBlock(ipAddress: String) extends AnyVal
+final case class CidrBlock(ipAddress: String) extends AnyVal {
+  override def toString() = ipAddress
+}
 
 /**
   * This should also do validation of the CidrBlock as already happens in TPDFE.
