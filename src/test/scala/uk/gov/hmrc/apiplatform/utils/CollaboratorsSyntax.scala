@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.domain.models
+package uk.gov.hmrc.apiplatform.utils
 
-import java.{util => ju}
+import uk.gov.hmrc.apiplatform.modules.applications.domain.models.Collaborators
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
 
-object ClientSecret {
+trait CollaboratorsSyntax {
 
-  case class Id(value: ju.UUID) extends AnyVal {
-    override def toString(): String = value.toString()
-  }
-
-  object Id {
-    import play.api.libs.json.Json
-
-    def random = Id(ju.UUID.randomUUID())
-
-    implicit val format = Json.valueFormat[Id]
+  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
+    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
+    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
   }
 }
+
+object CollaboratorsSyntax extends CollaboratorsSyntax

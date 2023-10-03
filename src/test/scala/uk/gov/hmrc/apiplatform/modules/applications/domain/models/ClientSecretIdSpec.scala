@@ -26,11 +26,11 @@ class ClientSecretIdSpec extends JsonFormattersSpec {
   "ClientSecretId" should {
     "convert to json" in {
 
-      Json.toJson(aClientSecretId) shouldBe JsString(aClientSecretId.value.toString())
+      Json.toJson(aClientSecretId) shouldBe JsString(aClientSecretId.toString())
     }
 
     "read from json" in {
-      testFromJson[ClientSecret.Id](s""""${aClientSecretId.value.toString}"""")(aClientSecretId)
+      testFromJson[ClientSecret.Id](s""""${aClientSecretId.toString}"""")(aClientSecretId)
     }
   }
 }
