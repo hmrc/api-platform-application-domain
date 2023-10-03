@@ -24,6 +24,10 @@ class CidrBlockSpec extends JsonFormattersSpec {
   val aCidrBlock = CidrBlock("1.0.0.0/24")
 
   "CidrBlock" should {
+    "toString" in {
+      aCidrBlock.toString() shouldBe "1.0.0.0/24"
+    }
+
     "convert to json" in {
       Json.toJson(aCidrBlock) shouldBe JsString(aCidrBlock.ipAddress)
     }

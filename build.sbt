@@ -24,6 +24,7 @@ lazy val library = Project(appName, file("."))
   .settings(
     ScoverageSettings()
   )
+  .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT")
   )

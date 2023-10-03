@@ -58,7 +58,7 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with EitherValues with 
 
     "given an administrator" should {
       val anId                = UserId.random
-      val idAsText            = anId.value.toString()
+      val idAsText            = anId.toString()
       val anEmail             = LaxEmailAddress("bob@smith.com")
       val admin: Collaborator = Collaborators.Administrator(anId, anEmail)
 
@@ -101,7 +101,7 @@ class CollaboratorSpec extends AnyWordSpec with Matchers with EitherValues with 
 
     "given an developer" should {
       val anId                    = UserId.random
-      val idAsText                = anId.value.toString()
+      val idAsText                = anId.toString()
       val anEmail                 = LaxEmailAddress("bob@smith.com")
       val developer: Collaborator = Collaborators.Developer(anId, anEmail)
 
