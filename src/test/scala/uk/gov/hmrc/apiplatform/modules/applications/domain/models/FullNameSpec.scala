@@ -14,23 +14,35 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import play.api.libs.json.{JsString, Json}
+import scala.util.Random
+
+import play.api.libs.json._
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class SubmissionIdSpec extends BaseJsonFormattersSpec {
-  val aSubmissionId = SubmissionId.random
+class FullNameSpec extends BaseJsonFormattersSpec {
 
-  "SubmissionId" should {
-    "convert to json" in {
+  "ServiceName" should {
+    val example = FullName("miscblah")
 
-      Json.toJson(aSubmissionId) shouldBe JsString(aSubmissionId.value)
+    "convert toString" in {
+      example.toString() shouldBe "miscblah"
     }
 
-    "read from json" in {
-      testFromJson[SubmissionId](s""""${aSubmissionId.value}"""")(aSubmissionId)
+    "read from Json" in {
+      testFromJson[FullName](s""""miscblah"""")(example)
+    }
+
+    "write to Json" in {
+      Json.toJson[FullName](example) shouldBe JsString("miscblah")
+    }
+
+    "order correctly" in {
+      val names = List("a", "b", "c", "d", "e").map(FullName(_))
+
+      Random.shuffle(names).sorted shouldBe names
     }
   }
 }

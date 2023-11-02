@@ -21,16 +21,18 @@ import scala.collection.immutable.SortedSet
 import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
 
 sealed trait RateLimitTier {
-  val orderIndex: Int
+  protected val orderIndex: Int
+
+  lazy val displayText: String = this.toString().toLowerCase().capitalize
 }
 
 object RateLimitTier {
 
-  case object BRONZE   extends RateLimitTier { override val orderIndex = 5 }
-  case object SILVER   extends RateLimitTier { override val orderIndex = 4 }
-  case object GOLD     extends RateLimitTier { override val orderIndex = 3 }
-  case object PLATINUM extends RateLimitTier { override val orderIndex = 2 }
-  case object RHODIUM  extends RateLimitTier { override val orderIndex = 1 }
+  case object BRONZE   extends RateLimitTier { override protected val orderIndex = 5 }
+  case object SILVER   extends RateLimitTier { override protected val orderIndex = 4 }
+  case object GOLD     extends RateLimitTier { override protected val orderIndex = 3 }
+  case object PLATINUM extends RateLimitTier { override protected val orderIndex = 2 }
+  case object RHODIUM  extends RateLimitTier { override protected val orderIndex = 1 }
 
   implicit val ordering: Ordering[RateLimitTier] = Ordering.by(_.orderIndex)
 
@@ -42,22 +44,16 @@ object RateLimitTier {
     RateLimitTier.values.find(e => e.toString == rateLimitTier.toUpperCase)
   }
 
-  def show(rateLimitTier: RateLimitTier): String = rateLimitTier match {
-    case BRONZE   => "Bronze"
-    case SILVER   => "Silver"
-    case GOLD     => "Gold"
-    case PLATINUM => "Platinum"
-    case RHODIUM  => "Rhodium"
-  }
+  def unsafeApply(text: String): RateLimitTier = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid Rate Limit Tier"))
 
   import play.api.libs.json.Reads._
 
-  implicit val rateLimitTierWrites: Writes[RateLimitTier] = implicitly[Writes[String]].contramap(_.toString)
+  implicit val writesRateLimitTier: Writes[RateLimitTier] = implicitly[Writes[String]].contramap(_.toString)
 
   implicit val readsRateLimitTier: Reads[RateLimitTier] = implicitly[Reads[String]].flatMapResult { x =>
     apply(x) match {
       case Some(rlt: RateLimitTier) => JsSuccess(rlt)
-      case None                     => JsError(s"Invalid rate Limit tier $x")
+      case None                     => JsError(s"Invalid Rate Limit Tier $x")
     }
 
   }

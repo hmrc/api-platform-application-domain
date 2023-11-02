@@ -21,8 +21,8 @@ import java.time.LocalDateTime
 case class ClientSecretResponse(id: ClientSecret.Id, name: String, createdOn: LocalDateTime, lastAccess: Option[LocalDateTime] = None)
 
 object ClientSecretResponse {
-  import play.api.libs.json.Json
+  import play.api.libs.json._
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
 
-  implicit val format = Json.format[ClientSecretResponse]
+  implicit val format: OFormat[ClientSecretResponse] = Json.format[ClientSecretResponse]
 }

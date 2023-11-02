@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class PrivacyPolicyLocationSpec extends JsonFormattersSpec {
+class PrivacyPolicyLocationSpec extends BaseJsonFormattersSpec {
 
   "PrivacyPolicyLocationJsonFormatting" when {
 
@@ -67,7 +67,6 @@ class PrivacyPolicyLocationSpec extends JsonFormattersSpec {
       PrivacyPolicyLocations.InDesktopSoftware.describe() shouldBe "In desktop software"
       PrivacyPolicyLocations.NoneProvided.describe() shouldBe "None provided"
       PrivacyPolicyLocations.Url("http://yo.com").describe() shouldBe "http://yo.com"
-
     }
   }
 }

@@ -51,5 +51,19 @@ class RedirectUriSpec extends AnyWordSpec with Matchers with OptionValues with A
         RedirectUri(v).value.uri shouldBe v withClue (s"$k: $v should be Valid")
       }
     }
+
+    for ((k, v) <- validCases) {
+      s"unsafeApply successfully $k" in {
+        RedirectUri.unsafeApply(v).uri shouldBe v withClue (s"$k: $v should be Valid")
+      }
+    }
+
+    for ((k, v) <- invalidCases) {
+      s"unsafeApply fail appropriately $k" in {
+        intercept[RuntimeException] {
+          RedirectUri.unsafeApply(v).uri
+        }
+      }
+    }
   }
 }

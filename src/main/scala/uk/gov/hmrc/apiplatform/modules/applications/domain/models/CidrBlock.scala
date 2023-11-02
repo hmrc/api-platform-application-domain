@@ -20,12 +20,10 @@ final case class CidrBlock(ipAddress: String) extends AnyVal {
   override def toString() = ipAddress
 }
 
-/**
-  * This should also do validation of the CidrBlock as already happens in TPDFE.
-  * We should add this later.
+/** This should also do validation of the CidrBlock as already happens in TPDFE. We should add this later.
   */
 object CidrBlock {
-  import play.api.libs.json.Json
+  import play.api.libs.json.{Format, Json}
 
-  implicit def JsonFormat = Json.valueFormat[CidrBlock]
+  implicit val format: Format[CidrBlock] = Json.valueFormat[CidrBlock]
 }

@@ -29,6 +29,11 @@ lazy val library = Project(appName, file("."))
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT")
   )
 
-  commands += Command.command("testAll") { state =>
-      "test" :: state
-  }
+  commands ++= Seq(
+    Command.command("run-all-tests") { state => "test" :: state },
+
+    Command.command("clean-and-test") { state => "clean" :: "compile" :: "run-all-tests" :: state },
+
+    // Coverage does not need compile !
+    Command.command("pre-commit") { state => "clean" :: "scalafmtAll" :: "scalafixAll" ::"coverage" :: "run-all-tests" :: "coverageReport" :: "coverageOff" :: state }
+  )

@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json._
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+case class Totp(secret: String, id: String)
 
-class SubmissionIdSpec extends BaseJsonFormattersSpec {
-  val aSubmissionId = SubmissionId.random
-
-  "SubmissionId" should {
-    "convert to json" in {
-
-      Json.toJson(aSubmissionId) shouldBe JsString(aSubmissionId.value)
-    }
-
-    "read from json" in {
-      testFromJson[SubmissionId](s""""${aSubmissionId.value}"""")(aSubmissionId)
-    }
-  }
+object Totp {
+  implicit val format: OFormat[Totp] = Json.format[Totp]
 }

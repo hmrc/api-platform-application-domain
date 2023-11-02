@@ -21,7 +21,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import play.api.libs.json._
 
-trait JsonFormattersSpec extends AnyWordSpec with Matchers {
+trait BaseJsonFormattersSpec extends AnyWordSpec with Matchers {
 
   def testToJson[T](in: T)(fields: (String, String)*)(implicit wrt: Writes[T]) = {
     val f: Seq[(String, JsValue)] = fields.map { case (k, v) => (k -> JsString(v)) }

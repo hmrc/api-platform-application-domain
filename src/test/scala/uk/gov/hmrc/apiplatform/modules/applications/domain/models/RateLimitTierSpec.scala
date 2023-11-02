@@ -21,17 +21,43 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 import play.api.libs.json._
 
 import uk.gov.hmrc.apiplatform.modules.applications.domain.models.RateLimitTier._
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class RateLimitTierSpec extends JsonFormattersSpec with TableDrivenPropertyChecks {
+class RateLimitTierSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
   "RateLimitTier" should {
     "toString should provide some text" in {
       RateLimitTier.BRONZE.toString() shouldBe "BRONZE"
 
-      val tests = Table(("tiers"), RateLimitTier.values.toSeq: _*)
-      forAll(tests) { (rateLimitTier) =>
+      val values = Table(("tiers"), RateLimitTier.values.toSeq: _*)
+      forAll(values) { (rateLimitTier) =>
         rateLimitTier.toString().isEmpty() shouldBe false
       }
+    }
+
+    "displayText correctly" in {
+      val values = Table(("tiers"), RateLimitTier.values.toSeq: _*)
+      forAll(values) { (rateLimitTier) =>
+        rateLimitTier.displayText shouldBe rateLimitTier.toString().toLowerCase().capitalize
+      }
+    }
+
+    "convert lower case string to case object" in {
+      val values = Table(("tier", "text"), (RateLimitTier.values.toSeq.map(r => (r, r.toString().toLowerCase()))): _*)
+      forAll(values) { (s, t) =>
+        RateLimitTier.apply(t) shouldBe Some(s)
+        RateLimitTier.unsafeApply(t) shouldBe s
+      }
+    }
+
+    "convert string value to None when undefined or empty" in {
+      RateLimitTier.apply("rubbish") shouldBe None
+      RateLimitTier.apply("") shouldBe None
+    }
+
+    "throw when string value is invalid" in {
+      intercept[RuntimeException] {
+        RateLimitTier.unsafeApply("rubbish")
+      }.getMessage() should include("Rate Limit Tier")
     }
 
     "convert to json" in {
@@ -46,7 +72,7 @@ class RateLimitTierSpec extends JsonFormattersSpec with TableDrivenPropertyCheck
 
     "not read invalid json but return a JsError instead" in {
       Json.fromJson[RateLimitTier](JsString("UNKNOWN")) match {
-        case e: JsError if (JsError.Message.unapply(e) == Some("Invalid rate Limit tier UNKNOWN")) => succeed
+        case e: JsError if (JsError.Message.unapply(e) == Some("Invalid Rate Limit Tier UNKNOWN")) => succeed
         case _                                                                                     => fail("Should have failed validation")
       }
     }

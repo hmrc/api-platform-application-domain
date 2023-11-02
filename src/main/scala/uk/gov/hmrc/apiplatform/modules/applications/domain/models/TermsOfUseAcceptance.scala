@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import play.api.libs.json.{JsString, Json}
+import java.time.LocalDateTime
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+import play.api.libs.json._
 
-class SubmissionIdSpec extends BaseJsonFormattersSpec {
-  val aSubmissionId = SubmissionId.random
+import uk.gov.hmrc.apiplatform.modules.submissions.domain.models.SubmissionId
 
-  "SubmissionId" should {
-    "convert to json" in {
+case class TermsOfUseAcceptance(responsibleIndividual: ResponsibleIndividual, dateTime: LocalDateTime, submissionId: SubmissionId, submissionInstance: Int = 0)
 
-      Json.toJson(aSubmissionId) shouldBe JsString(aSubmissionId.value)
-    }
-
-    "read from json" in {
-      testFromJson[SubmissionId](s""""${aSubmissionId.value}"""")(aSubmissionId)
-    }
-  }
+object TermsOfUseAcceptance {
+  implicit val format: OFormat[TermsOfUseAcceptance] = Json.format[TermsOfUseAcceptance]
 }

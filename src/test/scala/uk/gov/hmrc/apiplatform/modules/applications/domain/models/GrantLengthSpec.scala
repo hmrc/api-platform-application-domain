@@ -20,9 +20,9 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 
 import play.api.libs.json._
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class GrantLengthSpec extends JsonFormattersSpec with TableDrivenPropertyChecks {
+class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
 
   "GrantLength" should {
     "toString should provide some text" in {

@@ -18,9 +18,9 @@ package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
 import play.api.libs.json.{JsString, Json}
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class CidrBlockSpec extends JsonFormattersSpec {
+class CidrBlockSpec extends BaseJsonFormattersSpec {
   val aCidrBlock = CidrBlock("1.0.0.0/24")
 
   "CidrBlock" should {

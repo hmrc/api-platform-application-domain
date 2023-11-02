@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
 
-final case class SubmissionId(value: String) extends AnyVal
+final case class SubmissionId(value: String) extends AnyVal {
+  override def toString(): String = value.toString()
+}
 
 object SubmissionId {
   import play.api.libs.json.Json

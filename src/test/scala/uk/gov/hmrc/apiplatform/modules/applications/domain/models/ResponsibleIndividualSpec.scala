@@ -16,21 +16,30 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json.Json
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class ClientSecretIdSpec extends BaseJsonFormattersSpec {
-  val aClientSecretId = ClientSecret.Id.random
+class ResponsibleIndividualSpec extends BaseJsonFormattersSpec {
+  import ResponsibleIndividualSpec.example
 
-  "ClientSecretId" should {
+  "ResponsibleIndividual" should {
+    val jsonText = s"""{"fullName":"Fred Flintstone","emailAddress":"fred@bedrock.com"}"""
+
+    "build from raw text" in {
+      ResponsibleIndividual.build("Fred Flintstone", "fred@bedrock.com") shouldBe example
+    }
     "convert to json" in {
-
-      Json.toJson(aClientSecretId) shouldBe JsString(aClientSecretId.toString())
+      Json.toJson[ResponsibleIndividual](example).toString shouldBe jsonText
     }
 
     "read from json" in {
-      testFromJson[ClientSecret.Id](s""""${aClientSecretId.toString}"""")(aClientSecretId)
+      testFromJson[ResponsibleIndividual](jsonText)(example)
     }
   }
+}
+
+object ResponsibleIndividualSpec {
+  val example = ResponsibleIndividual(FullName("Fred Flintstone"), LaxEmailAddress("fred@bedrock.com"))
 }

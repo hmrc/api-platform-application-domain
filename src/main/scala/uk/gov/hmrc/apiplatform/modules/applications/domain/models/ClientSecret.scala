@@ -25,10 +25,10 @@ object ClientSecret {
   }
 
   object Id {
-    import play.api.libs.json.Json
+    import play.api.libs.json._
 
     def random = Id(ju.UUID.randomUUID())
 
-    implicit val format = Json.valueFormat[Id]
+    implicit val format: Format[Id] = Json.valueFormat[Id]
   }
 }

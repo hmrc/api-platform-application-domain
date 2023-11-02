@@ -90,8 +90,8 @@ object Collaborator {
   import play.api.libs.json.OFormat
   import uk.gov.hmrc.play.json.Union
 
-  implicit val administratorJf = Json.format[Collaborators.Administrator]
-  implicit val developersJf    = Json.format[Collaborators.Developer]
+  implicit val formatAdministrator: OFormat[Collaborators.Administrator] = Json.format[Collaborators.Administrator]
+  implicit val formatDeveloper: OFormat[Collaborators.Developer]         = Json.format[Collaborators.Developer]
 
   implicit val collaboratorJf: OFormat[Collaborator] = Union.from[Collaborator]("role")
     .and[Collaborators.Administrator](Roles.ADMINISTRATOR.toString)

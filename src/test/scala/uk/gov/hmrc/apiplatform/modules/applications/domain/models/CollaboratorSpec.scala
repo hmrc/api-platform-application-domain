@@ -23,9 +23,9 @@ import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsString, Json}
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
-import uk.gov.hmrc.apiplatform.modules.common.utils.JsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class CollaboratorSpec extends AnyWordSpec with Matchers with EitherValues with JsonFormattersSpec {
+class CollaboratorSpec extends AnyWordSpec with Matchers with EitherValues with BaseJsonFormattersSpec {
 
   "Collborator" when {
     "creating" should {
