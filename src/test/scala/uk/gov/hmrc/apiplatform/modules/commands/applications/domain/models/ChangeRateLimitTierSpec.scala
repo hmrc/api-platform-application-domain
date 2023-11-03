@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
 
-import uk.gov.hmrc.apiplatform.modules.applications.domain.models.RateLimitTier
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RateLimitTier
 
 class ChangeRateLimitTierSpec extends ApplicationCommandBaseSpec {
   val aRateLimitTier = RateLimitTier.PLATINUM

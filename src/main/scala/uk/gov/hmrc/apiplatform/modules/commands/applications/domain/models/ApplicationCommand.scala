@@ -21,7 +21,8 @@ import java.time.LocalDateTime
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.json.Union
 
-import uk.gov.hmrc.apiplatform.modules.applications.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 sealed trait ApplicationCommand {

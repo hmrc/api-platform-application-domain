@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import play.api.libs.json.{JsString, Json}
 
-trait CollaboratorsSyntax {
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
+class ClientSecretIdSpec extends BaseJsonFormattersSpec {
+  val aClientSecretId = ClientSecret.Id.random
+
+  "ClientSecretId" should {
+    "convert to json" in {
+
+      Json.toJson(aClientSecretId) shouldBe JsString(aClientSecretId.toString())
+    }
+
+    "read from json" in {
+      testFromJson[ClientSecret.Id](s""""${aClientSecretId.toString}"""")(aClientSecretId)
+    }
   }
 }
-
-object CollaboratorsSyntax extends CollaboratorsSyntax

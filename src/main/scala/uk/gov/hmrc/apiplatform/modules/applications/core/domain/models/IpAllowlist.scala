@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+case class IpAllowlist(
+    required: Boolean = false,
+    allowlist: Set[String] = Set.empty
+  )
 
-trait CollaboratorsSyntax {
+object IpAllowlist {
+  import play.api.libs.json._
 
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
-  }
+  implicit val format: OFormat[IpAllowlist] = Json.format[IpAllowlist]
 }
-
-object CollaboratorsSyntax extends CollaboratorsSyntax

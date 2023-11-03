@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
-
-trait CollaboratorsSyntax {
-
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
-  }
+final case class CidrBlock(ipAddress: String) extends AnyVal {
+  override def toString() = ipAddress
 }
 
-object CollaboratorsSyntax extends CollaboratorsSyntax
+/** This should also do validation of the CidrBlock as already happens in TPDFE. We should add this later.
+  */
+object CidrBlock {
+  import play.api.libs.json.{Format, Json}
+
+  implicit val format: Format[CidrBlock] = Json.valueFormat[CidrBlock]
+}

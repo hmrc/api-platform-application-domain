@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import com.typesafe.config.{Config, ConfigFactory}
 
-trait CollaboratorsSyntax {
+case class ClientSecretsHashingConfig(config: Config) {
+  config.checkValid(ConfigFactory.defaultReference(), "application-domain-lib.client-secrets-hashing")
 
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
-  }
+  val workFactor: Int = config.getInt("application-domain-lib.client-secrets-hashing.work-factor")
 }
-
-object CollaboratorsSyntax extends CollaboratorsSyntax
