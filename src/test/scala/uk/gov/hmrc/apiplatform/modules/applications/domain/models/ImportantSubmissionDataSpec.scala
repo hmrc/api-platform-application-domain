@@ -22,12 +22,9 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class ImportantSubmissionDataSpec extends BaseJsonFormattersSpec {
 
-  import ImportantSubmissionDataSpec.example
-  import TermsOfUseAcceptanceSpec.id
+  import ImportantSubmissionDataSpec._
 
   "ImportantSubmissionData" should {
-    val jsonText =
-      s"""{"organisationUrl":"http://abc.com","responsibleIndividual":{"fullName":"Fred Flintstone","emailAddress":"fred@bedrock.com"},"serverLocations":["inUK"],"termsAndConditionsLocation":{"termsAndConditionsType":"inDesktop"},"privacyPolicyLocation":{"privacyPolicyType":"inDesktop"},"termsOfUseAcceptances":[{"responsibleIndividual":{"fullName":"Fred Flintstone","emailAddress":"fred@bedrock.com"},"dateTime":"2020-01-02T03:04:05","submissionId":"$id","submissionInstance":1}]}"""
 
     "convert to json" in {
       Json.toJson[ImportantSubmissionData](example).toString shouldBe jsonText
@@ -40,7 +37,7 @@ class ImportantSubmissionDataSpec extends BaseJsonFormattersSpec {
 }
 
 object ImportantSubmissionDataSpec {
-  val url     = "http://abc.com"
+  val url = "http://abc.com"
 
   val example = ImportantSubmissionData(
     organisationUrl = Some(url),
@@ -50,4 +47,7 @@ object ImportantSubmissionDataSpec {
     privacyPolicyLocation = PrivacyPolicyLocations.InDesktopSoftware,
     termsOfUseAcceptances = List(TermsOfUseAcceptanceSpec.example)
   )
+
+  val jsonText =
+    s"""{"organisationUrl":"http://abc.com","responsibleIndividual":${ResponsibleIndividualSpec.jsonText},"serverLocations":["inUK"],"termsAndConditionsLocation":{"termsAndConditionsType":"inDesktop"},"privacyPolicyLocation":{"privacyPolicyType":"inDesktop"},"termsOfUseAcceptances":[${TermsOfUseAcceptanceSpec.jsonText}]}"""
 }

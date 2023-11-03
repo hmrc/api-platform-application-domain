@@ -24,12 +24,9 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 import uk.gov.hmrc.apiplatform.modules.submissions.domain.models.SubmissionId
 
 class TermsOfUseAcceptanceSpec extends BaseJsonFormattersSpec {
-  import TermsOfUseAcceptanceSpec.{example, id}
+  import TermsOfUseAcceptanceSpec._
 
   "TermsOfUseAcceptance" should {
-    val jsonText =
-      s"""{"responsibleIndividual":{"fullName":"Fred Flintstone","emailAddress":"fred@bedrock.com"},"dateTime":"2020-01-02T03:04:05","submissionId":"$id","submissionInstance":1}"""
-
     "convert to json" in {
       Json.toJson[TermsOfUseAcceptance](example).toString shouldBe jsonText
     }
@@ -44,4 +41,7 @@ object TermsOfUseAcceptanceSpec {
   val now     = LocalDateTime.of(2020, 1, 2, 3, 4, 5)
   val id      = SubmissionId.random
   val example = TermsOfUseAcceptance(ResponsibleIndividualSpec.example, now, id, 1)
+
+  val jsonText =
+    s"""{"responsibleIndividual":{"fullName":"Fred Flintstone","emailAddress":"fred@bedrock.com"},"dateTime":"2020-01-02T03:04:05Z","submissionId":"$id","submissionInstance":1}"""
 }

@@ -16,15 +16,17 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import java.time.LocalDateTime
+import uk.gov.hmrc.apiplatform.modules.applications.domain.models.FullName
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 
-import play.api.libs.json._
+case class ContactDetails(
+    fullname: FullName,
+    email: LaxEmailAddress,
+    telephoneNumber: String
+  )
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
-import uk.gov.hmrc.apiplatform.modules.submissions.domain.models.SubmissionId
+object ContactDetails {
+  import play.api.libs.json.Json
 
-case class TermsOfUseAcceptance(responsibleIndividual: ResponsibleIndividual, dateTime: LocalDateTime, submissionId: SubmissionId, submissionInstance: Int = 0)
-
-object TermsOfUseAcceptance {
-  implicit val format: OFormat[TermsOfUseAcceptance] = Json.format[TermsOfUseAcceptance]
+  implicit val format = Json.format[ContactDetails]
 }

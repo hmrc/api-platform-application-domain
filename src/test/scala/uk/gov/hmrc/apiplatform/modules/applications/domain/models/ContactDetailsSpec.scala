@@ -16,36 +16,31 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import scala.util.Random
-
-import play.api.libs.json._
-
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class FullNameSpec extends BaseJsonFormattersSpec {
-  import FullNameSpec.example
+class ContactDetailsSpec extends BaseJsonFormattersSpec {
+  import ContactDetailsSpec._
 
-  "ServiceName" should {
-    "convert toString" in {
-      example.toString() shouldBe "Fred Flintstone"
+  "ContactDetails" should {
+    "produce json" in {
+      testToJson[ContactDetails](example)(
+        ("fullname"        -> "Fred Flintstone"),
+        ("email"           -> email.text),
+        ("telephoneNumber" -> "01234566789")
+      )
     }
 
-    "read from Json" in {
-      testFromJson[FullName](s""" "Fred Flintstone" """)(example)
-    }
-
-    "write to Json" in {
-      Json.toJson[FullName](example) shouldBe JsString("Fred Flintstone")
-    }
-
-    "order correctly" in {
-      val names = List("a", "b", "c", "d", "e").map(FullName(_))
-
-      Random.shuffle(names).sorted shouldBe names
+    "read json" in {
+      testFromJson[ContactDetails](jsonText)(
+        example
+      )
     }
   }
 }
 
-object FullNameSpec {
-  val example = FullName("Fred Flintstone")
+object ContactDetailsSpec {
+  val email    = LaxEmailAddress("fred@bedrock.com")
+  val example  = ContactDetails(FullNameSpec.example, email, "01234566789")
+  val jsonText = s"""{"fullname":"Fred Flintstone","email":"${email.text}","telephoneNumber":"01234566789"}"""
 }

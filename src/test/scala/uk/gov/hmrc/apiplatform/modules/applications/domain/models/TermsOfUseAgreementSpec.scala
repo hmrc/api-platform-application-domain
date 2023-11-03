@@ -16,29 +16,35 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.domain.models
 
-import play.api.libs.json.Json
+import java.time.LocalDateTime
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class ResponsibleIndividualSpec extends BaseJsonFormattersSpec {
-  import ResponsibleIndividualSpec._
+class TermsOfUseAgreementSpec extends BaseJsonFormattersSpec {
+  import TermsOfUseAgreementSpec._
 
-  "ResponsibleIndividual" should {
-    "build from raw text" in {
-      ResponsibleIndividual.build("Fred Flintstone", "fred@bedrock.com") shouldBe example
-    }
-    "convert to json" in {
-      Json.toJson[ResponsibleIndividual](example).toString shouldBe jsonText
+  "TermsOfUseAgreement" should {
+    "produce json" in {
+      testToJson[TermsOfUseAgreement](example)(
+        ("emailAddress" -> email.text),
+        ("timeStamp"    -> "2020-01-02T03:04:05Z"),
+        ("version"      -> "v1")
+      )
     }
 
-    "read from json" in {
-      testFromJson[ResponsibleIndividual](jsonText)(example)
+    "read json" in {
+      testFromJson[TermsOfUseAgreement](jsonText)(
+        example
+      )
     }
   }
 }
 
-object ResponsibleIndividualSpec {
-  val example  = ResponsibleIndividual(FullName("Fred Flintstone"), LaxEmailAddress("fred@bedrock.com"))
-  val jsonText = """{"fullName":"Fred Flintstone","emailAddress":"fred@bedrock.com"}"""
+object TermsOfUseAgreementSpec {
+  val email   = LaxEmailAddress("fred@bedrock.com")
+  val now     = LocalDateTime.of(2020, 1, 2, 3, 4, 5)
+  val example = TermsOfUseAgreement(email, now, "v1")
+
+  val jsonText = s"""{"emailAddress":"${email.text}","timeStamp":"2020-01-02T03:04:05Z","version":"v1"}"""
 }
