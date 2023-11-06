@@ -18,12 +18,11 @@ package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
 import java.time.LocalDateTime
 
-import play.api.libs.json._
-
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
-
 case class TermsOfUseAcceptance(responsibleIndividual: ResponsibleIndividual, dateTime: LocalDateTime, submissionId: SubmissionId, submissionInstance: Int = 0)
 
 object TermsOfUseAcceptance {
+  import play.api.libs.json._
+  import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
+
   implicit val format: OFormat[TermsOfUseAcceptance] = Json.format[TermsOfUseAcceptance]
 }
