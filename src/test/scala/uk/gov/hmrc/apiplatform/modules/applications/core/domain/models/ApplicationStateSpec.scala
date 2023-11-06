@@ -99,7 +99,7 @@ class ApplicationStateSpec extends BaseJsonFormattersSpec with FixedClock with T
       }
     }
 
-   "produce json" in {
+    "produce json" in {
       testToJson[ApplicationState](example)(
         ("name"                    -> "PRODUCTION"),
         ("requestedByEmailAddress" -> email.text),

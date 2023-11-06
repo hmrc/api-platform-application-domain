@@ -22,23 +22,20 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, Us
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class CollaboratorSpec extends BaseJsonFormattersSpec {
+  import CollaboratorSpec._
 
   "Collborator" when {
     "creating" should {
-      val email  = LaxEmailAddress("bob")
-      val userId = UserId.random
 
       "create an administrator" in {
-        val result = Collaborators.Administrator(userId, email)
-        result.isAdministrator shouldBe true
-        result.isDeveloper shouldBe false
-        result shouldBe Collaborators.Administrator(userId, email)
+        exampleAdmin.isAdministrator shouldBe true
+        exampleAdmin.isDeveloper shouldBe false
+        exampleAdmin shouldBe Collaborators.Administrator(userId, email)
       }
       "create a developer" in {
-        val result = Collaborators.Developer(userId, email)
-        result.isAdministrator shouldBe false
-        result.isDeveloper shouldBe true
-        result shouldBe Collaborators.Developer(userId, email)
+        exampleDeveloper.isAdministrator shouldBe false
+        exampleDeveloper.isDeveloper shouldBe true
+        exampleDeveloper shouldBe Collaborators.Developer(userId, email)
       }
       "creating an admin via a role" in {
         val result = Collaborator.apply(email, Collaborator.Roles.ADMINISTRATOR, userId)
@@ -53,10 +50,8 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
     }
 
     "given an administrator" should {
-      val anId                = UserId.random
-      val idAsText            = anId.toString()
       val anEmail             = LaxEmailAddress("bob@smith.com")
-      val admin: Collaborator = Collaborators.Administrator(anId, anEmail)
+      val admin: Collaborator = Collaborators.Administrator(userId, anEmail)
 
       "describe it's role" in {
         admin.describeRole shouldBe "ADMINISTRATOR"
@@ -68,7 +63,7 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
 
       "normalise an email address" in {
         val mixedCaseEmail      = LaxEmailAddress(anEmail.text.capitalize)
-        val admin: Collaborator = Collaborators.Administrator(anId, mixedCaseEmail)
+        val admin: Collaborator = Collaborators.Administrator(userId, mixedCaseEmail)
 
         admin.normalise.emailAddress shouldBe anEmail
       }
@@ -84,22 +79,20 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
       "produce json" in {
         testToJson[Collaborator](admin)(
           ("role"         -> "ADMINISTRATOR"),
-          ("userId"       -> idAsText),
+          ("userId"       -> userId.toString()),
           ("emailAddress" -> "bob@smith.com")
         )
       }
 
       "read json" in {
-        testFromJson[Collaborator](s"""{"role":"ADMINISTRATOR","userId":"$idAsText","emailAddress":"bob@smith.com"}""")(admin)
+        testFromJson[Collaborator](s"""{"role":"ADMINISTRATOR","userId":"$userId","emailAddress":"bob@smith.com"}""")(admin)
       }
 
     }
 
     "given an developer" should {
-      val anId                    = UserId.random
-      val idAsText                = anId.toString()
       val anEmail                 = LaxEmailAddress("bob@smith.com")
-      val developer: Collaborator = Collaborators.Developer(anId, anEmail)
+      val developer: Collaborator = Collaborators.Developer(userId, anEmail)
 
       "describe it's role" in {
         developer.describeRole shouldBe "DEVELOPER"
@@ -111,7 +104,7 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
 
       "normalise an email address" in {
         val mixedCaseEmail          = LaxEmailAddress(anEmail.text.capitalize)
-        val developer: Collaborator = Collaborators.Developer(anId, mixedCaseEmail)
+        val developer: Collaborator = Collaborators.Developer(userId, mixedCaseEmail)
 
         developer.normalise.emailAddress shouldBe anEmail
       }
@@ -128,13 +121,13 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
       "produce json" in {
         testToJson[Collaborator](developer)(
           ("role"         -> "DEVELOPER"),
-          ("userId"       -> idAsText),
+          ("userId"       -> userId.toString),
           ("emailAddress" -> "bob@smith.com")
         )
       }
 
       "read json" in {
-        testFromJson[Collaborator](s"""{"role":"DEVELOPER","userId":"$idAsText","emailAddress":"bob@smith.com"}""")(developer)
+        testFromJson[Collaborator](s"""{"role":"DEVELOPER","userId":"${userId.toString}","emailAddress":"bob@smith.com"}""")(developer)
       }
     }
 
@@ -171,4 +164,13 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
       }
     }
   }
+}
+
+object CollaboratorSpec {
+  val email  = LaxEmailAddress("bob@smith.com")
+  val userId = UserId.random
+
+  val exampleAdmin     = Collaborators.Administrator(userId, email)
+  val jsonTextForAdmin = s"""{"role":"ADMINISTRATOR","userId":"$userId","emailAddress":"bob@smith.com"}"""
+  val exampleDeveloper = Collaborators.Developer(userId, email)
 }
