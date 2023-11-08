@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
-
-trait CollaboratorsSyntax {
-
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
-  }
+case class SellResellOrDistribute(answer: String) extends AnyVal {
+  override def toString(): String = answer
 }
 
-object CollaboratorsSyntax extends CollaboratorsSyntax
+object SellResellOrDistribute {
+  import play.api.libs.json.{Format, Json}
+
+  implicit val format: Format[SellResellOrDistribute] = Json.valueFormat[SellResellOrDistribute]
+}

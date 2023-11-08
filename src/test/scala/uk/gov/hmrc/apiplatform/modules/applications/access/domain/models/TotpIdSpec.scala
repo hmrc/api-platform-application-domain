@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-trait CollaboratorsSyntax {
+class TotpIdSpec extends BaseJsonFormattersSpec {
 
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
+  "TotpId" should {
+    "convert to json" in {
+      testToJson(TotpId("1234"))("production" -> "1234")
+    }
+
+    "read from json" in {
+      testFromJson[TotpId](""" {"production": "1234"} """)(TotpId("1234"))
+    }
   }
 }
-
-object CollaboratorsSyntax extends CollaboratorsSyntax

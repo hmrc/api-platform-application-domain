@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullName
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 
-trait CollaboratorsSyntax {
+case class ResponsibleIndividual(fullName: FullName, emailAddress: LaxEmailAddress)
 
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
-  }
+object ResponsibleIndividual {
+
+  def build(name: String, email: String): ResponsibleIndividual = ResponsibleIndividual(FullName(name), LaxEmailAddress(email))
+
+  import play.api.libs.json._
+  implicit val format: OFormat[ResponsibleIndividual] = Json.format[ResponsibleIndividual]
 }
-
-object CollaboratorsSyntax extends CollaboratorsSyntax

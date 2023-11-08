@@ -21,7 +21,8 @@ import java.time.LocalDateTime
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.json.Union
 
-import uk.gov.hmrc.apiplatform.modules.applications.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 sealed trait ApplicationCommand {
@@ -65,7 +66,9 @@ object ApplicationCommands {
   case class UnsubscribeFromApi(actor: Actor, apiIdentifier: ApiIdentifier, timestamp: LocalDateTime)                                                   extends ApplicationCommand
   case class UpdateRedirectUris(actor: Actor, oldRedirectUris: List[String], newRedirectUris: List[String], timestamp: LocalDateTime)                   extends ApplicationCommand
   case class VerifyResponsibleIndividual(instigator: UserId, timestamp: LocalDateTime, requesterName: String, riName: String, riEmail: LaxEmailAddress) extends ApplicationCommand
-  case class ChangeIpAllowlist(actor: Actor, timestamp: LocalDateTime, required: Boolean, oldIpAllowlist: List[CidrBlock], newIpAllowlist: List[CidrBlock])                extends ApplicationCommand
+
+  case class ChangeIpAllowlist(actor: Actor, timestamp: LocalDateTime, required: Boolean, oldIpAllowlist: List[CidrBlock], newIpAllowlist: List[CidrBlock])
+      extends ApplicationCommand
 }
 
 object ApplicationCommand {

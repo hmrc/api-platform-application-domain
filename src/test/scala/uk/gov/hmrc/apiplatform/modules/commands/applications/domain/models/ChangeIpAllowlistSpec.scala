@@ -18,14 +18,20 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
 
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.CidrBlock
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.Actors
-import uk.gov.hmrc.apiplatform.modules.applications.domain.models.CidrBlock
 
 class ChangeIpAllowlistSpec extends ApplicationCommandBaseSpec {
   val updateType = "changeIpAllowlist"
 
   "ChangeIpAllowlist" should {
-    val cmd = ApplicationCommands.ChangeIpAllowlist(Actors.AppCollaborator(anActorEmail), aTimestamp, false, List(CidrBlock("1.0.0.0/24")), List(CidrBlock("1.0.0.0/24"), CidrBlock("10.0.0.0/24")))
+    val cmd = ApplicationCommands.ChangeIpAllowlist(
+      Actors.AppCollaborator(anActorEmail),
+      aTimestamp,
+      false,
+      List(CidrBlock("1.0.0.0/24")),
+      List(CidrBlock("1.0.0.0/24"), CidrBlock("10.0.0.0/24"))
+    )
 
     "write to json (as a command)" in {
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(

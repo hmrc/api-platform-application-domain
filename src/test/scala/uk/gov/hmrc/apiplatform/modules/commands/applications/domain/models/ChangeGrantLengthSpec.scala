@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
 
-import uk.gov.hmrc.apiplatform.modules.applications.domain.models.GrantLength
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.GrantLength
 
 class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
   val aGrantLength = GrantLength.SIX_MONTHS

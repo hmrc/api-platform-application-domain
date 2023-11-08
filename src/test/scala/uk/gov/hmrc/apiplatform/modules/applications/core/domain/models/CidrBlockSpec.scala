@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import play.api.libs.json.{JsString, Json}
 
-trait CollaboratorsSyntax {
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
+class CidrBlockSpec extends BaseJsonFormattersSpec {
+  val aCidrBlock = CidrBlock("1.0.0.0/24")
+
+  "CidrBlock" should {
+    "toString" in {
+      aCidrBlock.toString() shouldBe "1.0.0.0/24"
+    }
+
+    "convert to json" in {
+      Json.toJson(aCidrBlock) shouldBe JsString(aCidrBlock.ipAddress)
+    }
+
+    "read from json" in {
+      testFromJson[CidrBlock](s""""${aCidrBlock.ipAddress}"""")(aCidrBlock)
+    }
   }
 }
-
-object CollaboratorsSyntax extends CollaboratorsSyntax

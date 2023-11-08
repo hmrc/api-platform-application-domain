@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.utils
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import java.time.LocalDateTime
 
-trait CollaboratorsSyntax {
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 
-  implicit class CollaboratorSyntax(email: LaxEmailAddress) {
-    def asDeveloper()     = Collaborators.Developer(userId = UserId.random, emailAddress = email)
-    def asAdministrator() = Collaborators.Administrator(userId = UserId.random, emailAddress = email)
-  }
+case class TermsOfUseAgreement(emailAddress: LaxEmailAddress, timeStamp: LocalDateTime, version: String)
+
+object TermsOfUseAgreement {
+  import play.api.libs.json._
+  import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
+
+  implicit val format: OFormat[TermsOfUseAgreement] = Json.format[TermsOfUseAgreement]
 }
-
-object CollaboratorsSyntax extends CollaboratorsSyntax
