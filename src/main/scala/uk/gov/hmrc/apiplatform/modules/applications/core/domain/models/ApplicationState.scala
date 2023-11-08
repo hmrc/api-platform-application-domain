@@ -21,8 +21,6 @@ import java.security.MessageDigest
 import java.time.LocalDateTime
 import java.{util => ju}
 
-import uk.gov.hmrc.apiplatform.modules.common.services.ClockNow
-
 class InvalidStateTransition(invalidFrom: State, to: State, expectedFrom: State)
     extends RuntimeException(s"Transition to '$to' state requires the application to be in '$expectedFrom' state, but it was in '$invalidFrom'")
 
@@ -49,41 +47,41 @@ case class ApplicationState(
   lazy val isInProduction                                                   = name == State.PRODUCTION
   lazy val isDeleted                                                        = name == State.DELETED
 
-  def toProduction(clock: ClockNow) = {
+  def toProduction(timestamp: LocalDateTime) = {
     requireState(requirement = State.PRE_PRODUCTION, transitionTo = State.PRODUCTION)
-    copy(name = State.PRODUCTION, updatedOn = clock.now())
+    copy(name = State.PRODUCTION, updatedOn = timestamp)
   }
 
-  def toPreProduction(clock: ClockNow) = {
+  def toPreProduction(timestamp: LocalDateTime) = {
     requireState(requirement = State.PENDING_REQUESTER_VERIFICATION, transitionTo = State.PRE_PRODUCTION)
-    copy(name = State.PRE_PRODUCTION, updatedOn = clock.now())
+    copy(name = State.PRE_PRODUCTION, updatedOn = timestamp)
   }
 
-  def toTesting(clock: ClockNow) = copy(name = State.TESTING, requestedByEmailAddress = None, requestedByName = None, verificationCode = None, updatedOn = clock.now())
+  def toTesting(timestamp: LocalDateTime) = copy(name = State.TESTING, requestedByEmailAddress = None, requestedByName = None, verificationCode = None, updatedOn = timestamp)
 
-  def toPendingGatekeeperApproval(requestedByEmailAddress: String, requestedByName: String, clock: ClockNow) = {
+  def toPendingGatekeeperApproval(requestedByEmailAddress: String, requestedByName: String, timestamp: LocalDateTime) = {
     requireState(requirement = State.TESTING, transitionTo = State.PENDING_GATEKEEPER_APPROVAL)
 
     copy(
       name = State.PENDING_GATEKEEPER_APPROVAL,
-      updatedOn = clock.now(),
+      updatedOn = timestamp,
       requestedByEmailAddress = Some(requestedByEmailAddress),
       requestedByName = Some(requestedByName)
     )
   }
 
-  def toPendingResponsibleIndividualVerification(requestedByEmailAddress: String, requestedByName: String, clock: ClockNow) = {
+  def toPendingResponsibleIndividualVerification(requestedByEmailAddress: String, requestedByName: String, timestamp: LocalDateTime) = {
     requireState(requirement = State.TESTING, transitionTo = State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION)
 
     copy(
       name = State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION,
-      updatedOn = clock.now(),
+      updatedOn = timestamp,
       requestedByEmailAddress = Some(requestedByEmailAddress),
       requestedByName = Some(requestedByName)
     )
   }
 
-  def toPendingRequesterVerification(clock: ClockNow) = {
+  def toPendingRequesterVerification(timestamp: LocalDateTime) = {
     requireState(requirement = State.PENDING_GATEKEEPER_APPROVAL, transitionTo = State.PENDING_REQUESTER_VERIFICATION)
 
     def verificationCode(input: String = ju.UUID.randomUUID().toString): String = {
@@ -92,10 +90,10 @@ case class ApplicationState(
       val digest = MessageDigest.getInstance("SHA-256")
       urlSafe(new String(ju.Base64.getEncoder.encode(digest.digest(input.getBytes(StandardCharsets.UTF_8))), StandardCharsets.UTF_8))
     }
-    copy(name = State.PENDING_REQUESTER_VERIFICATION, verificationCode = Some(verificationCode()), updatedOn = clock.now())
+    copy(name = State.PENDING_REQUESTER_VERIFICATION, verificationCode = Some(verificationCode()), updatedOn = timestamp)
   }
 
-  def toDeleted(clock: ClockNow) = copy(name = State.DELETED, verificationCode = None, updatedOn = clock.now())
+  def toDeleted(timestamp: LocalDateTime) = copy(name = State.DELETED, verificationCode = None, updatedOn = timestamp)
 }
 
 object ApplicationState {

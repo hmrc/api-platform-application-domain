@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
-sealed trait OverrideFlag
+sealed trait OverrideFlag {
+  lazy val overrideType: OverrideType = OverrideFlag.asOverrideType(this)
+}
 
 object OverrideFlag {
   case object PersistLogin                                   extends OverrideFlag
