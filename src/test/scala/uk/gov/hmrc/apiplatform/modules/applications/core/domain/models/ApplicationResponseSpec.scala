@@ -19,28 +19,29 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import play.api.libs.json.Json
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApplicationId, ClientId, Environment}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
-class ApplicationSpec extends BaseJsonFormattersSpec {
-  import ApplicationSpec._
+class ApplicationResponseSpec extends BaseJsonFormattersSpec {
+  import ApplicationResponseSpec._
 
   "Application" should {
     "convert to json" in {
-      Json.toJson[Application](example) shouldBe Json.parse(jsonText)
+      Json.toJson[ApplicationResponse](example) shouldBe Json.parse(jsonText)
     }
 
     "read from json" in {
-      testFromJson[Application](jsonText)(example)
+      testFromJson[ApplicationResponse](jsonText)(example)
     }
   }
 }
 
-object ApplicationSpec extends FixedClock {
+object ApplicationResponseSpec extends FixedClock {
   val id       = ApplicationId.random
   val clientId = ClientId.random
 
-  val example = Application(
+  val example = ApplicationResponse(
     id,
     clientId,
     gatewayId = "",
