@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access.Standard
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
@@ -30,16 +29,23 @@ case class CreateApplicationRequestV1 private (
     subscriptions: Option[Set[ApiIdentifier]]
   ) extends CreateApplicationRequest {
 
+  validate(this)
+
   lazy val accessType = access.accessType
 
   lazy val anySubscriptions: Set[ApiIdentifier] = subscriptions.getOrElse(Set.empty)
 
-  def normaliseCollaborators: CreateApplicationRequestV1 = copy(collaborators = CreateApplicationRequest.normaliseEmails(collaborators))
+  private def validate(in: CreateApplicationRequestV1): Unit = {
+    super.validate(in)
+    in.access match {
+      case a: Access.Standard => require(a.redirectUris.size <= 5, "maximum number of redirect URIs exceeded")
+      case _                  =>
+    }
+  }
 
 }
 
 object CreateApplicationRequestV1 {
-  import play.api.libs.json.Json
 
   def create(
       name: String,
@@ -47,20 +53,37 @@ object CreateApplicationRequestV1 {
       description: Option[String],
       environment: Environment,
       collaborators: Set[Collaborator],
-      upliftRequest: UpliftRequest,
-      requestedBy: String,
-      sandboxApplicationId: ApplicationId
-    ): Option[CreateApplicationRequestV1] = {
-    val redirectUris = access match {
-      case Standard(redirectUris, _, _, _, _, _) => redirectUris
-      case _                                     => List.empty
-    }
+      subscriptions: Option[Set[ApiIdentifier]]
+    ): CreateApplicationRequestV1 = {
 
-    CreateApplicationRequest.validateBasics(name, redirectUris, collaborators).fold(
-      _ => None,
-      { case (n, r, c) => Some(new CreateApplicationRequestV1(n, access, description, environment, c, None)) }
-    )
+    val request = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
+
+    request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
+
+    // val redirectUris = access match {
+    //   case Standard(redirectUris, _, _, _, _, _) => redirectUris
+    //   case _                                     => List.empty
+    // }
+
+
+
+    // CreateApplicationRequest.validateBasics(name, redirectUris, collaborators).fold(
+    //   _ => None,
+    //   { case normalisedCollaborators => Some(new CreateApplicationRequestV1(name, access, description, environment, normalisedCollaborators, subscriptions)) }
+    // )
   }
 
-  implicit val reads = Json.reads[CreateApplicationRequestV1]
+
+  // def isValid(request: CreateApplicationRequestV1): Boolean = {
+  //   val redirectUris = request.access match {
+  //     case Standard(redirectUris, _, _, _, _, _) => redirectUris
+  //     case _ => List.empty
+  //   }
+  //   CreateApplicationRequest.validateBasics(request.name, redirectUris, request.collaborators).isRight
+  // }
+
+  import play.api.libs.json._
+  implicit val format: OFormat[CreateApplicationRequestV1] = Json.format[CreateApplicationRequestV1]
+  // implicit val reads: Reads[CreateApplicationRequestV1] = Json.reads[CreateApplicationRequestV1].filter(r => CreateApplicationRequestV1.isValid(r))
+  // implicit val writes: OWrites[CreateApplicationRequestV1] = Json.writes[CreateApplicationRequestV1]
 }

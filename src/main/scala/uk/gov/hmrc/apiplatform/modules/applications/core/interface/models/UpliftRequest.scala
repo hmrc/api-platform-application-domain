@@ -21,7 +21,8 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 case class UpliftRequest(
     sellResellOrDistribute: SellResellOrDistribute,
-    subscriptions: Set[ApiIdentifier]
+    subscriptions: Set[ApiIdentifier],
+    requestedBy: String
   )
 
 object UpliftRequest {

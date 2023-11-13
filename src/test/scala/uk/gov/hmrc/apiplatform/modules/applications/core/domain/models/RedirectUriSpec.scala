@@ -17,10 +17,11 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import org.scalatest.AppendedClues
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+import org.scalatest.OptionValues
 
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
+class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with AppendedClues {
 
-class RedirectUriSpec extends HmrcSpec with AppendedClues {
   "redirectUri validation" should {
     val invalidCases = Map(
       "fragment in http url"      -> "http://example.com#test",
@@ -64,6 +65,26 @@ class RedirectUriSpec extends HmrcSpec with AppendedClues {
           RedirectUri.unsafeApply(v).uri
         }
       }
+    }
+
+    import play.api.libs.json._
+    val validUri = RedirectUri.unsafeApply("https://abc.com/a")
+    val invalidUri = new RedirectUri("broken")
+
+    "convert to json" in {
+      Json.toJson[RedirectUri](validUri) shouldBe JsString("https://abc.com/a")
+      Json.toJson[RedirectUri](invalidUri) shouldBe JsString("broken")
+    }
+
+    "read from json" in {
+      testFromJson[RedirectUri](""" "broken" """)(invalidUri)
+      testFromJson[RedirectUri](""" "https://abc.com/a" """)(validUri)
+    }
+
+    "supports toString" in {
+      val redirectUri = RedirectUri("https://localhost:101/abc").get
+
+      s"$redirectUri" shouldBe "https://localhost:101/abc"
     }
   }
 }

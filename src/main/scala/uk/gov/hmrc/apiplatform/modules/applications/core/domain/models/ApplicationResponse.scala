@@ -34,7 +34,7 @@ case class ApplicationResponse(
     lastAccess: Option[LocalDateTime],
     grantLength: Int,
     lastAccessTokenUsage: Option[LocalDateTime],
-    redirectUris: List[String],
+    redirectUris: List[RedirectUri],
     termsAndConditionsUrl: Option[String],
     privacyPolicyUrl: Option[String],
     access: Access,

@@ -20,7 +20,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
-abstract class CreateApplicationRequest {
+trait CreateApplicationRequest {
   def name: String
   def description: Option[String]
   def collaborators: Set[Collaborator]
@@ -28,63 +28,74 @@ abstract class CreateApplicationRequest {
   def anySubscriptions: Set[ApiIdentifier]
 
   def accessType: AccessType
+
+  def validate(in: CreateApplicationRequest): Unit = {
+    require(in.name.nonEmpty, "name is required")
+    require(in.collaborators.exists(_.isAdministrator), "at least one ADMINISTRATOR collaborator is required")
+    require(in.collaborators.size == collaborators.map(_.normalise).size, "duplicate email in collaborator")
+  }
 }
 
 object CreateApplicationRequest {
   import play.api.libs.functional.syntax._
+  import play.api.libs.json.Reads
 
   def normaliseEmails(in: Set[Collaborator]): Set[Collaborator] = {
     in.map(c => c.normalise)
   }
 
-  def validateBasics(
-      name: String,
-      redirectUris: List[RedirectUri],
-      collaborators: Set[Collaborator]
-    ): Either[Validation, (String, List[RedirectUri], Set[Collaborator])] = {
-    for {
-      validatedName          <- validateName(name)
-      _                      <- validateAdminPresent(collaborators)
-      validatedCollaborators <- validateUniqueEmails(collaborators)
-      validatedRedirectUris  <- validateRedirectUris(redirectUris)
-    } yield (validatedName, validatedRedirectUris, validatedCollaborators)
-  }
+  private val readsV1: Reads[CreateApplicationRequestV1] = CreateApplicationRequestV1.format.reads _
+  private val readsV2: Reads[CreateApplicationRequestV2] = CreateApplicationRequestV2.format.reads _
 
-  implicit val reads =
-    CreateApplicationRequestV2.reads.map(_.asInstanceOf[CreateApplicationRequest]) or CreateApplicationRequestV1.reads.map(_.asInstanceOf[CreateApplicationRequest])
+  implicit val reads: Reads[CreateApplicationRequest] =
+    readsV2.map(_.asInstanceOf[CreateApplicationRequest]) or readsV1.map(_.asInstanceOf[CreateApplicationRequest])
 
-  def validateName(name: String): Either[Validation, String] = Either.cond(name.nonEmpty, name, NameIsRequired)
 
-  def validateAdminPresent(collaborators: Set[Collaborator]): Either[Validation, Set[Collaborator]] =
-    Either.cond(collaborators.exists(_.isAdministrator), collaborators, AtLeastOneAdministratorIsRequired)
+  // def validateBasics(
+  //     name: String,
+  //     redirectUris: List[RedirectUri],
+  //     collaborators: Set[Collaborator]
+  //   ): Either[Validation, (Set[Collaborator])] = {
+  //   for {
+  //     _                      <- validateName(name)
+  //     _                      <- validateAdminPresent(collaborators)
+  //     validatedCollaborators <- validateUniqueEmails(collaborators)
+  //     _                      <- validateRedirectUris(redirectUris)
+  //   } yield (validatedCollaborators)
+  // }
 
-  def validateUniqueEmails(collaborators: Set[Collaborator]): Either[Validation, Set[Collaborator]] = {
-    val normalisedCollaborators = normaliseEmails(collaborators)
-    val setOfRawEmails          = collaborators.map(_.emailAddress)
-    val setOfNormalisedEmails   = normalisedCollaborators.map(_.emailAddress)
-    Either.cond(setOfRawEmails.size == setOfNormalisedEmails.size, normalisedCollaborators, EmailsMustbeUnique)
-  }
+  // def validateName(name: String): Either[Validation, String] = Either.cond(name.nonEmpty, name, NameIsRequired)
 
-  def validateRedirectUris(redirectUris: List[RedirectUri]): Either[Validation, List[RedirectUri]] =
-    Either.cond(redirectUris.size <= 5, redirectUris, NoMoreThanFiveRedirectUrisAllowed)
+  // def validateAdminPresent(collaborators: Set[Collaborator]): Either[Validation, Set[Collaborator]] =
+  //   Either.cond(collaborators.exists(_.isAdministrator), collaborators, AtLeastOneAdministratorIsRequired)
 
-  sealed trait Validation {
-    def errorMessage: String
-  }
+  // def validateUniqueEmails(collaborators: Set[Collaborator]): Either[Validation, Set[Collaborator]] = {
+  //   val normalisedCollaborators = normaliseEmails(collaborators)
+  //   val setOfRawEmails          = collaborators.map(_.emailAddress)
+  //   val setOfNormalisedEmails   = normalisedCollaborators.map(_.emailAddress)
+  //   Either.cond(setOfRawEmails.size == setOfNormalisedEmails.size, normalisedCollaborators, EmailsMustbeUnique)
+  // }
 
-  case object NameIsRequired extends Validation {
-    def errorMessage: String = "Name is required."
-  }
+  // def validateRedirectUris(redirectUris: List[RedirectUri]): Either[Validation, List[RedirectUri]] =
+  //   Either.cond(redirectUris.size <= 5, redirectUris, NoMoreThanFiveRedirectUrisAllowed)
 
-  case object AtLeastOneAdministratorIsRequired extends Validation {
-    def errorMessage: String = "At least one ADMINISTRATOR collaborator is required."
-  }
+  // sealed trait Validation {
+  //   def errorMessage: String
+  // }
 
-  case object EmailsMustbeUnique extends Validation {
-    def errorMessage: String = "Duplicate email in collaborator."
-  }
+  // case object NameIsRequired extends Validation {
+  //   def errorMessage: String = "Name is required."
+  // }
 
-  case object NoMoreThanFiveRedirectUrisAllowed extends Validation {
-    def errorMessage: String = "Maximum number (5) of redirect URIs exceeded"
-  }
+  // case object AtLeastOneAdministratorIsRequired extends Validation {
+  //   def errorMessage: String = "At least one ADMINISTRATOR collaborator is required."
+  // }
+
+  // case object EmailsMustbeUnique extends Validation {
+  //   def errorMessage: String = "Duplicate email in collaborator."
+  // }
+
+  // case object NoMoreThanFiveRedirectUrisAllowed extends Validation {
+  //   def errorMessage: String = "Maximum number (5) of redirect URIs exceeded"
+  // }
 }

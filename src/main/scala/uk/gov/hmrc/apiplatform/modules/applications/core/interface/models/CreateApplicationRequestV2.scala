@@ -34,6 +34,9 @@ case class CreateApplicationRequestV2 private (
     sandboxApplicationId: ApplicationId
   ) extends CreateApplicationRequest {
 
+    
+  validate(this)
+
   lazy val accessType = AccessType.STANDARD
 
   lazy val anySubscriptions: Set[ApiIdentifier] = upliftRequest.subscriptions
@@ -43,7 +46,6 @@ case class CreateApplicationRequestV2 private (
 }
 
 object CreateApplicationRequestV2 {
-  import play.api.libs.json.Json
 
   def create(
       name: String,
@@ -54,13 +56,26 @@ object CreateApplicationRequestV2 {
       upliftRequest: UpliftRequest,
       requestedBy: String,
       sandboxApplicationId: ApplicationId
-    ): Option[CreateApplicationRequestV2] = {
+    ): CreateApplicationRequestV2 = {
 
-    CreateApplicationRequest.validateBasics(name, access.redirectUris, collaborators).fold(
-      _ => None,
-      { case (n, r, c) => Some(new CreateApplicationRequestV2(n, access, description, environment, c, upliftRequest, requestedBy, sandboxApplicationId)) }
-    )
+      val request = new CreateApplicationRequestV2(name, access, description, environment, collaborators, upliftRequest, requestedBy, sandboxApplicationId)
+
+      request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
+
+    // CreateApplicationRequest.validateBasics(name, access.redirectUris, collaborators).fold(
+    //   _ => None,
+    //   { case (normalisedCollaborators) => Some(new CreateApplicationRequestV2(name, access, description, environment, normalisedCollaborators, upliftRequest, requestedBy, sandboxApplicationId)) }
+    // )
   }
 
-  implicit val reads = Json.reads[CreateApplicationRequestV2]
+  
+  // def isValid(request: CreateApplicationRequestV2): Boolean = {
+  //   CreateApplicationRequest.validateBasics(request.name, request.access.redirectUris, request.collaborators).isRight
+  // }
+
+  import play.api.libs.json._
+  implicit val format: OFormat[CreateApplicationRequestV2] = Json.format[CreateApplicationRequestV2]
+
+  // implicit val reads: Reads[CreateApplicationRequestV2] = Json.reads[CreateApplicationRequestV2].filter(r => CreateApplicationRequestV2.isValid(r))
+  // implicit val writes: OWrites[CreateApplicationRequestV2] = Json.writes[CreateApplicationRequestV2]
 }
