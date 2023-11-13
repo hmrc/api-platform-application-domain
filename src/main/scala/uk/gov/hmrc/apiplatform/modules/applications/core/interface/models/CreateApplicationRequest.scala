@@ -30,9 +30,10 @@ trait CreateApplicationRequest {
   def accessType: AccessType
 
   def validate(in: CreateApplicationRequest): Unit = {
+    println(in.collaborators.map(_.normalise))
     require(in.name.nonEmpty, "name is required")
     require(in.collaborators.exists(_.isAdministrator), "at least one ADMINISTRATOR collaborator is required")
-    require(in.collaborators.size == collaborators.map(_.normalise).size, "duplicate email in collaborator")
+    require(in.collaborators.map(_.emailAddress).size == collaborators.map(_.normalise).map(_.emailAddress).size, "duplicate email in collaborator")
   }
 }
 
@@ -49,7 +50,6 @@ object CreateApplicationRequest {
 
   implicit val reads: Reads[CreateApplicationRequest] =
     readsV2.map(_.asInstanceOf[CreateApplicationRequest]) or readsV1.map(_.asInstanceOf[CreateApplicationRequest])
-
 
   // def validateBasics(
   //     name: String,

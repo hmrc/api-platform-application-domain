@@ -65,14 +65,11 @@ object CreateApplicationRequestV1 {
     //   case _                                     => List.empty
     // }
 
-
-
     // CreateApplicationRequest.validateBasics(name, redirectUris, collaborators).fold(
     //   _ => None,
     //   { case normalisedCollaborators => Some(new CreateApplicationRequestV1(name, access, description, environment, normalisedCollaborators, subscriptions)) }
     // )
   }
-
 
   // def isValid(request: CreateApplicationRequestV1): Boolean = {
   //   val redirectUris = request.access match {

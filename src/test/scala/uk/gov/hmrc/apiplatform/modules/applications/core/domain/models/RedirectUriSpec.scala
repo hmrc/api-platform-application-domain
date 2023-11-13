@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import org.scalatest.AppendedClues
+import org.scalatest.{AppendedClues, OptionValues}
+
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
-import org.scalatest.OptionValues
 
 class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with AppendedClues {
 
@@ -68,7 +68,7 @@ class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with Appe
     }
 
     import play.api.libs.json._
-    val validUri = RedirectUri.unsafeApply("https://abc.com/a")
+    val validUri   = RedirectUri.unsafeApply("https://abc.com/a")
     val invalidUri = new RedirectUri("broken")
 
     "convert to json" in {

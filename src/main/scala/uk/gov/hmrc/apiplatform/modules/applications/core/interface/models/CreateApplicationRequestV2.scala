@@ -34,7 +34,6 @@ case class CreateApplicationRequestV2 private (
     sandboxApplicationId: ApplicationId
   ) extends CreateApplicationRequest {
 
-    
   validate(this)
 
   lazy val accessType = AccessType.STANDARD
@@ -58,9 +57,9 @@ object CreateApplicationRequestV2 {
       sandboxApplicationId: ApplicationId
     ): CreateApplicationRequestV2 = {
 
-      val request = new CreateApplicationRequestV2(name, access, description, environment, collaborators, upliftRequest, requestedBy, sandboxApplicationId)
+    val request = new CreateApplicationRequestV2(name, access, description, environment, collaborators, upliftRequest, requestedBy, sandboxApplicationId)
 
-      request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
+    request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
 
     // CreateApplicationRequest.validateBasics(name, access.redirectUris, collaborators).fold(
     //   _ => None,
@@ -68,7 +67,6 @@ object CreateApplicationRequestV2 {
     // )
   }
 
-  
   // def isValid(request: CreateApplicationRequestV2): Boolean = {
   //   CreateApplicationRequest.validateBasics(request.name, request.access.redirectUris, request.collaborators).isRight
   // }

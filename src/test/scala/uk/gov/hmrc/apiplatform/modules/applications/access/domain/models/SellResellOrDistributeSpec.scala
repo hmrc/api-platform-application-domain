@@ -21,9 +21,9 @@ import play.api.libs.json._
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class SellResellOrDistributeSpec extends BaseJsonFormattersSpec {
+  import SellResellOrDistributeSpec._
 
   "SellResellOrDistribute" should {
-    val example = SellResellOrDistribute("miscblah")
 
     "convert toString" in {
       example.toString() shouldBe "miscblah"
@@ -37,4 +37,8 @@ class SellResellOrDistributeSpec extends BaseJsonFormattersSpec {
       Json.toJson[SellResellOrDistribute](example) shouldBe JsString("miscblah")
     }
   }
+}
+
+object SellResellOrDistributeSpec {
+  val example = SellResellOrDistribute("miscblah")
 }
