@@ -59,28 +59,8 @@ object CreateApplicationRequestV1 {
     val request = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
 
     request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
-
-    // val redirectUris = access match {
-    //   case Standard(redirectUris, _, _, _, _, _) => redirectUris
-    //   case _                                     => List.empty
-    // }
-
-    // CreateApplicationRequest.validateBasics(name, redirectUris, collaborators).fold(
-    //   _ => None,
-    //   { case normalisedCollaborators => Some(new CreateApplicationRequestV1(name, access, description, environment, normalisedCollaborators, subscriptions)) }
-    // )
   }
-
-  // def isValid(request: CreateApplicationRequestV1): Boolean = {
-  //   val redirectUris = request.access match {
-  //     case Standard(redirectUris, _, _, _, _, _) => redirectUris
-  //     case _ => List.empty
-  //   }
-  //   CreateApplicationRequest.validateBasics(request.name, redirectUris, request.collaborators).isRight
-  // }
 
   import play.api.libs.json._
   implicit val format: OFormat[CreateApplicationRequestV1] = Json.format[CreateApplicationRequestV1]
-  // implicit val reads: Reads[CreateApplicationRequestV1] = Json.reads[CreateApplicationRequestV1].filter(r => CreateApplicationRequestV1.isValid(r))
-  // implicit val writes: OWrites[CreateApplicationRequestV1] = Json.writes[CreateApplicationRequestV1]
 }
