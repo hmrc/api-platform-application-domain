@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
-import java.util.UUID
-import scala.util.control.Exception._
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
-case class SubmissionId(value: UUID) extends AnyVal {
-  override def toString(): String = value.toString()
-}
+case class UpliftRequest(
+    sellResellOrDistribute: SellResellOrDistribute,
+    subscriptions: Set[ApiIdentifier],
+    requestedBy: String
+  )
 
-object SubmissionId {
+object UpliftRequest {
   import play.api.libs.json.{Format, Json}
 
-  def apply(raw: String): Option[SubmissionId] = allCatch.opt(SubmissionId(UUID.fromString(raw)))
-
-  def unsafeApply(raw: String): SubmissionId = SubmissionId(UUID.fromString(raw))
-
-  implicit val format: Format[SubmissionId] = Json.valueFormat[SubmissionId]
-
-// $COVERAGE-OFF$
-  def random: SubmissionId = SubmissionId(UUID.randomUUID)
-// $COVERAGE-ON$
+  implicit val format: Format[UpliftRequest] = Json.format[UpliftRequest]
 }

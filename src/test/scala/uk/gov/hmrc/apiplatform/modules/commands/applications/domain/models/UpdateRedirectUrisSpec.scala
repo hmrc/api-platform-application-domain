@@ -18,11 +18,18 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
 
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 class UpdateRedirectUrisSpec extends ApplicationCommandBaseSpec {
-  val oldUris = List("a", "b", "c")
-  val newUris = List("a", "b", "x")
+  val base  = "http://localhost:1001"
+  val one   = RedirectUri.unsafeApply(s"$base/a")
+  val two   = RedirectUri.unsafeApply(s"$base/b")
+  val three = RedirectUri.unsafeApply(s"$base/c")
+  val four  = RedirectUri.unsafeApply(s"$base/x")
+
+  val oldUris = List(one, two, three)
+  val newUris = List(one, two, four)
 
   "UpdateRedirectUris" should {
     val cmd = ApplicationCommands.UpdateRedirectUris(Actors.AppCollaborator(anActorEmail), oldUris, newUris, aTimestamp)
@@ -34,8 +41,8 @@ class UpdateRedirectUrisSpec extends ApplicationCommandBaseSpec {
           "email"     -> "bob@example.com",
           "actorType" -> "COLLABORATOR"
         ),
-        "oldRedirectUris" -> Json.arr("a", "b", "c"),
-        "newRedirectUris" -> Json.arr("a", "b", "x"),
+        "oldRedirectUris" -> Json.arr(one, two, three),
+        "newRedirectUris" -> Json.arr(one, two, four),
         "timestamp"       -> s"$nowAsText",
         "updateType"      -> "updateRedirectUris"
       )
@@ -43,7 +50,7 @@ class UpdateRedirectUrisSpec extends ApplicationCommandBaseSpec {
 
     "read from json" in {
       val jsonText =
-        s""" {"actor":{"email":"bob@example.com","actorType":"COLLABORATOR"},"timestamp":"$nowAsText","oldRedirectUris":["a","b","c"],"newRedirectUris":["a","b","x"],"updateType":"updateRedirectUris"} """
+        s""" {"actor":{"email":"bob@example.com","actorType":"COLLABORATOR"},"timestamp":"$nowAsText","oldRedirectUris":["$base/a","$base/b","$base/c"],"newRedirectUris":["$base/a","$base/b","$base/x"],"updateType":"updateRedirectUris"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }

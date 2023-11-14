@@ -18,6 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 import play.api.libs.json._
 
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.ImportantSubmissionData
 
 sealed trait Access {
@@ -33,7 +34,7 @@ object Access {
   }
 
   case class Standard(
-      redirectUris: List[String] = List.empty,
+      redirectUris: List[RedirectUri] = List.empty,
       termsAndConditionsUrl: Option[String] = None,
       privacyPolicyUrl: Option[String] = None,
       overrides: Set[OverrideFlag] = Set.empty,

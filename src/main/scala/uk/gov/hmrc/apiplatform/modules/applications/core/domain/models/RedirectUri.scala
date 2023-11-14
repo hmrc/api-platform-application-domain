@@ -19,7 +19,9 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import java.net.URL
 import scala.util.Try
 
-case class RedirectUri private (uri: String) extends AnyVal
+case class RedirectUri(uri: String) extends AnyVal {
+  override def toString(): String = uri
+}
 
 object RedirectUri {
 

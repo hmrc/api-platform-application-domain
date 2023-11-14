@@ -24,13 +24,38 @@ class SubmissionIdSpec extends BaseJsonFormattersSpec {
   val aSubmissionId = SubmissionId.random
 
   "SubmissionId" should {
-    "convert to json" in {
+    "toString" in {
+      aSubmissionId.toString() shouldBe aSubmissionId.value.toString()
+    }
 
-      Json.toJson(aSubmissionId) shouldBe JsString(aSubmissionId.value)
+    "apply raw text" in {
+      val in = SubmissionId.random
+
+      SubmissionId.apply(in.value.toString()) shouldBe Some(in)
+    }
+
+    "apply raw text fails when not valid" in {
+      SubmissionId.apply("not-a-uuid") shouldBe None
+    }
+
+    "unsafeApply text" in {
+      val in = SubmissionId.random
+
+      SubmissionId.unsafeApply(in.value.toString()) shouldBe in
+    }
+
+    "unsafeApply raw text throws when not valid" in {
+      intercept[RuntimeException] {
+        SubmissionId.unsafeApply("not-a-uuid")
+      }
+    }
+
+    "convert to json" in {
+      Json.toJson(aSubmissionId) shouldBe JsString(aSubmissionId.value.toString())
     }
 
     "read from json" in {
-      testFromJson[SubmissionId](s""""${aSubmissionId.value}"""")(aSubmissionId)
+      testFromJson[SubmissionId](s""""${aSubmissionId.toString}"""")(aSubmissionId)
     }
   }
 }
