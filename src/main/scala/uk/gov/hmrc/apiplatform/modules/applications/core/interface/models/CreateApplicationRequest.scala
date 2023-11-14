@@ -30,7 +30,6 @@ trait CreateApplicationRequest {
   def accessType: AccessType
 
   def validate(in: CreateApplicationRequest): Unit = {
-    println(in.collaborators.map(_.normalise))
     require(in.name.nonEmpty, "name is required")
     require(in.collaborators.exists(_.isAdministrator), "at least one ADMINISTRATOR collaborator is required")
     require(in.collaborators.map(_.emailAddress).size == collaborators.map(_.normalise).map(_.emailAddress).size, "duplicate email in collaborator")
