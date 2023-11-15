@@ -27,7 +27,7 @@ case class ApplicationResponse(
     clientId: ClientId,
     gatewayId: String,
     name: String,
-    deployedTo: String,
+    deployedTo: Environment,
     description: Option[String],
     collaborators: Set[Collaborator],
     createdOn: LocalDateTime,
