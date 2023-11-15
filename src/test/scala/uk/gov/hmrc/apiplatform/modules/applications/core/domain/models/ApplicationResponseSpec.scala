@@ -46,7 +46,7 @@ object ApplicationResponseSpec extends FixedClock {
     clientId,
     gatewayId = "",
     name = "App",
-    deployedTo = Environment.PRODUCTION.toString(),
+    deployedTo = Environment.PRODUCTION,
     description = None,
     collaborators = Set(CollaboratorSpec.exampleAdmin),
     createdOn = now(),
