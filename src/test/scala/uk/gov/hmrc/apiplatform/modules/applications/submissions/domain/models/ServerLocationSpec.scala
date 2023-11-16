@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json.Json
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
@@ -67,19 +67,19 @@ class ServerLocationSpec extends BaseJsonFormattersSpec with TableDrivenProperty
 
     "read from Json" in {
       forAll(values) { (s, t) =>
-        testFromJson[ServerLocation](s""" "$t" """)(s)
+        testFromJson[ServerLocation](s""" {"serverLocation": "$t"} """)(s)
       }
     }
 
     "read with error from Json" in {
       intercept[Exception] {
-        testFromJson[ServerLocation](s"""123""")(ServerLocation.InEEA)
-      }.getMessage() should include("Cannot parse Server Location from '123'")
+        testFromJson[ServerLocation](s""" "inUK" """)(ServerLocation.InEEA)
+      }.getMessage() should include("inUK")
     }
 
     "write to Json" in {
       forAll(values) { (s, t) =>
-        Json.toJson[ServerLocation](s) shouldBe JsString(t)
+        Json.toJson[ServerLocation](s) shouldBe Json.obj("serverLocation" -> t)
       }
     }
   }
