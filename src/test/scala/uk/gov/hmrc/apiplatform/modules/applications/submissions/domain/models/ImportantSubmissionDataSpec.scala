@@ -49,5 +49,5 @@ object ImportantSubmissionDataSpec {
   )
 
   val jsonText =
-    s"""{"organisationUrl":"http://abc.com","responsibleIndividual":${ResponsibleIndividualSpec.jsonText},"serverLocations":["inUK"],"termsAndConditionsLocation":{"termsAndConditionsType":"inDesktop"},"privacyPolicyLocation":{"privacyPolicyType":"inDesktop"},"termsOfUseAcceptances":[${TermsOfUseAcceptanceSpec.jsonText}]}"""
+    s"""{"organisationUrl":"http://abc.com","responsibleIndividual":${ResponsibleIndividualSpec.jsonText},"serverLocations":[{"serverLocation":"inUK"}],"termsAndConditionsLocation":{"termsAndConditionsType":"inDesktop"},"privacyPolicyLocation":{"privacyPolicyType":"inDesktop"},"termsOfUseAcceptances":[${TermsOfUseAcceptanceSpec.jsonText}]}"""
 }
