@@ -55,12 +55,7 @@ object CreateApplicationRequestV1 {
       environment: Environment,
       collaborators: Set[Collaborator],
       subscriptions: Option[Set[ApiIdentifier]]
-    ): CreateApplicationRequestV1 = {
-
-    val request = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
-
-    request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
-  }
+    ): CreateApplicationRequestV1 = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
 
   import play.api.libs.json._
   implicit val format: OFormat[CreateApplicationRequestV1] = Json.format[CreateApplicationRequestV1]

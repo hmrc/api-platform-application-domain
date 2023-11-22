@@ -28,8 +28,6 @@ sealed trait Collaborator {
   def isAdministrator: Boolean
   def isDeveloper: Boolean = !isAdministrator
 
-  final def normalise: Collaborator = Collaborator.normalise(this)
-
   final def describeRole: String = Collaborator.describeRole(this)
 
   final def role: Collaborator.Role = Collaborator.role(this)
@@ -74,11 +72,6 @@ object Collaborator {
   def role(me: Collaborator): Collaborator.Role = me match {
     case a: Collaborators.Administrator => Collaborator.Roles.ADMINISTRATOR
     case d: Collaborators.Developer     => Collaborator.Roles.DEVELOPER
-  }
-
-  def normalise(me: Collaborator): Collaborator = me match {
-    case a: Collaborators.Administrator => a.copy(emailAddress = a.emailAddress.normalise())
-    case d: Collaborators.Developer     => d.copy(emailAddress = d.emailAddress.normalise())
   }
 
   def describeRole(me: Collaborator): String = me match {

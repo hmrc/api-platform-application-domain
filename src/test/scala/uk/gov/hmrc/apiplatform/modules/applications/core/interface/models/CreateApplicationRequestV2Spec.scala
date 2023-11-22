@@ -29,9 +29,6 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
   "CreateApplicationRequestV2" should {
     val admin                  = "jim@example.com".toLaxEmail.asAdministrator()
     val sandboxApplicationId   = ApplicationId.random
-    val mixedCaseCollaborator1 = "IamAnewUser@soMeO.com".toLaxEmail.asDeveloper()
-    val mixedCaseCollaborator2 = "RandomCaseUser@uPDown.com".toLaxEmail.asAdministrator()
-    val mixedCaseCollaborators = Set(mixedCaseCollaborator1, mixedCaseCollaborator2)
 
     val upliftRequest = UpliftRequest(
       sellResellOrDistribute = SellResellOrDistributeSpec.example,
@@ -74,11 +71,6 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
       intercept[IllegalArgumentException] {
         Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]
       }
-    }
-
-    "normalise collaborators should normaise emails of all collaborators" in {
-      val newRequest = request.copy(collaborators = request.collaborators ++ mixedCaseCollaborators)
-      newRequest.normaliseCollaborators.collaborators.map(_.emailAddress).map(_.text) should contain.only("jim@example.com", "iamanewuser@someo.com", "randomcaseuser@updown.com")
     }
 
   }
