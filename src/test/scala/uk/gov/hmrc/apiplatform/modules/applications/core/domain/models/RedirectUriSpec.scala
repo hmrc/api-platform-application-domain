@@ -24,12 +24,14 @@ class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with Appe
 
   "redirectUri validation" should {
     val invalidCases = Map(
-      "fragment in http url"      -> "http://example.com#test",
-      "fragment in https url"     -> "https://example.com#test",
-      "fragment in localhost url" -> "http://localhost#test",
-      "invalid url"               -> "random",
-      "not https"                 -> "http://example.com",
-      "invalid localhost"         -> "http://localhost.example.com"
+      "fragment in http"      -> "http://example.com#test",
+      "fragment in https"     -> "https://example.com#test",
+      "fragment in localhost" -> "http://localhost#test",
+      "invalid"               -> "random",
+      "relative"              -> "/auth-redirect",
+      "not https"             -> "http://example.com",
+      "blank"                 -> "",
+      "invalid localhost"     -> "http://localhost.example.com"
     )
 
     val validCases = Map(
@@ -37,6 +39,8 @@ class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with Appe
       "localhost with port" -> "http://localhost:8080",
       "localhost with path" -> "http://localhost:8080/some/path",
       "https url"           -> "https://example.com",
+      "query param"         -> "https://www.example.com:8080/auth-redirect?some_parameter=some_value",
+      "custom url"          -> "uk.gov.hmrc.app://oauth-authorization-code",
       "oob"                 -> "urn:ietf:wg:oauth:2.0:oob",
       "oob auto"            -> "urn:ietf:wg:oauth:2.0:oob:auto"
     )
