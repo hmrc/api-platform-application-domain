@@ -4,8 +4,10 @@ resolvers += Resolver.url("HMRC-open-artefacts-ivy", url("https://open.artefacts
 resolvers += "Typesafe Releases" at "https://repo.typesafe.com/typesafe/releases/"
 
 addSbtPlugin("uk.gov.hmrc"          %  "sbt-auto-build"         % "3.15.0")
-addSbtPlugin("ch.epfl.scala"        %  "sbt-bloop"              % "1.5.4")
-addSbtPlugin("org.scoverage"        %  "sbt-scoverage"          % "1.9.3")
+addSbtPlugin("ch.epfl.scala"        %  "sbt-bloop"              % "1.5.11")
+addSbtPlugin("org.scoverage"        %  "sbt-scoverage"          % "2.0.9")
 addSbtPlugin("org.scalastyle"       %% "scalastyle-sbt-plugin"  % "1.0.0")
-addSbtPlugin("org.scalameta"        %  "sbt-scalafmt"           % "2.4.6")
-addSbtPlugin("ch.epfl.scala"        %  "sbt-scalafix"           % "0.10.2")
+addSbtPlugin("org.scalameta"        %  "sbt-scalafmt"           % "2.5.2")
+addSbtPlugin("ch.epfl.scala"        %%  "sbt-scalafix"           % "0.11.1")
+
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always

@@ -17,7 +17,6 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import play.api.libs.json.{JsString, Json}
-
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 

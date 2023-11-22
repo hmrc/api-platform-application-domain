@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 trait CreateApplicationRequest {
   def name: String

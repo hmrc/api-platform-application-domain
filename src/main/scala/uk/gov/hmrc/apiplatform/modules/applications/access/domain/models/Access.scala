@@ -51,9 +51,9 @@ object Access {
 
   import uk.gov.hmrc.play.json.Union
 
-  private implicit val formatStandard   = Json.format[Standard]
-  private implicit val formatPrivileged = Json.format[Privileged]
-  private implicit val formatRopc       = Json.format[Ropc]
+  private implicit val formatStandard: OFormat[Standard]     = Json.format[Standard]
+  private implicit val formatPrivileged: OFormat[Privileged] = Json.format[Privileged]
+  private implicit val formatRopc: OFormat[Ropc]             = Json.format[Ropc]
 
   implicit val format: OFormat[Access] = Union.from[Access]("accessType")
     .and[Standard](AccessType.STANDARD.toString)

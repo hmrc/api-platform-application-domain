@@ -17,9 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.Actors
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.CidrBlock
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.Actors
 
 class ChangeIpAllowlistSpec extends ApplicationCommandBaseSpec {
   val updateType = "changeIpAllowlist"

@@ -18,11 +18,11 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.utils.CollaboratorsSyntax
-
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContext, ApiIdentifier, ApiVersionNbr, ApplicationId, Environment}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
 
 class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with CollaboratorsSyntax {
 

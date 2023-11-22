@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.utils
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborators
 
 trait CollaboratorsSyntax {
 

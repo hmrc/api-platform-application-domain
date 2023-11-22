@@ -19,7 +19,6 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import org.scalatest.prop.TableDrivenPropertyChecks
 
 import play.api.libs.json._
-
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {

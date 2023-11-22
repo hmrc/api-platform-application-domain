@@ -17,9 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import play.api.libs.json._
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.Collaborator.Roles._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
 
 sealed trait Collaborator {
   def userId: UserId

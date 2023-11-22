@@ -27,7 +27,7 @@ object ServerLocation {
   case object OutsideEEAWithAdequacy    extends ServerLocation
   case object OutsideEEAWithoutAdequacy extends ServerLocation
 
-  val values = List(InUK, InEEA, OutsideEEAWithAdequacy, OutsideEEAWithoutAdequacy)
+  val values: List[ServerLocation] = List(InUK, InEEA, OutsideEEAWithAdequacy, OutsideEEAWithoutAdequacy)
 
   def apply(text: String): Option[ServerLocation] = ServerLocation.values.find(_.toString.toUpperCase == text.toUpperCase())
 
@@ -35,10 +35,10 @@ object ServerLocation {
 
   // We cannot use SealedTraitJsonFormatting because this was never stored as an Enumeration or Enum originally but rather as an object
   //
-  private implicit val inUkFormat                      = Json.format[InUK.type]
-  private implicit val inEEAFormat                     = Json.format[InEEA.type]
-  private implicit val outsideEEAWithAdequacyFormat    = Json.format[OutsideEEAWithAdequacy.type]
-  private implicit val outsideEEAWithoutAdequacyFormat = Json.format[OutsideEEAWithoutAdequacy.type]
+  private implicit val inUkFormat: OFormat[InUK.type]                                           = Json.format[InUK.type]
+  private implicit val inEEAFormat: OFormat[InEEA.type]                                         = Json.format[InEEA.type]
+  private implicit val outsideEEAWithAdequacyFormat: OFormat[OutsideEEAWithAdequacy.type]       = Json.format[OutsideEEAWithAdequacy.type]
+  private implicit val outsideEEAWithoutAdequacyFormat: OFormat[OutsideEEAWithoutAdequacy.type] = Json.format[OutsideEEAWithoutAdequacy.type]
 
   implicit val format: OFormat[ServerLocation] = Union.from[ServerLocation]("serverLocation")
     .and[InUK.type]("inUK")

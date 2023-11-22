@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 /*
 ** This is only used for creating an app when uplifting a standard sandbox app to production

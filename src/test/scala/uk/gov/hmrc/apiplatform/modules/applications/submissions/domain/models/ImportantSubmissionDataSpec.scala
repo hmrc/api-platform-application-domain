@@ -17,7 +17,6 @@
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
 import play.api.libs.json.Json
-
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class ImportantSubmissionDataSpec extends BaseJsonFormattersSpec {

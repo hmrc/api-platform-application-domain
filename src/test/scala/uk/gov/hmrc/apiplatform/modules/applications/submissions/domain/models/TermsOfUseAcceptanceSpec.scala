@@ -19,7 +19,6 @@ package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 import java.time.LocalDateTime
 
 import play.api.libs.json.Json
-
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class TermsOfUseAcceptanceSpec extends BaseJsonFormattersSpec {

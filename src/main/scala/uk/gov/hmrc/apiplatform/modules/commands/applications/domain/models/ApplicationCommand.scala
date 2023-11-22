@@ -18,12 +18,12 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import java.time.LocalDateTime
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.play.json.Union
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 sealed trait ApplicationCommand {
   // TODO - remove this at earliest opportunity
@@ -75,36 +75,40 @@ object ApplicationCommand {
   import ApplicationCommands._
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
 
-  implicit private val addCollaboratorFormatter                          = Json.format[AddCollaborator]
-  implicit private val removeCollaboratorFormatter                       = Json.format[RemoveCollaborator]
-  implicit private val addClientSecretFormatter                          = Json.format[AddClientSecret]
-  implicit private val removeClientSecretFormatter                       = Json.format[RemoveClientSecret]
-  implicit private val addRedirectUriFormatter                           = Json.format[AddRedirectUri]
-  implicit private val changeCollaboratorFormatter                       = Json.format[ChangeRedirectUri]
-  implicit private val deleteRedirectUriFormatter                        = Json.format[DeleteRedirectUri]
-  implicit private val allowApplicationAutoDeleteFormatter               = Json.format[AllowApplicationAutoDelete]
-  implicit private val blockApplicationAutoDeleteFormatter               = Json.format[BlockApplicationAutoDelete]
-  implicit private val changeGrantLengthFormatter                        = Json.format[ChangeGrantLength]
-  implicit private val changeRateLimitTierFormatter                      = Json.format[ChangeRateLimitTier]
-  implicit private val changeProductionApplicationNameFormatter          = Json.format[ChangeProductionApplicationName]
-  implicit private val changePrivacyPolicyLocationFormatter              = Json.format[ChangeProductionApplicationPrivacyPolicyLocation]
-  implicit private val changeTermsAndConditionsLocationFormatter         = Json.format[ChangeProductionApplicationTermsAndConditionsLocation]
-  implicit private val changeResponsibleIndividualToSelfFormatter        = Json.format[ChangeResponsibleIndividualToSelf]
-  implicit private val changeResponsibleIndividualToOtherFormatter       = Json.format[ChangeResponsibleIndividualToOther]
-  implicit private val verifyResponsibleIndividualFormatter              = Json.format[VerifyResponsibleIndividual]
-  implicit private val declineApplicationApprovalRequestFormatter        = Json.format[DeclineApplicationApprovalRequest]
-  implicit private val declineResponsibleIndividualFormatter             = Json.format[DeclineResponsibleIndividual]
-  implicit private val declineResponsibleIndividualDidNotVerifyFormatter = Json.format[DeclineResponsibleIndividualDidNotVerify]
-  implicit private val deleteApplicationByCollaboratorFormatter          = Json.format[DeleteApplicationByCollaborator]
-  implicit private val deleteApplicationByGatekeeperFormatter            = Json.format[DeleteApplicationByGatekeeper]
-  implicit private val deleteUnusedApplicationFormatter                  = Json.format[DeleteUnusedApplication]
-  implicit private val deleteProductionCredentialsApplicationFormatter   = Json.format[DeleteProductionCredentialsApplication]
-  implicit private val subscribeToApiFormatter                           = Json.format[SubscribeToApi]
-  implicit private val unsubscribeFromApiFormatter                       = Json.format[UnsubscribeFromApi]
-  implicit private val UpdateRedirectUrisFormatter                       = Json.format[UpdateRedirectUris]
-  implicit private val ChangeIpAllowlistFormatter                        = Json.format[ChangeIpAllowlist]
+  implicit private val addCollaboratorFormatter: OFormat[AddCollaborator]                                 = Json.format[AddCollaborator]
+  implicit private val removeCollaboratorFormatter: OFormat[RemoveCollaborator]                           = Json.format[RemoveCollaborator]
+  implicit private val addClientSecretFormatter: OFormat[AddClientSecret]                                 = Json.format[AddClientSecret]
+  implicit private val removeClientSecretFormatter: OFormat[RemoveClientSecret]                           = Json.format[RemoveClientSecret]
+  implicit private val addRedirectUriFormatter: OFormat[AddRedirectUri]                                   = Json.format[AddRedirectUri]
+  implicit private val changeCollaboratorFormatter: OFormat[ChangeRedirectUri]                            = Json.format[ChangeRedirectUri]
+  implicit private val deleteRedirectUriFormatter: OFormat[DeleteRedirectUri]                             = Json.format[DeleteRedirectUri]
+  implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]           = Json.format[AllowApplicationAutoDelete]
+  implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]           = Json.format[BlockApplicationAutoDelete]
+  implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                             = Json.format[ChangeGrantLength]
+  implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                         = Json.format[ChangeRateLimitTier]
+  implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName] = Json.format[ChangeProductionApplicationName]
 
-  implicit val formatter = Union.from[ApplicationCommand]("updateType")
+  implicit private val changePrivacyPolicyLocationFormatter: OFormat[ChangeProductionApplicationPrivacyPolicyLocation] =
+    Json.format[ChangeProductionApplicationPrivacyPolicyLocation]
+
+  implicit private val changeTermsAndConditionsLocationFormatter: OFormat[ChangeProductionApplicationTermsAndConditionsLocation] =
+    Json.format[ChangeProductionApplicationTermsAndConditionsLocation]
+  implicit private val changeResponsibleIndividualToSelfFormatter: OFormat[ChangeResponsibleIndividualToSelf]                    = Json.format[ChangeResponsibleIndividualToSelf]
+  implicit private val changeResponsibleIndividualToOtherFormatter: OFormat[ChangeResponsibleIndividualToOther]                  = Json.format[ChangeResponsibleIndividualToOther]
+  implicit private val verifyResponsibleIndividualFormatter: OFormat[VerifyResponsibleIndividual]                                = Json.format[VerifyResponsibleIndividual]
+  implicit private val declineApplicationApprovalRequestFormatter: OFormat[DeclineApplicationApprovalRequest]                    = Json.format[DeclineApplicationApprovalRequest]
+  implicit private val declineResponsibleIndividualFormatter: OFormat[DeclineResponsibleIndividual]                              = Json.format[DeclineResponsibleIndividual]
+  implicit private val declineResponsibleIndividualDidNotVerifyFormatter: OFormat[DeclineResponsibleIndividualDidNotVerify]      = Json.format[DeclineResponsibleIndividualDidNotVerify]
+  implicit private val deleteApplicationByCollaboratorFormatter: OFormat[DeleteApplicationByCollaborator]                        = Json.format[DeleteApplicationByCollaborator]
+  implicit private val deleteApplicationByGatekeeperFormatter: OFormat[DeleteApplicationByGatekeeper]                            = Json.format[DeleteApplicationByGatekeeper]
+  implicit private val deleteUnusedApplicationFormatter: OFormat[DeleteUnusedApplication]                                        = Json.format[DeleteUnusedApplication]
+  implicit private val deleteProductionCredentialsApplicationFormatter: OFormat[DeleteProductionCredentialsApplication]          = Json.format[DeleteProductionCredentialsApplication]
+  implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]                                                          = Json.format[SubscribeToApi]
+  implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi]                                                  = Json.format[UnsubscribeFromApi]
+  implicit private val UpdateRedirectUrisFormatter: OFormat[UpdateRedirectUris]                                                  = Json.format[UpdateRedirectUris]
+  implicit private val ChangeIpAllowlistFormatter: OFormat[ChangeIpAllowlist]                                                    = Json.format[ChangeIpAllowlist]
+
+  implicit val formatter: OFormat[ApplicationCommand] = Union.from[ApplicationCommand]("updateType")
     .and[AddCollaborator]("addCollaborator")
     .and[RemoveCollaborator]("removeCollaborator")
     .and[AddClientSecret]("addClientSecret")
