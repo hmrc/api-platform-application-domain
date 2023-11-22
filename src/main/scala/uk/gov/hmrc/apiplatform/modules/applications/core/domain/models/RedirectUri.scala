@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import java.net.URL
+import java.net.URI
 import scala.util.Try
 
 case class RedirectUri(uri: String) extends AnyVal {
@@ -26,13 +26,13 @@ case class RedirectUri(uri: String) extends AnyVal {
 object RedirectUri {
 
   private def isValidRedirectUri(s: String): Boolean = {
-    def isNotBlankString: String => Boolean         = s => s.trim.length > 0
-    def hasNoFragments(s: String)                   = s.contains("#") == false
-    def isLocalhostUrl: String => Boolean           = s => Try(new URL(s.trim).getHost == "localhost").getOrElse(false)
-    def isHttpsUrl: String => Boolean               = s => Try(new URL(s.trim).getProtocol == "https").getOrElse(false)
-    def isOutOfBoundsRedirectUrl: String => Boolean = s => s == "urn:ietf:wg:oauth:2.0:oob:auto" || s == "urn:ietf:wg:oauth:2.0:oob"
+    def isNotBlankString: String => Boolean = s => s.trim.nonEmpty
+    def hasNoFragments: String => Boolean   = s => Try(new URI(s.trim).getFragment == null).getOrElse(false)
+    def isLocalhostUrl: String => Boolean   = s => Try(new URI(s.trim).getHost == "localhost").getOrElse(false)
+    def isNotHttpUrl: String => Boolean     = s => Try(new URI(s.trim).getScheme != "http").getOrElse(false)
+    def isAbsoluteUrl: String => Boolean    = s => Try(new URI(s.trim).isAbsolute).getOrElse(false)
 
-    isNotBlankString(s) && hasNoFragments(s) && (isLocalhostUrl(s) || isHttpsUrl(s) || isOutOfBoundsRedirectUrl(s))
+    isNotBlankString(s) && hasNoFragments(s) && isAbsoluteUrl(s) && (isLocalhostUrl(s) || isNotHttpUrl(s))
   }
 
   def apply(uri: String): Option[RedirectUri] = Some(new RedirectUri(uri)).filter(_ => isValidRedirectUri(uri))
