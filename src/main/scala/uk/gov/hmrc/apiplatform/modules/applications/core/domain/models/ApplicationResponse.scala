@@ -18,9 +18,10 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import java.time.LocalDateTime
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 case class ApplicationResponse(
     id: ApplicationId,

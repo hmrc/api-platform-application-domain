@@ -19,7 +19,6 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import scala.util.Random
 
 import play.api.libs.json.Json
-
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{Actors, ApplicationId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 

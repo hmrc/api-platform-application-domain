@@ -17,7 +17,6 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import play.api.libs.json.{JsString, Json}
-
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
@@ -61,13 +60,6 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
         admin.role shouldBe Collaborator.Roles.ADMINISTRATOR
       }
 
-      "normalise an email address" in {
-        val mixedCaseEmail      = LaxEmailAddress(anEmail.text.capitalize)
-        val admin: Collaborator = Collaborators.Administrator(userId, mixedCaseEmail)
-
-        admin.normalise.emailAddress shouldBe anEmail
-      }
-
       "be an admin" in {
         admin.isAdministrator shouldBe true
       }
@@ -100,13 +92,6 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
 
       "provide the role" in {
         developer.role shouldBe Collaborator.Roles.DEVELOPER
-      }
-
-      "normalise an email address" in {
-        val mixedCaseEmail          = LaxEmailAddress(anEmail.text.capitalize)
-        val developer: Collaborator = Collaborators.Developer(userId, mixedCaseEmail)
-
-        developer.normalise.emailAddress shouldBe anEmail
       }
 
       "a developer" in {

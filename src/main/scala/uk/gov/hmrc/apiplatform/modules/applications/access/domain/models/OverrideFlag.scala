@@ -43,7 +43,7 @@ object OverrideFlag {
   private implicit val formatGrantWithoutConsent: OFormat[GrantWithoutConsent]               = Json.format[GrantWithoutConsent]
   private implicit val formatSuppressIvForIndividuals: OFormat[SuppressIvForIndividuals]     = Json.format[SuppressIvForIndividuals]
 
-  implicit val formatOverride = Union.from[OverrideFlag]("overrideType")
+  implicit val formatOverride: OFormat[OverrideFlag] = Union.from[OverrideFlag]("overrideType")
     .and[GrantWithoutConsent](OverrideType.GRANT_WITHOUT_TAXPAYER_CONSENT.toString)
     .and[PersistLogin.type](OverrideType.PERSIST_LOGIN_AFTER_GRANT.toString)
     .and[SuppressIvForAgents](OverrideType.SUPPRESS_IV_FOR_AGENTS.toString)

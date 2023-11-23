@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 /*
 ** This is only used for creating an app when uplifting a standard sandbox app to production
@@ -40,8 +41,6 @@ case class CreateApplicationRequestV2 private (
 
   lazy val anySubscriptions: Set[ApiIdentifier] = upliftRequest.subscriptions
 
-  def normaliseCollaborators: CreateApplicationRequestV2 = copy(collaborators = CreateApplicationRequest.normaliseEmails(collaborators))
-
 }
 
 object CreateApplicationRequestV2 {
@@ -55,12 +54,7 @@ object CreateApplicationRequestV2 {
       upliftRequest: UpliftRequest,
       requestedBy: String,
       sandboxApplicationId: ApplicationId
-    ): CreateApplicationRequestV2 = {
-
-    val request = new CreateApplicationRequestV2(name, access, description, environment, collaborators, upliftRequest, requestedBy, sandboxApplicationId)
-
-    request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
-  }
+    ): CreateApplicationRequestV2 = CreateApplicationRequestV2(name, access, description, environment, collaborators, upliftRequest, requestedBy, sandboxApplicationId)
 
   import play.api.libs.json._
   implicit val format: OFormat[CreateApplicationRequestV2] = Json.format[CreateApplicationRequestV2]

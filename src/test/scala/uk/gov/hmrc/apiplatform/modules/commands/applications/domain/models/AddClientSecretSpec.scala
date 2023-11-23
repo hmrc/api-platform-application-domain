@@ -17,9 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ClientSecret
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 class AddClientSecretSpec extends ApplicationCommandBaseSpec {
   val id = ClientSecret.Id.random

@@ -19,7 +19,6 @@ package uk.gov.hmrc.apiplatform.modules.applications.common.domain.models
 import scala.util.Random
 
 import play.api.libs.json._
-
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class FullNameSpec extends BaseJsonFormattersSpec {

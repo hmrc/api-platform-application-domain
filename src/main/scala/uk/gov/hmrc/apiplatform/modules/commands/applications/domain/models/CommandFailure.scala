@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.play.json.Union
 
 sealed trait CommandFailure {
@@ -60,18 +60,18 @@ object CommandFailures {
 object CommandFailure {
   import CommandFailures._
 
-  implicit private val formatApplicationNotFound            = Json.format[ApplicationNotFound.type]
-  implicit private val formatInsufficientPrivileges         = Json.format[InsufficientPrivileges]
-  implicit private val formatCannotRemoveLastAdmin          = Json.format[CannotRemoveLastAdmin.type]
-  implicit private val formatActorIsNotACollaboratorOnApp   = Json.format[ActorIsNotACollaboratorOnApp.type]
-  implicit private val formatClientSecretLimitExceeded      = Json.format[ClientSecretLimitExceeded.type]
-  implicit private val formatCollaboratorDoesNotExistOnApp  = Json.format[CollaboratorDoesNotExistOnApp.type]
-  implicit private val formatCollaboratorHasMismatchOnApp   = Json.format[CollaboratorHasMismatchOnApp.type]
-  implicit private val formatCollaboratorAlreadyExistsOnApp = Json.format[CollaboratorAlreadyExistsOnApp.type]
-  implicit private val formatDuplicateSubscription          = Json.format[DuplicateSubscription.type]
-  implicit private val formatSubscriptionNotAvailable       = Json.format[SubscriptionNotAvailable.type]
-  implicit private val formatNotSubscribedToApi             = Json.format[NotSubscribedToApi.type]
-  implicit private val formatGenericFailure                 = Json.format[GenericFailure]
+  implicit private val formatApplicationNotFound: OFormat[CommandFailures.ApplicationNotFound.type]                       = Json.format[ApplicationNotFound.type]
+  implicit private val formatInsufficientPrivileges: OFormat[InsufficientPrivileges]                                      = Json.format[InsufficientPrivileges]
+  implicit private val formatCannotRemoveLastAdmin: OFormat[CommandFailures.CannotRemoveLastAdmin.type]                   = Json.format[CannotRemoveLastAdmin.type]
+  implicit private val formatActorIsNotACollaboratorOnApp: OFormat[CommandFailures.ActorIsNotACollaboratorOnApp.type]     = Json.format[ActorIsNotACollaboratorOnApp.type]
+  implicit private val formatClientSecretLimitExceeded: OFormat[CommandFailures.ClientSecretLimitExceeded.type]           = Json.format[ClientSecretLimitExceeded.type]
+  implicit private val formatCollaboratorDoesNotExistOnApp: OFormat[CommandFailures.CollaboratorDoesNotExistOnApp.type]   = Json.format[CollaboratorDoesNotExistOnApp.type]
+  implicit private val formatCollaboratorHasMismatchOnApp: OFormat[CommandFailures.CollaboratorHasMismatchOnApp.type]     = Json.format[CollaboratorHasMismatchOnApp.type]
+  implicit private val formatCollaboratorAlreadyExistsOnApp: OFormat[CommandFailures.CollaboratorAlreadyExistsOnApp.type] = Json.format[CollaboratorAlreadyExistsOnApp.type]
+  implicit private val formatDuplicateSubscription: OFormat[CommandFailures.DuplicateSubscription.type]                   = Json.format[DuplicateSubscription.type]
+  implicit private val formatSubscriptionNotAvailable: OFormat[CommandFailures.SubscriptionNotAvailable.type]             = Json.format[SubscriptionNotAvailable.type]
+  implicit private val formatNotSubscribedToApi: OFormat[CommandFailures.NotSubscribedToApi.type]                         = Json.format[NotSubscribedToApi.type]
+  implicit private val formatGenericFailure: OFormat[GenericFailure]                                                      = Json.format[GenericFailure]
 
   implicit val format: Format[CommandFailure] = Union.from[CommandFailure]("failureType")
     .and[ApplicationNotFound.type]("ApplicationNotFound")

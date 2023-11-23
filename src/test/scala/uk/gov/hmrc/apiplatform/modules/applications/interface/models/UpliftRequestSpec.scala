@@ -17,10 +17,10 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.Json
-
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
 
 class UpliftRequestSpec extends BaseJsonFormattersSpec {
   import UpliftRequestSpec._

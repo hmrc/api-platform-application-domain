@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullName
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
+
+import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullName
 
 case class ResponsibleIndividual(fullName: FullName, emailAddress: LaxEmailAddress)
 

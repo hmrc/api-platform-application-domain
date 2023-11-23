@@ -17,10 +17,10 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.Json
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.OverrideFlag
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
-import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
   import StandardAccessDataToCopySpec._

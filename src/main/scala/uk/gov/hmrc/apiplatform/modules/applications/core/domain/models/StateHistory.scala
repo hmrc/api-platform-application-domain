@@ -18,6 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import java.time.LocalDateTime
 
+import play.api.libs.json.OFormat
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{Actor, ApplicationId}
 
 case class StateHistory(applicationId: ApplicationId, state: State, actor: Actor, previousState: Option[State] = None, notes: Option[String] = None, changedAt: LocalDateTime)
@@ -28,5 +29,5 @@ object StateHistory {
 
   implicit val orderingOldestFirst: Ordering[StateHistory] = Ordering.by[StateHistory, LocalDateTime](_.changedAt)
 
-  implicit val format = Json.format[StateHistory]
+  implicit val format: OFormat[StateHistory] = Json.format[StateHistory]
 }

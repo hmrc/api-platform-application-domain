@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sbt clean +scalastyle +compile +coverage +test +coverageReport
+sbt pre-commit

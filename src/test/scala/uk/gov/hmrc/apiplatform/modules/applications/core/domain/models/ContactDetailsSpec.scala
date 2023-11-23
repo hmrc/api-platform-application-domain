@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullNameSpec
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+
+import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullNameSpec
 
 class ContactDetailsSpec extends BaseJsonFormattersSpec {
   import ContactDetailsSpec._

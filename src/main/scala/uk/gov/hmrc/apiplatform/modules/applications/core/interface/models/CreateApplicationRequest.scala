@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 trait CreateApplicationRequest {
   def name: String
@@ -32,17 +33,13 @@ trait CreateApplicationRequest {
   def validate(in: CreateApplicationRequest): Unit = {
     require(in.name.nonEmpty, "name is required")
     require(in.collaborators.exists(_.isAdministrator), "at least one ADMINISTRATOR collaborator is required")
-    require(in.collaborators.map(_.emailAddress).size == collaborators.map(_.normalise).map(_.emailAddress).size, "duplicate email in collaborator")
+    require(in.collaborators.toList.map(_.emailAddress).size == collaborators.map(_.emailAddress).size, "duplicate email in collaborator")
   }
 }
 
 object CreateApplicationRequest {
   import play.api.libs.functional.syntax._
   import play.api.libs.json.Reads
-
-  def normaliseEmails(in: Set[Collaborator]): Set[Collaborator] = {
-    in.map(c => c.normalise)
-  }
 
   private val readsV1: Reads[CreateApplicationRequestV1] = CreateApplicationRequestV1.format.reads _
   private val readsV2: Reads[CreateApplicationRequestV2] = CreateApplicationRequestV2.format.reads _

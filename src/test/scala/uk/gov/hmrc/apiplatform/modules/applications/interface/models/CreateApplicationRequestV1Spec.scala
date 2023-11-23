@@ -18,11 +18,11 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.utils.CollaboratorsSyntax
-
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.Environment
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
 
 class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with CollaboratorsSyntax {
 
@@ -115,7 +115,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
           access = Access.Standard(),
           description = None,
           environment = Environment.PRODUCTION,
-          collaborators = Set(admin, "Jim@Example.com".toLaxEmail.asAdministrator(), developer),
+          collaborators = Set(admin, "Jim@Example.com".toLaxEmail.asAdministrator(), developer, "Jim@Example.com".toLaxEmail.asDeveloper()),
           subscriptions = None
         )
       }

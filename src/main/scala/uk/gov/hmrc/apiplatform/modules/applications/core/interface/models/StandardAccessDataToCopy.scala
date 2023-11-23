@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import play.api.libs.json.OFormat
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
 
@@ -27,5 +29,5 @@ case class StandardAccessDataToCopy(
 object StandardAccessDataToCopy {
   import play.api.libs.json.Json
 
-  implicit val format = Json.format[StandardAccessDataToCopy]
+  implicit val format: OFormat[StandardAccessDataToCopy] = Json.format[StandardAccessDataToCopy]
 }

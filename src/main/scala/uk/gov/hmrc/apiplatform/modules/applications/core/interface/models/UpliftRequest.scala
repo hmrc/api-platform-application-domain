@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 
 case class UpliftRequest(
     sellResellOrDistribute: SellResellOrDistribute,

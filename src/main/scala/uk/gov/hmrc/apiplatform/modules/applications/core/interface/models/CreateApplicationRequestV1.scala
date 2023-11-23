@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 case class CreateApplicationRequestV1 private (
     name: String,
@@ -54,12 +55,7 @@ object CreateApplicationRequestV1 {
       environment: Environment,
       collaborators: Set[Collaborator],
       subscriptions: Option[Set[ApiIdentifier]]
-    ): CreateApplicationRequestV1 = {
-
-    val request = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
-
-    request.copy(collaborators = CreateApplicationRequest.normaliseEmails(request.collaborators))
-  }
+    ): CreateApplicationRequestV1 = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
 
   import play.api.libs.json._
   implicit val format: OFormat[CreateApplicationRequestV1] = Json.format[CreateApplicationRequestV1]

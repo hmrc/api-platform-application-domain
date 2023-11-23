@@ -23,11 +23,11 @@ case class DispatchRequest(command: ApplicationCommand, verifiedCollaboratorsToN
 object DispatchRequest {
   import play.api.libs.json._
 
-  val readsExactDispatchRequest: Reads[DispatchRequest] = Json.reads[DispatchRequest]
-  val readsExactCommand: Reads[DispatchRequest]         = ApplicationCommand.formatter.map(cmd => DispatchRequest(cmd, Set.empty))
+  private val readsExactDispatchRequest: Reads[DispatchRequest] = Json.reads[DispatchRequest]
+  private val readsExactCommand: Reads[DispatchRequest]         = ApplicationCommand.formatter.map(cmd => DispatchRequest(cmd, Set.empty))
 
   implicit val readsDispatchRequest: Reads[DispatchRequest] = readsExactDispatchRequest orElse readsExactCommand
 
   implicit val writesDispatchRequest: Writes[DispatchRequest] = Json.writes[DispatchRequest]
-  implicit val formatDispatchRequest                          = Format(readsDispatchRequest, writesDispatchRequest)
+  implicit val formatDispatchRequest: Format[DispatchRequest] = Format(readsDispatchRequest, writesDispatchRequest)
 }

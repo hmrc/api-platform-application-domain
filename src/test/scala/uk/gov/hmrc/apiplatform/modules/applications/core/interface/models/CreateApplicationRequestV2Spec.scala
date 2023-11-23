@@ -18,20 +18,17 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.utils.CollaboratorsSyntax
-
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContext, ApiIdentifier, ApiVersionNbr, ApplicationId, Environment}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
 
 class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with CollaboratorsSyntax {
 
   "CreateApplicationRequestV2" should {
     val admin                  = "jim@example.com".toLaxEmail.asAdministrator()
     val sandboxApplicationId   = ApplicationId.random
-    val mixedCaseCollaborator1 = "IamAnewUser@soMeO.com".toLaxEmail.asDeveloper()
-    val mixedCaseCollaborator2 = "RandomCaseUser@uPDown.com".toLaxEmail.asAdministrator()
-    val mixedCaseCollaborators = Set(mixedCaseCollaborator1, mixedCaseCollaborator2)
 
     val upliftRequest = UpliftRequest(
       sellResellOrDistribute = SellResellOrDistributeSpec.example,
@@ -74,11 +71,6 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
       intercept[IllegalArgumentException] {
         Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]
       }
-    }
-
-    "normalise collaborators should normaise emails of all collaborators" in {
-      val newRequest = request.copy(collaborators = request.collaborators ++ mixedCaseCollaborators)
-      newRequest.normaliseCollaborators.collaborators.map(_.emailAddress).map(_.text) should contain.only("jim@example.com", "iamanewuser@someo.com", "randomcaseuser@updown.com")
     }
 
   }
