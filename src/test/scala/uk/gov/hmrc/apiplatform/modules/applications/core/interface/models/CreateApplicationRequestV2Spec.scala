@@ -27,8 +27,8 @@ import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellRes
 class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with CollaboratorsSyntax {
 
   "CreateApplicationRequestV2" should {
-    val admin                  = "jim@example.com".toLaxEmail.asAdministrator()
-    val sandboxApplicationId   = ApplicationId.random
+    val admin                = "jim@example.com".toLaxEmail.asAdministrator()
+    val sandboxApplicationId = ApplicationId.random
 
     val upliftRequest = UpliftRequest(
       sellResellOrDistribute = SellResellOrDistributeSpec.example,

@@ -18,7 +18,34 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import scala.collection.immutable.ListSet
 
-sealed trait State
+sealed trait State {
+  // $COVERAGE-OFF$
+  lazy val isPreProduction: Boolean = this == State.PRE_PRODUCTION
+
+  lazy val isProduction: Boolean = this == State.PRODUCTION
+
+  lazy val isApproved: Boolean = isPreProduction || isProduction
+
+  lazy val isPendingApproval: Boolean = (this == State.PENDING_REQUESTER_VERIFICATION
+    || this == State.PENDING_GATEKEEPER_APPROVAL
+    || this == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION)
+
+  lazy val isPendingApprovalOrProduction: Boolean = (this == State.PENDING_REQUESTER_VERIFICATION
+    || this == State.PENDING_GATEKEEPER_APPROVAL
+    || this == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION
+    || this == State.PRODUCTION)
+
+  lazy val isInTesting: Boolean = this == State.TESTING
+
+  lazy val isInTestingOrProduction: Boolean = (this == State.TESTING || this == State.PRODUCTION)
+
+  lazy val isPendingGatekeeperApproval = this == State.PENDING_GATEKEEPER_APPROVAL
+
+  lazy val isPendingRequesterVerification = this == State.PENDING_REQUESTER_VERIFICATION
+
+  lazy val isDeleted = this == State.DELETED
+  // $COVERAGE-ON$
+}
 
 object State {
 
