@@ -31,7 +31,8 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
         (OverrideFlag.GrantWithoutConsent(Set.empty), OverrideType.GRANT_WITHOUT_TAXPAYER_CONSENT),
         (OverrideFlag.SuppressIvForAgents(Set.empty), OverrideType.SUPPRESS_IV_FOR_AGENTS),
         (OverrideFlag.SuppressIvForIndividuals(Set.empty), OverrideType.SUPPRESS_IV_FOR_INDIVIDUALS),
-        (OverrideFlag.SuppressIvForOrganisations(Set.empty), OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS)
+        (OverrideFlag.SuppressIvForOrganisations(Set.empty), OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS),
+        (OverrideFlag.OriginOveride("an origin"), OverrideType.ORIGIN_OVERRIDE)
       )
 
       forAll(values) {
@@ -39,11 +40,12 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
       }
     }
 
-    val persistLogin       = """{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}"""
-    val emptyGWC           = """{"scopes":[],"overrideType":"GRANT_WITHOUT_TAXPAYER_CONSENT"}"""
-    val emptyAgents        = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_AGENTS"}"""
-    val emptyIndividuals   = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_INDIVIDUALS"}"""
-    val emptyOrganisations = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_ORGANISATIONS"}"""
+    val persistLogin         = """{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}"""
+    val emptyGWC             = """{"scopes":[],"overrideType":"GRANT_WITHOUT_TAXPAYER_CONSENT"}"""
+    val emptyAgents          = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_AGENTS"}"""
+    val emptyIndividuals     = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_INDIVIDUALS"}"""
+    val emptyOrganisations   = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_ORGANISATIONS"}"""
+    val simpleOriginOverride = """{"origin":"an origin","overrideType":"ORIGIN_OVERRIDE"}"""
 
     val values = Table(
       ("OverrideFlag", "Expected Json"),
@@ -51,7 +53,8 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
       (OverrideFlag.GrantWithoutConsent(Set.empty), emptyGWC),
       (OverrideFlag.SuppressIvForAgents(Set.empty), emptyAgents),
       (OverrideFlag.SuppressIvForIndividuals(Set.empty), emptyIndividuals),
-      (OverrideFlag.SuppressIvForOrganisations(Set.empty), emptyOrganisations)
+      (OverrideFlag.SuppressIvForOrganisations(Set.empty), emptyOrganisations),
+      (OverrideFlag.OriginOveride("an origin"), simpleOriginOverride)
     )
 
     "correctly write the default OverrideFlag to Json" in {

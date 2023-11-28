@@ -31,7 +31,8 @@ class OverrideTypeSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
         (OverrideType.PERSIST_LOGIN_AFTER_GRANT, "persist_login_after_grant"),
         (OverrideType.SUPPRESS_IV_FOR_AGENTS, "suppress_iv_for_agents"),
         (OverrideType.SUPPRESS_IV_FOR_INDIVIDUALS, "suppress_iv_for_individuals"),
-        (OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS, "suppress_iv_for_organisations")
+        (OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS, "suppress_iv_for_organisations"),
+        (OverrideType.ORIGIN_OVERRIDE, "origin_override")
       )
 
     "convert to string correctly" in {

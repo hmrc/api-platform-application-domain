@@ -24,8 +24,16 @@ object OverrideType {
   case object SUPPRESS_IV_FOR_AGENTS         extends OverrideType
   case object SUPPRESS_IV_FOR_ORGANISATIONS  extends OverrideType
   case object SUPPRESS_IV_FOR_INDIVIDUALS    extends OverrideType
+  case object ORIGIN_OVERRIDE                extends OverrideType
 
-  val values = List(PERSIST_LOGIN_AFTER_GRANT, GRANT_WITHOUT_TAXPAYER_CONSENT, SUPPRESS_IV_FOR_AGENTS, SUPPRESS_IV_FOR_ORGANISATIONS, SUPPRESS_IV_FOR_INDIVIDUALS)
+  val values = List(
+    PERSIST_LOGIN_AFTER_GRANT,
+    GRANT_WITHOUT_TAXPAYER_CONSENT,
+    SUPPRESS_IV_FOR_AGENTS,
+    SUPPRESS_IV_FOR_ORGANISATIONS,
+    SUPPRESS_IV_FOR_INDIVIDUALS,
+    ORIGIN_OVERRIDE
+  )
 
   def apply(text: String): Option[OverrideType] = OverrideType.values.find(_.toString() == text.toUpperCase)
 
