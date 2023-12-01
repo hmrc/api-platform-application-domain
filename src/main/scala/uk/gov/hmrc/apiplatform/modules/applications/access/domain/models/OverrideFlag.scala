@@ -26,7 +26,7 @@ object OverrideFlag {
   case class SuppressIvForOrganisations(scopes: Set[String]) extends OverrideFlag
   case class GrantWithoutConsent(scopes: Set[String])        extends OverrideFlag
   case class SuppressIvForIndividuals(scopes: Set[String])   extends OverrideFlag
-  case class OriginOveride(origin: String)                   extends OverrideFlag
+  case class OriginOverride(origin: String)                  extends OverrideFlag
 
   def asOverrideType(overrideFlag: OverrideFlag) = overrideFlag match {
     case SuppressIvForAgents(_)        => OverrideType.SUPPRESS_IV_FOR_AGENTS
@@ -34,7 +34,7 @@ object OverrideFlag {
     case SuppressIvForIndividuals(_)   => OverrideType.SUPPRESS_IV_FOR_INDIVIDUALS
     case GrantWithoutConsent(_)        => OverrideType.GRANT_WITHOUT_TAXPAYER_CONSENT
     case _: PersistLogin.type          => OverrideType.PERSIST_LOGIN_AFTER_GRANT
-    case OriginOveride(_)              => OverrideType.ORIGIN_OVERRIDE
+    case OriginOverride(_)             => OverrideType.ORIGIN_OVERRIDE
   }
 
   import play.api.libs.json._
@@ -44,7 +44,7 @@ object OverrideFlag {
   private implicit val formatSuppressIvForOrganisations: OFormat[SuppressIvForOrganisations] = Json.format[SuppressIvForOrganisations]
   private implicit val formatGrantWithoutConsent: OFormat[GrantWithoutConsent]               = Json.format[GrantWithoutConsent]
   private implicit val formatSuppressIvForIndividuals: OFormat[SuppressIvForIndividuals]     = Json.format[SuppressIvForIndividuals]
-  private implicit val formatOriginOveride: OFormat[OriginOveride]                           = Json.format[OriginOveride]
+  private implicit val formatOriginOverride: OFormat[OriginOverride]                         = Json.format[OriginOverride]
 
   implicit val formatOverride: OFormat[OverrideFlag] = Union.from[OverrideFlag]("overrideType")
     .and[GrantWithoutConsent](OverrideType.GRANT_WITHOUT_TAXPAYER_CONSENT.toString)
@@ -52,6 +52,6 @@ object OverrideFlag {
     .and[SuppressIvForAgents](OverrideType.SUPPRESS_IV_FOR_AGENTS.toString)
     .and[SuppressIvForOrganisations](OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS.toString)
     .and[SuppressIvForIndividuals](OverrideType.SUPPRESS_IV_FOR_INDIVIDUALS.toString)
-    .and[OriginOveride](OverrideType.ORIGIN_OVERRIDE.toString)
+    .and[OriginOverride](OverrideType.ORIGIN_OVERRIDE.toString)
     .format
 }
