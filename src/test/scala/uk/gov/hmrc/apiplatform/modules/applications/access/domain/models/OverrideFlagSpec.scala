@@ -32,7 +32,7 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
         (OverrideFlag.SuppressIvForAgents(Set.empty), OverrideType.SUPPRESS_IV_FOR_AGENTS),
         (OverrideFlag.SuppressIvForIndividuals(Set.empty), OverrideType.SUPPRESS_IV_FOR_INDIVIDUALS),
         (OverrideFlag.SuppressIvForOrganisations(Set.empty), OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS),
-        (OverrideFlag.OriginOveride("an origin"), OverrideType.ORIGIN_OVERRIDE)
+        (OverrideFlag.OriginOverride("an origin"), OverrideType.ORIGIN_OVERRIDE)
       )
 
       forAll(values) {
@@ -54,7 +54,7 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
       (OverrideFlag.SuppressIvForAgents(Set.empty), emptyAgents),
       (OverrideFlag.SuppressIvForIndividuals(Set.empty), emptyIndividuals),
       (OverrideFlag.SuppressIvForOrganisations(Set.empty), emptyOrganisations),
-      (OverrideFlag.OriginOveride("an origin"), simpleOriginOverride)
+      (OverrideFlag.OriginOverride("an origin"), simpleOriginOverride)
     )
 
     "correctly write the default OverrideFlag to Json" in {
