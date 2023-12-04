@@ -41,6 +41,22 @@ class OverrideTypeSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
       }
     }
 
+    "displayText correctly" in {
+      val displayTexts =
+        Table(
+          ("overrideType", "displayText"),
+          (OverrideType.GRANT_WITHOUT_TAXPAYER_CONSENT, "Grant without taxpayer consent"),
+          (OverrideType.PERSIST_LOGIN_AFTER_GRANT, "Persist login after grant"),
+          (OverrideType.SUPPRESS_IV_FOR_AGENTS, "Suppress IV for agents"),
+          (OverrideType.SUPPRESS_IV_FOR_INDIVIDUALS, "Suppress IV for individuals"),
+          (OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS, "Suppress IV for organisations"),
+          (OverrideType.ORIGIN_OVERRIDE, "Origin override")
+        )
+      forAll(displayTexts) { (overrideType, displayText) =>
+        overrideType.displayText shouldBe displayText
+      }
+    }
+
     "convert lower case string to case object" in {
       forAll(values) { (s, t) =>
         OverrideType.apply(t) shouldBe Some(s)

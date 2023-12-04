@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import org.scalatest.prop.TableDrivenPropertyChecks
+
 import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class CollaboratorSpec extends BaseJsonFormattersSpec {
+class CollaboratorSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
   import CollaboratorSpec._
 
   "Collborator" when {
@@ -128,6 +130,18 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
         Collaborator.Roles.DEVELOPER.isAdministrator shouldBe false
         Collaborator.Roles.ADMINISTRATOR.isDeveloper shouldBe false
         Collaborator.Roles.DEVELOPER.isDeveloper shouldBe true
+      }
+
+      "displayText correctly" in {
+        val values =
+          Table(
+            ("role", "displayText"),
+            (Collaborator.Roles.ADMINISTRATOR, "Administrator"),
+            (Collaborator.Roles.DEVELOPER, "Developer")
+          )
+        forAll(values) { (role, displayText) =>
+          role.displayText shouldBe displayText
+        }
       }
 
       "write admin to json" in {

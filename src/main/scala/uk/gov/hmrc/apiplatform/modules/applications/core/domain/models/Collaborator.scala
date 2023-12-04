@@ -38,9 +38,16 @@ object Collaborator {
   sealed trait Role {
     def isAdministrator: Boolean
     def isDeveloper: Boolean = !isAdministrator
+
+    lazy val displayText: String = Role.displayText(this)
   }
 
   object Role {
+
+    val displayText: Role => String = {
+      case Collaborator.Roles.ADMINISTRATOR => "Administrator"
+      case Collaborator.Roles.DEVELOPER     => "Developer"
+    }
 
     def apply(text: String): Option[Collaborator.Role] = text.toUpperCase() match {
       case "ADMINISTRATOR" => Some(Collaborator.Roles.ADMINISTRATOR)

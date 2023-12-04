@@ -35,7 +35,6 @@ case class ApplicationResponse(
     lastAccess: Option[LocalDateTime],
     grantLength: Int,
     lastAccessTokenUsage: Option[LocalDateTime],
-    redirectUris: List[RedirectUri],
     termsAndConditionsUrl: Option[String],
     privacyPolicyUrl: Option[String],
     access: Access,
@@ -46,7 +45,12 @@ case class ApplicationResponse(
     trusted: Boolean,
     ipAllowlist: IpAllowlist,
     moreApplication: MoreApplication
-  )
+  ) {
+
+  lazy val admins: Set[Collaborator] = collaborators.filter(_.isAdministrator)
+
+  lazy val developers: Set[Collaborator] = collaborators.filter(_.isDeveloper)
+}
 
 object ApplicationResponse {
   import play.api.libs.json.{Json, OFormat}

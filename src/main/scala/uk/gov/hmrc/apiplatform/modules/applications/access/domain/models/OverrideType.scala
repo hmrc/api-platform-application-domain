@@ -16,7 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
-sealed trait OverrideType
+sealed trait OverrideType {
+  lazy val displayText: String = OverrideType.displayText(this)
+}
 
 object OverrideType {
   case object PERSIST_LOGIN_AFTER_GRANT      extends OverrideType
@@ -34,6 +36,15 @@ object OverrideType {
     SUPPRESS_IV_FOR_INDIVIDUALS,
     ORIGIN_OVERRIDE
   )
+
+  val displayText: OverrideType => String = {
+    case PERSIST_LOGIN_AFTER_GRANT      => "Persist login after grant"
+    case GRANT_WITHOUT_TAXPAYER_CONSENT => "Grant without taxpayer consent"
+    case SUPPRESS_IV_FOR_AGENTS         => "Suppress IV for agents"
+    case SUPPRESS_IV_FOR_ORGANISATIONS  => "Suppress IV for organisations"
+    case SUPPRESS_IV_FOR_INDIVIDUALS    => "Suppress IV for individuals"
+    case ORIGIN_OVERRIDE                => "Origin override"
+  }
 
   def apply(text: String): Option[OverrideType] = OverrideType.values.find(_.toString() == text.toUpperCase)
 
