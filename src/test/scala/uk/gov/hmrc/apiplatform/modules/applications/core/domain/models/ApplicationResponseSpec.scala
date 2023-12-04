@@ -34,6 +34,18 @@ class ApplicationResponseSpec extends BaseJsonFormattersSpec {
     "read from json" in {
       testFromJson[ApplicationResponse](jsonText)(example)
     }
+
+    "return the admins" in {
+      val admin = CollaboratorSpec.exampleAdmin
+      val app   = example.copy(collaborators = Set(admin, CollaboratorSpec.exampleDeveloper))
+      app.admins shouldBe Set(admin)
+    }
+
+    "return the developers" in {
+      val developer = CollaboratorSpec.exampleDeveloper
+      val app       = example.copy(collaborators = Set(developer, CollaboratorSpec.exampleAdmin))
+      app.developers shouldBe Set(developer)
+    }
   }
 }
 
@@ -53,7 +65,6 @@ object ApplicationResponseSpec extends FixedClock {
     lastAccess = None,
     grantLength = GrantLength.EIGHTEEN_MONTHS.days,
     lastAccessTokenUsage = None,
-    redirectUris = List.empty,
     termsAndConditionsUrl = None,
     privacyPolicyUrl = None,
     access = Access.Standard(),
@@ -67,5 +78,5 @@ object ApplicationResponseSpec extends FixedClock {
   )
 
   val jsonText =
-    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.jsonTextForAdmin}],"createdOn":"$nowAsText","grantLength":547,"redirectUris":[],"access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false}}"""
+    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.jsonTextForAdmin}],"createdOn":"$nowAsText","grantLength":547,"access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false}}"""
 }
