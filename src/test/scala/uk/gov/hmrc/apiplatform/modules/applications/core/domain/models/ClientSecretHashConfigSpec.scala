@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import com.typesafe.config.{ConfigException, ConfigFactory}
 
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
 class ClientSecretHashConfigSpec extends HmrcSpec {
 

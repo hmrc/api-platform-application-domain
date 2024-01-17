@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.services
 
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
 import uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models._
 

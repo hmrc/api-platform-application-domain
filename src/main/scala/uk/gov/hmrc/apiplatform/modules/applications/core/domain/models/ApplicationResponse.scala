@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import java.time.LocalDateTime
+import java.time.Instant
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
@@ -31,10 +31,10 @@ case class ApplicationResponse(
     deployedTo: Environment,
     description: Option[String],
     collaborators: Set[Collaborator],
-    createdOn: LocalDateTime,
-    lastAccess: Option[LocalDateTime],
+    createdOn: Instant,
+    lastAccess: Option[Instant],
     grantLength: Int,
-    lastAccessTokenUsage: Option[LocalDateTime],
+    lastAccessTokenUsage: Option[Instant],
     termsAndConditionsUrl: Option[String],
     privacyPolicyUrl: Option[String],
     access: Access,
@@ -54,6 +54,5 @@ case class ApplicationResponse(
 
 object ApplicationResponse {
   import play.api.libs.json.{Json, OFormat}
-  import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
   implicit val format: OFormat[ApplicationResponse] = Json.format[ApplicationResponse]
 }

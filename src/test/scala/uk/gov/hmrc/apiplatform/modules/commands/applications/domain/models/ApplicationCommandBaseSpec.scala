@@ -17,10 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import uk.gov.hmrc.apiplatform.utils.CollaboratorsSyntax._
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContext, ApiIdentifier, ApiVersionNbr, UserId}
-import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
+import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.{ClientSecret, Collaborator, RedirectUri}
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocations, TermsAndConditionsLocations}
@@ -34,7 +33,7 @@ trait ApplicationCommandBaseSpec extends HmrcSpec with FixedClock {
   val aUserId                     = UserId.random
   val ThreeMillisFourNanos        = 3 * 1000 * 1000 + 4
   val aCollaborator: Collaborator = aCollaboratorEmail.asDeveloper().copy(userId = aUserId)
-  val aTimestamp                  = now()
+  val aTimestamp                  = instant
   val reasons                     = "blahblah"
 
   val aClientSecretId = ClientSecret.Id.random

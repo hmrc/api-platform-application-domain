@@ -16,13 +16,12 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import java.time.LocalDateTime
+import java.time.Instant
 
-case class ClientSecretResponse(id: ClientSecret.Id, name: String, createdOn: LocalDateTime, lastAccess: Option[LocalDateTime] = None)
+case class ClientSecretResponse(id: ClientSecret.Id, name: String, createdOn: Instant, lastAccess: Option[Instant] = None)
 
 object ClientSecretResponse {
   import play.api.libs.json._
-  import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
 
   implicit val format: OFormat[ClientSecretResponse] = Json.format[ClientSecretResponse]
 }
