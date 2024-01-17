@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 class TermsOfUseAcceptanceSpec extends BaseJsonFormattersSpec {
   import TermsOfUseAcceptanceSpec._
@@ -35,10 +35,9 @@ class TermsOfUseAcceptanceSpec extends BaseJsonFormattersSpec {
   }
 }
 
-object TermsOfUseAcceptanceSpec {
-  val now     = LocalDateTime.of(2020, 1, 2, 3, 4, 5)
+object TermsOfUseAcceptanceSpec extends FixedClock {
   val id      = SubmissionId.random
-  val example = TermsOfUseAcceptance(ResponsibleIndividualSpec.example, now, id, 1)
+  val example = TermsOfUseAcceptance(ResponsibleIndividualSpec.example, instant.truncatedTo(ChronoUnit.SECONDS), id, 1)
 
   val jsonText =
     s"""{"responsibleIndividual":{"fullName":"Fred Flintstone","emailAddress":"fred@bedrock.com"},"dateTime":"2020-01-02T03:04:05Z","submissionId":"$id","submissionInstance":1}"""

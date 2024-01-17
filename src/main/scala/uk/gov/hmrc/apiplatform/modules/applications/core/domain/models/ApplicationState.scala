@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.time.LocalDateTime
+import java.time.Instant
 import java.{util => ju}
 
 class InvalidStateTransition(invalidFrom: State, to: State, expectedFrom: State)
@@ -29,7 +29,7 @@ case class ApplicationState(
     requestedByEmailAddress: Option[String] = None,
     requestedByName: Option[String] = None,
     verificationCode: Option[String] = None,
-    updatedOn: LocalDateTime
+    updatedOn: Instant
   ) {
 
   final def requireState(requirement: State, transitionTo: State): Unit = {
@@ -47,19 +47,19 @@ case class ApplicationState(
   lazy val isInProduction                                                   = name == State.PRODUCTION
   lazy val isDeleted                                                        = name == State.DELETED
 
-  def toProduction(timestamp: LocalDateTime) = {
+  def toProduction(timestamp: Instant) = {
     requireState(requirement = State.PRE_PRODUCTION, transitionTo = State.PRODUCTION)
     copy(name = State.PRODUCTION, updatedOn = timestamp)
   }
 
-  def toPreProduction(timestamp: LocalDateTime) = {
+  def toPreProduction(timestamp: Instant) = {
     requireState(requirement = State.PENDING_REQUESTER_VERIFICATION, transitionTo = State.PRE_PRODUCTION)
     copy(name = State.PRE_PRODUCTION, updatedOn = timestamp)
   }
 
-  def toTesting(timestamp: LocalDateTime) = copy(name = State.TESTING, requestedByEmailAddress = None, requestedByName = None, verificationCode = None, updatedOn = timestamp)
+  def toTesting(timestamp: Instant) = copy(name = State.TESTING, requestedByEmailAddress = None, requestedByName = None, verificationCode = None, updatedOn = timestamp)
 
-  def toPendingGatekeeperApproval(requestedByEmailAddress: String, requestedByName: String, timestamp: LocalDateTime) = {
+  def toPendingGatekeeperApproval(requestedByEmailAddress: String, requestedByName: String, timestamp: Instant) = {
     requireState(requirement = State.TESTING, transitionTo = State.PENDING_GATEKEEPER_APPROVAL)
 
     copy(
@@ -70,7 +70,7 @@ case class ApplicationState(
     )
   }
 
-  def toPendingResponsibleIndividualVerification(requestedByEmailAddress: String, requestedByName: String, timestamp: LocalDateTime) = {
+  def toPendingResponsibleIndividualVerification(requestedByEmailAddress: String, requestedByName: String, timestamp: Instant) = {
     requireState(requirement = State.TESTING, transitionTo = State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION)
 
     copy(
@@ -81,7 +81,7 @@ case class ApplicationState(
     )
   }
 
-  def toPendingRequesterVerification(timestamp: LocalDateTime) = {
+  def toPendingRequesterVerification(timestamp: Instant) = {
     requireState(requirement = State.PENDING_GATEKEEPER_APPROVAL, transitionTo = State.PENDING_REQUESTER_VERIFICATION)
 
     def verificationCode(input: String = ju.UUID.randomUUID().toString): String = {
@@ -93,11 +93,10 @@ case class ApplicationState(
     copy(name = State.PENDING_REQUESTER_VERIFICATION, verificationCode = Some(verificationCode()), updatedOn = timestamp)
   }
 
-  def toDeleted(timestamp: LocalDateTime) = copy(name = State.DELETED, verificationCode = None, updatedOn = timestamp)
+  def toDeleted(timestamp: Instant) = copy(name = State.DELETED, verificationCode = None, updatedOn = timestamp)
 }
 
 object ApplicationState {
-  import uk.gov.hmrc.apiplatform.modules.common.domain.services.LocalDateTimeFormatter._
   import play.api.libs.json._
 
   implicit val formatApplicationState: OFormat[ApplicationState] = Json.format[ApplicationState]

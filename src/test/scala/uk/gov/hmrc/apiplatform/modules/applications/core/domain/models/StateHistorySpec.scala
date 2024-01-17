@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import java.time.Duration
 import scala.util.Random
 
 import play.api.libs.json.Json
@@ -28,12 +29,12 @@ class StateHistorySpec extends BaseJsonFormattersSpec {
   "StateHistory" should {
     "order correctly" in {
       val histories = List(
-        example.copy(changedAt = example.changedAt.minusDays(3)),
-        example.copy(changedAt = example.changedAt.minusDays(2)),
-        example.copy(changedAt = example.changedAt.minusDays(1)),
-        example.copy(changedAt = example.changedAt.plusDays(1)),
-        example.copy(changedAt = example.changedAt.plusDays(2)),
-        example.copy(changedAt = example.changedAt.plusDays(3))
+        example.copy(changedAt = example.changedAt.minus(Duration.ofDays(3))),
+        example.copy(changedAt = example.changedAt.minus(Duration.ofDays(2))),
+        example.copy(changedAt = example.changedAt.minus(Duration.ofDays(1))),
+        example.copy(changedAt = example.changedAt.plus(Duration.ofDays(1))),
+        example.copy(changedAt = example.changedAt.plus(Duration.ofDays(2))),
+        example.copy(changedAt = example.changedAt.plus(Duration.ofDays(3)))
       )
 
       Random.shuffle(histories).sorted shouldBe histories
@@ -50,6 +51,6 @@ class StateHistorySpec extends BaseJsonFormattersSpec {
 
 object StateHistorySpec extends FixedClock {
   val id       = ApplicationId.random
-  val example  = StateHistory(id, State.PRODUCTION, Actors.Unknown, Some(State.PRE_PRODUCTION), None, now())
+  val example  = StateHistory(id, State.PRODUCTION, Actors.Unknown, Some(State.PRE_PRODUCTION), None, instant)
   val jsonText = s"""{"applicationId":"$id","state":"PRODUCTION","actor":{"actorType":"UNKNOWN"},"previousState":"PRE_PRODUCTION","changedAt":"2020-01-02T03:04:05.006Z"}"""
 }

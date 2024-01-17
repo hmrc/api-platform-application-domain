@@ -61,7 +61,7 @@ object ApplicationResponseSpec extends FixedClock {
     deployedTo = Environment.PRODUCTION,
     description = None,
     collaborators = Set(CollaboratorSpec.exampleAdmin),
-    createdOn = now(),
+    createdOn = instant,
     lastAccess = None,
     grantLength = GrantLength.EIGHTEEN_MONTHS.days,
     lastAccessTokenUsage = None,

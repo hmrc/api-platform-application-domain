@@ -22,7 +22,7 @@ import scala.concurrent.duration._
 
 import cats.data.NonEmptyList
 
-import uk.gov.hmrc.apiplatform.utils.HmrcSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
 class CommandHandlerTypesSpec extends HmrcSpec {
   import CommandFailures._

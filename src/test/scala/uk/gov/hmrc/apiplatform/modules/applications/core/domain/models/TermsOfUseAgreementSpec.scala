@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
-import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 class TermsOfUseAgreementSpec extends BaseJsonFormattersSpec {
   import TermsOfUseAgreementSpec._
@@ -41,10 +41,9 @@ class TermsOfUseAgreementSpec extends BaseJsonFormattersSpec {
   }
 }
 
-object TermsOfUseAgreementSpec {
+object TermsOfUseAgreementSpec extends FixedClock {
   val email   = LaxEmailAddress("fred@bedrock.com")
-  val now     = LocalDateTime.of(2020, 1, 2, 3, 4, 5)
-  val example = TermsOfUseAgreement(email, now, "v1")
+  val example = TermsOfUseAgreement(email, instant.truncatedTo(ChronoUnit.SECONDS), "v1")
 
   val jsonText = s"""{"emailAddress":"${email.text}","timeStamp":"2020-01-02T03:04:05Z","version":"v1"}"""
 }
