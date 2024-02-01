@@ -18,9 +18,10 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import java.time.Instant
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.play.json.Union
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.InstantJsonFormatter
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
@@ -74,6 +75,7 @@ object ApplicationCommands {
 object ApplicationCommand {
   import ApplicationCommands._
 
+  implicit private val instantFormat: Format[Instant]                                                     = InstantJsonFormatter.WithTimeZone.instantWithTimeZoneFormat
   implicit private val addCollaboratorFormatter: OFormat[AddCollaborator]                                 = Json.format[AddCollaborator]
   implicit private val removeCollaboratorFormatter: OFormat[RemoveCollaborator]                           = Json.format[RemoveCollaborator]
   implicit private val addClientSecretFormatter: OFormat[AddClientSecret]                                 = Json.format[AddClientSecret]
