@@ -36,14 +36,14 @@ class AddClientSecretSpec extends ApplicationCommandBaseSpec {
         "name"         -> "aName",
         "id"           -> s"$id",
         "hashedSecret" -> "blahblahsecret",
-        "timestamp"    -> s"$nowAsText",
+        "timestamp"    -> s"2020-01-02T03:04:05.006Z",
         "updateType"   -> "addClientSecret"
       )
     }
 
     "read from json" in {
       val jsonText =
-        s""" {"actor":{"email":"bob@example.com"},"name":"aName","id":"$id","hashedSecret":"blahblahsecret","timestamp":"$nowAsText","updateType":"addClientSecret"} """
+        s""" {"actor":{"email":"bob@example.com"},"name":"aName","id":"$id","hashedSecret":"blahblahsecret","timestamp":"2020-01-02T03:04:05.006","updateType":"addClientSecret"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }
