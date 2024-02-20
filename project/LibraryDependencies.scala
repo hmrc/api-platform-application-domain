@@ -8,7 +8,8 @@ object LibraryDependencies {
   lazy val compileDependencies = Seq(
     "uk.gov.hmrc"             %% "api-platform-common-domain"     % commonDomainVersion,
     "com.github.t3hnar"       %% "scala-bcrypt"                   % "4.1",
-    "com.typesafe"             % "config"                         % "1.4.2"
+    "com.typesafe"             % "config"                         % "1.4.2",
+    "commons-validator"        % "commons-validator"              % "1.7"
   )
 
   lazy val testDependencies = Seq(
