@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.OFormat
 import uk.gov.hmrc.play.json.Union
 
 sealed trait ServerLocation
@@ -35,15 +35,10 @@ object ServerLocation {
 
   // We cannot use SealedTraitJsonFormatting because this was never stored as an Enumeration or Enum originally but rather as an object
   //
-  private implicit val inUkFormat: OFormat[InUK.type]                                           = Json.format[InUK.type]
-  private implicit val inEEAFormat: OFormat[InEEA.type]                                         = Json.format[InEEA.type]
-  private implicit val outsideEEAWithAdequacyFormat: OFormat[OutsideEEAWithAdequacy.type]       = Json.format[OutsideEEAWithAdequacy.type]
-  private implicit val outsideEEAWithoutAdequacyFormat: OFormat[OutsideEEAWithoutAdequacy.type] = Json.format[OutsideEEAWithoutAdequacy.type]
-
   implicit val format: OFormat[ServerLocation] = Union.from[ServerLocation]("serverLocation")
-    .and[InUK.type]("inUK")
-    .and[InEEA.type]("inEEA")
-    .and[OutsideEEAWithAdequacy.type]("outsideEEAWithAdequacy")
-    .and[OutsideEEAWithoutAdequacy.type]("outsideEEAWithoutAdequacy")
+    .andType("inUK", () => InUK)
+    .andType("inEEA", () => InEEA)
+    .andType("outsideEEAWithAdequacy", () => OutsideEEAWithAdequacy)
+    .andType("outsideEEAWithoutAdequacy", () => OutsideEEAWithoutAdequacy)
     .format
 }

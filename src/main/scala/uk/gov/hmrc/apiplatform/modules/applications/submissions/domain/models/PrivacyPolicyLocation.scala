@@ -38,13 +38,11 @@ object PrivacyPolicyLocation {
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 
-  private implicit val formatNoneProvided: OFormat[PrivacyPolicyLocations.NoneProvided.type]           = Json.format[PrivacyPolicyLocations.NoneProvided.type]
-  private implicit val formatInDesktopSoftware: OFormat[PrivacyPolicyLocations.InDesktopSoftware.type] = Json.format[PrivacyPolicyLocations.InDesktopSoftware.type]
-  private implicit val formatUrl: OFormat[PrivacyPolicyLocations.Url]                                  = Json.format[PrivacyPolicyLocations.Url]
+  private implicit val formatUrl: OFormat[PrivacyPolicyLocations.Url] = Json.format[PrivacyPolicyLocations.Url]
 
   implicit val formatPrivacyPolicyLocation: OFormat[PrivacyPolicyLocation] = Union.from[PrivacyPolicyLocation]("privacyPolicyType")
-    .and[PrivacyPolicyLocations.NoneProvided.type]("noneProvided")
-    .and[PrivacyPolicyLocations.InDesktopSoftware.type]("inDesktop")
+    .andType("noneProvided", () => PrivacyPolicyLocations.NoneProvided)
+    .andType("inDesktop", () => PrivacyPolicyLocations.InDesktopSoftware)
     .and[PrivacyPolicyLocations.Url]("url")
     .format
 }
