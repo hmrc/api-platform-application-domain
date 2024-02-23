@@ -20,40 +20,16 @@ import scala.collection.immutable.ListMap
 
 import cats.data.NonEmptyList
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApplicationId
 import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.submissions.utils.SubmissionsTestData
 
 class MarkAnswerSpec extends HmrcSpec with FixedClock {
 
-  object TestQuestionnaires {
+  object TestQuestionnaires extends SubmissionsTestData {
     val question1Id      = Question.Id.random
-    val question2Id      = Question.Id.random
     val questionnaireAId = Questionnaire.Id.random
-    val submissionId     = SubmissionId.random
-    val applicationId    = ApplicationId.random
-
-    val standardContext: AskWhen.Context = Map(
-      AskWhen.Context.Keys.IN_HOUSE_SOFTWARE       -> "No",
-      AskWhen.Context.Keys.VAT_OR_ITSA             -> "No",
-      AskWhen.Context.Keys.NEW_TERMS_OF_USE_UPLIFT -> "No"
-    )
-
-    val testQuestionIdsOfInterest = QuestionIdsOfInterest(
-      responsibleIndividualIsRequesterId = Question.Id.random,
-      responsibleIndividualNameId = Question.Id.random,
-      responsibleIndividualEmailId = Question.Id.random,
-      applicationNameId = Question.Id.random,
-      privacyPolicyId = Question.Id.random,
-      privacyPolicyUrlId = Question.Id.random,
-      termsAndConditionsId = Question.Id.random,
-      termsAndConditionsUrlId = Question.Id.random,
-      organisationUrlId = Question.Id.random,
-      identifyYourOrganisationId = Question.Id.random,
-      serverLocationsId = Question.Id.random
-    )
 
     val YES = SingleChoiceAnswer("Yes")
     val NO  = SingleChoiceAnswer("No")
@@ -92,6 +68,14 @@ class MarkAnswerSpec extends HmrcSpec with FixedClock {
       errorInfo = Some(ErrorInfo("error"))
     )
 
+    def buildTextQuestionNoAbsence(id: Question.Id) = TextQuestion(
+      id,
+      Wording("wording1"),
+      Some(Statement(StatementText("Statement1"), StatementBullets(CompoundFragment(StatementText("text "), StatementLink("link", "/example/url"))))),
+      absence = None,
+      errorInfo = Some(ErrorInfo("error"))
+    )
+
     def buildAcknowledgementOnlyQuestion(id: Question.Id) = AcknowledgementOnly(
       id,
       Wording("wording1"),
@@ -121,6 +105,12 @@ class MarkAnswerSpec extends HmrcSpec with FixedClock {
       val submission = buildSubmissionFromQuestions(question1)
     }
 
+    object NonOptionalQuestionnaireData {
+      val question1 = buildTextQuestionNoAbsence(question1Id)
+
+      val submission = buildSubmissionFromQuestions(question1)
+    }
+
     object AcknowledgementOnlyQuestionnaireData {
       val question1 = buildAcknowledgementOnlyQuestion(question1Id)
 
@@ -140,23 +130,31 @@ class MarkAnswerSpec extends HmrcSpec with FixedClock {
     require(List(YES, NO).contains(answer1))
     require(List(YES, NO).contains(answer2))
 
-    hasCompletelyAnsweredWith(Map(question1Id -> answer1, question2Id -> answer2))(YesNoQuestionnaireData.submission)
+    YesNoQuestionnaireData.submission.hasCompletelyAnsweredWith(Map(question1Id -> answer1, question2Id -> answer2))
   }
 
   def withSingleOptionalQuestionNoAnswer(): Submission = {
-    hasCompletelyAnsweredWith(Map(question1Id -> NoAnswer))(OptionalQuestionnaireData.submission)
+    OptionalQuestionnaireData.submission.hasCompletelyAnsweredWith(Map(question1Id -> NoAnswer))
+  }
+
+  def withSingleNonOptionalQuestionNoAnswer(): Submission = {
+    NonOptionalQuestionnaireData.submission.hasCompletelyAnsweredWith(Map(question1Id -> NoAnswer))
   }
 
   def withSingleOptionalQuestionAndAnswer(): Submission = {
-    hasCompletelyAnsweredWith(Map(question1Id -> TextAnswer("blah blah")))(OptionalQuestionnaireData.submission)
+    OptionalQuestionnaireData.submission.hasCompletelyAnsweredWith(Map(question1Id -> TextAnswer("blah blah")))
   }
 
   def withAcknowledgementOnlyAnswers(): Submission = {
-    hasCompletelyAnsweredWith(Map(question1Id -> AcknowledgedAnswer))(AcknowledgementOnlyQuestionnaireData.submission)
+    AcknowledgementOnlyQuestionnaireData.submission.hasCompletelyAnsweredWith(Map(question1Id -> AcknowledgedAnswer))
   }
 
   def withMultiChoiceAnswers(answers: String*): Submission = {
-    hasCompletelyAnsweredWith(Map(question1Id -> MultipleChoiceAnswer(answers.toList.toSet)))(MultiChoiceQuestionnaireData.submission)
+    MultiChoiceQuestionnaireData.submission.hasCompletelyAnsweredWith(Map(question1Id -> MultipleChoiceAnswer(answers.toList.toSet)))
+  }
+
+  def withInvalidMultiChoiceQuestionAndTextAnswer(): Submission = {
+    MultiChoiceQuestionnaireData.submission.hasCompletelyAnsweredWith(Map(question1Id -> TextAnswer("blah blah")))
   }
 
   def hasCompletelyAnsweredWith(answers: Submission.AnswersToQuestions)(submission: Submission): Submission = {
@@ -170,6 +168,12 @@ class MarkAnswerSpec extends HmrcSpec with FixedClock {
     "not accept incomplete submissions without throwing exception" in {
       intercept[IllegalArgumentException] {
         MarkAnswer.markSubmission(MultiChoiceQuestionnaireData.submission)
+      }
+    }
+
+    "not accept invalid submissions with multi choice question and text answer without throwing exception" in {
+      intercept[IllegalArgumentException] {
+        MarkAnswer.markSubmission(withInvalidMultiChoiceQuestionAndTextAnswer())
       }
     }
 
@@ -231,6 +235,26 @@ class MarkAnswerSpec extends HmrcSpec with FixedClock {
       val markedQuestions = MarkAnswer.markSubmission(withMultiChoiceAnswers(ANSWER_WARN, ANSWER_PASS))
 
       markedQuestions shouldBe Map(question1Id -> Warn)
+    }
+
+    "throw exception for NoAnswer in non-optional text question" in {
+      intercept[RuntimeException] {
+        MarkAnswer.markSubmission(withSingleNonOptionalQuestionNoAnswer())
+      }
+    }
+  }
+
+  "markInstance" should {
+    "return Pass for Answer in optional text question" in {
+      val markedQuestions = MarkAnswer.markInstance(withSingleOptionalQuestionAndAnswer(), 0)
+
+      markedQuestions shouldBe Map(question1Id -> Pass)
+    }
+
+    "return empty map for non existant instance" in {
+      val markedQuestions = MarkAnswer.markInstance(withSingleOptionalQuestionAndAnswer(), 1)
+
+      markedQuestions shouldBe Map.empty
     }
   }
 }
