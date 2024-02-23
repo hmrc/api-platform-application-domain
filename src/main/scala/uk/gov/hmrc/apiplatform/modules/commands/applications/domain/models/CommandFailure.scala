@@ -60,31 +60,21 @@ object CommandFailures {
 object CommandFailure {
   import CommandFailures._
 
-  implicit private val formatApplicationNotFound: OFormat[CommandFailures.ApplicationNotFound.type]                       = Json.format[ApplicationNotFound.type]
-  implicit private val formatInsufficientPrivileges: OFormat[InsufficientPrivileges]                                      = Json.format[InsufficientPrivileges]
-  implicit private val formatCannotRemoveLastAdmin: OFormat[CommandFailures.CannotRemoveLastAdmin.type]                   = Json.format[CannotRemoveLastAdmin.type]
-  implicit private val formatActorIsNotACollaboratorOnApp: OFormat[CommandFailures.ActorIsNotACollaboratorOnApp.type]     = Json.format[ActorIsNotACollaboratorOnApp.type]
-  implicit private val formatClientSecretLimitExceeded: OFormat[CommandFailures.ClientSecretLimitExceeded.type]           = Json.format[ClientSecretLimitExceeded.type]
-  implicit private val formatCollaboratorDoesNotExistOnApp: OFormat[CommandFailures.CollaboratorDoesNotExistOnApp.type]   = Json.format[CollaboratorDoesNotExistOnApp.type]
-  implicit private val formatCollaboratorHasMismatchOnApp: OFormat[CommandFailures.CollaboratorHasMismatchOnApp.type]     = Json.format[CollaboratorHasMismatchOnApp.type]
-  implicit private val formatCollaboratorAlreadyExistsOnApp: OFormat[CommandFailures.CollaboratorAlreadyExistsOnApp.type] = Json.format[CollaboratorAlreadyExistsOnApp.type]
-  implicit private val formatDuplicateSubscription: OFormat[CommandFailures.DuplicateSubscription.type]                   = Json.format[DuplicateSubscription.type]
-  implicit private val formatSubscriptionNotAvailable: OFormat[CommandFailures.SubscriptionNotAvailable.type]             = Json.format[SubscriptionNotAvailable.type]
-  implicit private val formatNotSubscribedToApi: OFormat[CommandFailures.NotSubscribedToApi.type]                         = Json.format[NotSubscribedToApi.type]
-  implicit private val formatGenericFailure: OFormat[GenericFailure]                                                      = Json.format[GenericFailure]
+  implicit private val formatInsufficientPrivileges: OFormat[InsufficientPrivileges] = Json.format[InsufficientPrivileges]
+  implicit private val formatGenericFailure: OFormat[GenericFailure]                 = Json.format[GenericFailure]
 
   implicit val format: Format[CommandFailure] = Union.from[CommandFailure]("failureType")
-    .and[ApplicationNotFound.type]("ApplicationNotFound")
     .and[InsufficientPrivileges]("InsufficientPrivileges")
-    .and[CannotRemoveLastAdmin.type]("CannotRemoveLastAdmin")
-    .and[ActorIsNotACollaboratorOnApp.type]("ActorIsNotACollaboratorOnApp")
-    .and[ClientSecretLimitExceeded.type]("ClientSecretLimitExceeded")
-    .and[CollaboratorDoesNotExistOnApp.type]("CollaboratorDoesNotExistOnApp")
-    .and[CollaboratorHasMismatchOnApp.type]("CollaboratorHasMismatchOnApp")
-    .and[CollaboratorAlreadyExistsOnApp.type]("CollaboratorAlreadyExistsOnApp")
-    .and[DuplicateSubscription.type]("DuplicateSubscription")
-    .and[SubscriptionNotAvailable.type]("SubscriptionNotAvailable")
-    .and[NotSubscribedToApi.type]("NotSubscribedToApi")
     .and[GenericFailure]("GenericFailure")
+    .andType("ApplicationNotFound", () => ApplicationNotFound)
+    .andType("CannotRemoveLastAdmin", () => CannotRemoveLastAdmin)
+    .andType("ActorIsNotACollaboratorOnApp", () => ActorIsNotACollaboratorOnApp)
+    .andType("ClientSecretLimitExceeded", () => ClientSecretLimitExceeded)
+    .andType("CollaboratorDoesNotExistOnApp", () => CollaboratorDoesNotExistOnApp)
+    .andType("CollaboratorHasMismatchOnApp", () => CollaboratorHasMismatchOnApp)
+    .andType("CollaboratorAlreadyExistsOnApp", () => CollaboratorAlreadyExistsOnApp)
+    .andType("DuplicateSubscription", () => DuplicateSubscription)
+    .andType("SubscriptionNotAvailable", () => SubscriptionNotAvailable)
+    .andType("NotSubscribedToApi", () => NotSubscribedToApi)
     .format
 }

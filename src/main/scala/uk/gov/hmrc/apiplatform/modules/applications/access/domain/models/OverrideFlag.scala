@@ -39,7 +39,6 @@ object OverrideFlag {
 
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
-  private implicit val formatPersistLogin: OFormat[PersistLogin.type]                        = Json.format[PersistLogin.type]
   private implicit val formatSuppressIvForAgents: OFormat[SuppressIvForAgents]               = Json.format[SuppressIvForAgents]
   private implicit val formatSuppressIvForOrganisations: OFormat[SuppressIvForOrganisations] = Json.format[SuppressIvForOrganisations]
   private implicit val formatGrantWithoutConsent: OFormat[GrantWithoutConsent]               = Json.format[GrantWithoutConsent]
@@ -48,7 +47,7 @@ object OverrideFlag {
 
   implicit val formatOverride: OFormat[OverrideFlag] = Union.from[OverrideFlag]("overrideType")
     .and[GrantWithoutConsent](OverrideType.GRANT_WITHOUT_TAXPAYER_CONSENT.toString)
-    .and[PersistLogin.type](OverrideType.PERSIST_LOGIN_AFTER_GRANT.toString)
+    .andType(OverrideType.PERSIST_LOGIN_AFTER_GRANT.toString, () => PersistLogin)
     .and[SuppressIvForAgents](OverrideType.SUPPRESS_IV_FOR_AGENTS.toString)
     .and[SuppressIvForOrganisations](OverrideType.SUPPRESS_IV_FOR_ORGANISATIONS.toString)
     .and[SuppressIvForIndividuals](OverrideType.SUPPRESS_IV_FOR_INDIVIDUALS.toString)

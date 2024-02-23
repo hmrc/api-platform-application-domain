@@ -38,13 +38,11 @@ object TermsAndConditionsLocation {
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 
-  private implicit val formatNoneProvided: OFormat[TermsAndConditionsLocations.NoneProvided.type]           = Json.format[TermsAndConditionsLocations.NoneProvided.type]
-  private implicit val formatInDesktopSoftware: OFormat[TermsAndConditionsLocations.InDesktopSoftware.type] = Json.format[TermsAndConditionsLocations.InDesktopSoftware.type]
-  private implicit val formatUrl: OFormat[TermsAndConditionsLocations.Url]                                  = Json.format[TermsAndConditionsLocations.Url]
+  private implicit val formatUrl: OFormat[TermsAndConditionsLocations.Url] = Json.format[TermsAndConditionsLocations.Url]
 
   implicit val formatTermsAndConditionsLocation: OFormat[TermsAndConditionsLocation] = Union.from[TermsAndConditionsLocation]("termsAndConditionsType")
-    .and[TermsAndConditionsLocations.NoneProvided.type]("noneProvided")
-    .and[TermsAndConditionsLocations.InDesktopSoftware.type]("inDesktop")
+    .andType("noneProvided", () => TermsAndConditionsLocations.NoneProvided)
+    .andType("inDesktop", () => TermsAndConditionsLocations.InDesktopSoftware)
     .and[TermsAndConditionsLocations.Url]("url")
     .format
 }
