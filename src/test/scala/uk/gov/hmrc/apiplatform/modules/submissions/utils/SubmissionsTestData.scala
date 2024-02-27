@@ -126,6 +126,17 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   val warningsSubmission            = Submission.warnings(instant, "bob@example.com")(submittedSubmission)
   val failSubmission                = Submission.fail(instant, "bob@example.com")(submittedSubmission)
 
+  val partialQuestionnaireProgress        = Map(
+    DevelopmentPractices.questionnaire.id                    -> QuestionnaireProgress(
+      QuestionnaireState.NotStarted,
+      List(DevelopmentPractices.question1.id, DevelopmentPractices.question2.id, DevelopmentPractices.question3.id)
+    ),
+    OrganisationDetails.questionnaire.id                     -> QuestionnaireProgress(QuestionnaireState.InProgress, List(OrganisationDetails.question1.id, OrganisationDetails.question3.id)),
+    CustomersAuthorisingYourSoftware.questionnaire.id        -> QuestionnaireProgress(QuestionnaireState.Completed, List.empty),
+    Questionnaire.Id("1e4a1369-8e28-447c-bd47-efbabec1a43b") -> QuestionnaireProgress(QuestionnaireState.NotApplicable, List.empty)
+  )
+  val partiallyAnsweredExtendedSubmission = ExtendedSubmission(answeringSubmission, partialQuestionnaireProgress)
+
   def buildSubmissionWithQuestions(): Submission = {
     val subId = SubmissionId.random
     val appId = ApplicationId.random
@@ -258,7 +269,7 @@ trait AnsweringQuestionsHelper {
 
       case TextQuestion(id, _, _, _, _, _, _, absence, _) =>
         if (desiredMark == Pass)
-          Some(TextAnswer("Some text")) ::
+          Some(TextAnswer(Random.nextString(Random.nextInt(25) + 1))) ::
             absence.flatMap(a => if (a._2 == desiredMark) Some(NoAnswer) else None) ::
             List.empty[Option[ActualAnswer]]
         else

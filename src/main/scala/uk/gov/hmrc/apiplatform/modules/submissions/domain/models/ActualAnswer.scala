@@ -22,3 +22,23 @@ case class SingleChoiceAnswer(value: String)         extends ActualAnswer
 case class TextAnswer(value: String)                 extends ActualAnswer
 case object AcknowledgedAnswer                       extends ActualAnswer
 case object NoAnswer                                 extends ActualAnswer
+
+object ActualAnswer {
+  import play.api.libs.json._
+  import uk.gov.hmrc.play.json.Union
+
+  implicit val jfAcknowledgedAnswer: OFormat[AcknowledgedAnswer.type] = Json.format[AcknowledgedAnswer.type]
+  implicit val jfNoAnswer: OFormat[NoAnswer.type]                     = Json.format[NoAnswer.type]
+  implicit val jfTextAnswer: OFormat[TextAnswer]                      = Json.format[TextAnswer]
+  implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]      = Json.format[SingleChoiceAnswer]
+  implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer]  = Json.format[MultipleChoiceAnswer]
+
+  implicit val jfActualAnswer: OFormat[ActualAnswer] = Union.from[ActualAnswer]("answerType")
+    .and[MultipleChoiceAnswer]("multipleChoice")
+    .and[SingleChoiceAnswer]("singleChoice")
+    .and[TextAnswer]("text")
+    .and[AcknowledgedAnswer.type]("acknowledged")
+    .and[NoAnswer.type]("noAnswer")
+    .format
+
+}

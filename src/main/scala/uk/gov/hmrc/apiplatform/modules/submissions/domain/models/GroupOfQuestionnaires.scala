@@ -18,7 +18,15 @@ package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
 
 import cats.data.NonEmptyList
 
+import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
+
 case class GroupOfQuestionnaires(
     heading: String,
     links: NonEmptyList[Questionnaire]
   )
+
+object GroupOfQuestionnaires extends NonEmptyListFormatters {
+  import Questionnaire._
+  implicit val groupOfQuestionnairesJsonFormat: OFormat[GroupOfQuestionnaires] = Json.format[GroupOfQuestionnaires]
+}

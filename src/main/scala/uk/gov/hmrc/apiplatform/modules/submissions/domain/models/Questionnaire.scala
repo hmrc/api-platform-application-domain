@@ -19,6 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
 import cats.data.NonEmptyList
 
 import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
 
 object AskWhen {
   import Submission.AnswersToQuestions
@@ -54,13 +55,31 @@ object AskWhenAnswer {
     require(question.choices.find(qc => qc.value == expectedValue).isDefined)
     AskWhenAnswer(question.id, SingleChoiceAnswer(expectedValue))
   }
+
+  import play.api.libs.json._
+  import uk.gov.hmrc.play.json.Union
+
+  implicit val jsonFormatAskWhenContext: OFormat[AskWhenContext] = Json.format[AskWhenContext]
+  implicit val jsonFormatAskWhenAnswer: OFormat[AskWhenAnswer]   = Json.format[AskWhenAnswer]
+  implicit val jsonFormatAskAlways: OFormat[AlwaysAsk.type]      = Json.format[AlwaysAsk.type]
+
+  implicit val jsonFormatCondition: Format[AskWhen] = Union.from[AskWhen]("askWhen")
+    .and[AskWhenContext]("askWhenContext")
+    .and[AskWhenAnswer]("askWhenAnswer")
+    .and[AlwaysAsk.type]("alwaysAsk")
+    .format
 }
 
 case class QuestionItem(question: Question, askWhen: AskWhen)
 
-object QuestionItem {
+object QuestionItem extends NonEmptyListFormatters {
   def apply(question: Question): QuestionItem                   = QuestionItem(question, AlwaysAsk)
   def apply(question: Question, askWhen: AskWhen): QuestionItem = new QuestionItem(question, askWhen)
+
+  import play.api.libs.json._
+  import AskWhenAnswer._
+
+  implicit val jsonFormatQuestionItem: OFormat[QuestionItem] = Json.format[QuestionItem]
 }
 
 object Questionnaire {
@@ -76,6 +95,11 @@ object Questionnaire {
 
     implicit val format: Format[Id] = Json.valueFormat[Id]
   }
+
+  import play.api.libs.json._
+  import QuestionItem._
+
+  implicit val jsonFormatquestionnaire: OFormat[Questionnaire] = Json.format[Questionnaire]
 }
 
 case class Questionnaire(
