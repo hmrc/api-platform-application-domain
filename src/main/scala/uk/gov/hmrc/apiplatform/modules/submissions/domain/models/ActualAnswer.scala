@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,15 @@
 package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
 
 sealed trait ActualAnswer
-case class MultipleChoiceAnswer(values: Set[String]) extends ActualAnswer
-case class SingleChoiceAnswer(value: String)         extends ActualAnswer
-case class TextAnswer(value: String)                 extends ActualAnswer
-case object AcknowledgedAnswer                       extends ActualAnswer
-case object NoAnswer                                 extends ActualAnswer
 
 object ActualAnswer {
+
+  case class MultipleChoiceAnswer(values: Set[String]) extends ActualAnswer
+  case class SingleChoiceAnswer(value: String)         extends ActualAnswer
+  case class TextAnswer(value: String)                 extends ActualAnswer
+  case object AcknowledgedAnswer                       extends ActualAnswer
+  case object NoAnswer                                 extends ActualAnswer
+
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 

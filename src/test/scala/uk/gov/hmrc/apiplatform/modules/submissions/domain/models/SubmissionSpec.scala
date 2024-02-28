@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   "submission questionIdsOfInterest app name" in {
     Submission.updateLatestAnswersTo(samplePassAnswersToQuestions)(aSubmission).latestInstance.answersToQuestions(
       aSubmission.questionIdsOfInterest.applicationNameId
-    ) shouldBe TextAnswer("name of software")
+    ) shouldBe ActualAnswer.TextAnswer("name of software")
   }
 
   "submission instance state history" in {
@@ -61,10 +61,12 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "submission setLatestAnswers" in {
     val newAnswersToQuestions = Map(
-      (OrganisationDetails.question1.id -> TextAnswer("new web site"))
+      (OrganisationDetails.question1.id -> ActualAnswer.TextAnswer("new web site"))
     )
 
-    Submission.updateLatestAnswersTo(newAnswersToQuestions)(aSubmission).latestInstance.answersToQuestions(OrganisationDetails.question1.id) shouldBe TextAnswer("new web site")
+    Submission.updateLatestAnswersTo(newAnswersToQuestions)(aSubmission).latestInstance.answersToQuestions(OrganisationDetails.question1.id) shouldBe ActualAnswer.TextAnswer(
+      "new web site"
+    )
   }
 
   "submission automaticallyMark pass" in {

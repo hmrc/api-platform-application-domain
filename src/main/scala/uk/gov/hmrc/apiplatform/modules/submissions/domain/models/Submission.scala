@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import cats.data.NonEmptyList
 
 import play.api.libs.json.EnvReads
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApplicationId
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.{InstantJsonFormatter, NonEmptyListFormatters}
 
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.submissions.domain.services.MarkAnswer
@@ -330,7 +330,7 @@ object Submission extends EnvReads with NonEmptyListFormatters {
 
   implicit val questionIdsOfInterestFormat: OFormat[QuestionIdsOfInterest] = Json.format[QuestionIdsOfInterest]
 
-  implicit val utcReads: Reads[Instant] = DefaultInstantReads
+  implicit val utcReads: Reads[Instant] = InstantJsonFormatter.lenientInstantReads
 
   import Submission.Status._
 
@@ -402,7 +402,7 @@ case class MarkedSubmission(
     submission: Submission,
     markedAnswers: Map[Question.Id, Mark]
   ) {
-  lazy val isFail = markedAnswers.values.toList.contains(Fail) | markedAnswers.values.filter(_ == Warn).size >= 4
-  lazy val isWarn = markedAnswers.values.toList.contains(Warn)
+  lazy val isFail = markedAnswers.values.toList.contains(Mark.Fail) | markedAnswers.values.filter(_ == Mark.Warn).size >= 4
+  lazy val isWarn = markedAnswers.values.toList.contains(Mark.Warn)
   lazy val isPass = !isWarn && !isFail
 }

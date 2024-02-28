@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,29 @@ import scala.collection.immutable.{ListMap, ListSet}
 import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.MapJsonFormatters
 
+sealed trait Mark
+
+object Mark {
+
+  case object Fail extends Mark
+  case object Warn extends Mark
+  case object Pass extends Mark
+
+  import cats.Monoid
+
+  implicit val markMonoid: Monoid[Mark] = new Monoid[Mark] {
+    def empty: Mark = Pass
+
+    def combine(x: Mark, y: Mark): Mark = (x, y) match {
+      case (Fail, _)    => Fail
+      case (_, Fail)    => Fail
+      case (Warn, _)    => Warn
+      case (_, Warn)    => Warn
+      case (Pass, Pass) => Pass
+    }
+  }
+}
+
 sealed trait Question {
   def id: Question.Id
   def wording: Wording
@@ -34,6 +57,8 @@ sealed trait Question {
 
   final def isOptional: Boolean = absence.isDefined
 }
+
+case class PossibleAnswer(value: String) extends AnyVal
 
 trait LabelAndHints {
   self: Question =>
@@ -56,6 +81,7 @@ trait ErrorMessaging {
 
   def errorInfo: Option[ErrorInfo]
 }
+
 case class Wording(value: String) extends AnyVal
 
 object Wording {
@@ -77,21 +103,97 @@ object Question extends MapJsonFormatters {
     implicit val format: Format[Label] = Json.valueFormat[Label]
   }
 
+  case class TextQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      validation: Option[TextValidation] = None,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None
+    ) extends Question with LabelAndHints with ErrorMessaging
+
+  case class AcknowledgementOnly(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement]
+    ) extends Question {
+    val absence        = None
+    val afterStatement = None
+  }
+
+  sealed trait ChoiceQuestion extends Question with LabelAndHints with ErrorMessaging {
+    def choices: ListSet[PossibleAnswer]
+    def marking: ListMap[PossibleAnswer, Mark]
+  }
+
+  sealed trait SingleChoiceQuestion extends ChoiceQuestion
+
+  case class MultiChoiceQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      marking: ListMap[PossibleAnswer, Mark],
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None
+    ) extends ChoiceQuestion {
+    lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
+  }
+
+  case class ChooseOneOfQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      marking: ListMap[PossibleAnswer, Mark],
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None
+    ) extends SingleChoiceQuestion {
+    lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
+  }
+
+  case class YesNoQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      yesMarking: Mark,
+      noMarking: Mark,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None
+    ) extends SingleChoiceQuestion {
+
+    val YES = PossibleAnswer("Yes")
+    val NO  = PossibleAnswer("No")
+
+    lazy val marking: ListMap[PossibleAnswer, Mark] = ListMap(YES -> yesMarking, NO -> noMarking)
+    lazy val choices                                = ListSet(YES, NO)
+  }
+
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 
   implicit val jsonFormatWording: Format[Wording] = Json.valueFormat[Wording]
 
   implicit val markWrites: Writes[Mark] = Writes {
-    case Fail => JsString("fail")
-    case Warn => JsString("warn")
-    case Pass => JsString("pass")
+    case Mark.Fail => JsString("fail")
+    case Mark.Warn => JsString("warn")
+    case Mark.Pass => JsString("pass")
   }
 
   implicit val markReads: Reads[Mark] = Reads {
-    case JsString("fail") => JsSuccess(Fail)
-    case JsString("warn") => JsSuccess(Warn)
-    case JsString("pass") => JsSuccess(Pass)
+    case JsString("fail") => JsSuccess(Mark.Fail)
+    case JsString("warn") => JsSuccess(Mark.Warn)
+    case JsString("pass") => JsSuccess(Mark.Pass)
     case _                => JsError("Failed to parse Mark value")
   }
 
@@ -119,103 +221,4 @@ object Question extends MapJsonFormatters {
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
     .format
-}
-
-case class TextQuestion(
-    id: Question.Id,
-    wording: Wording,
-    statement: Option[Statement],
-    afterStatement: Option[Statement] = None,
-    label: Option[Question.Label] = None,
-    hintText: Option[NonBulletStatementFragment] = None,
-    validation: Option[TextValidation] = None,
-    absence: Option[(String, Mark)] = None,
-    errorInfo: Option[ErrorInfo] = None
-  ) extends Question with LabelAndHints with ErrorMessaging
-
-case class AcknowledgementOnly(
-    id: Question.Id,
-    wording: Wording,
-    statement: Option[Statement]
-  ) extends Question {
-  val absence        = None
-  val afterStatement = None
-}
-
-sealed trait Mark
-case object Fail extends Mark
-case object Warn extends Mark
-case object Pass extends Mark
-
-object Mark {
-  import cats.Monoid
-
-  implicit val markMonoid: Monoid[Mark] = new Monoid[Mark] {
-    def empty: Mark = Pass
-
-    def combine(x: Mark, y: Mark): Mark = (x, y) match {
-      case (Fail, _)    => Fail
-      case (_, Fail)    => Fail
-      case (Warn, _)    => Warn
-      case (_, Warn)    => Warn
-      case (Pass, Pass) => Pass
-    }
-  }
-}
-
-case class PossibleAnswer(value: String) extends AnyVal
-
-sealed trait ChoiceQuestion extends Question with LabelAndHints with ErrorMessaging {
-  def choices: ListSet[PossibleAnswer]
-  def marking: ListMap[PossibleAnswer, Mark]
-}
-
-sealed trait SingleChoiceQuestion extends ChoiceQuestion
-
-case class MultiChoiceQuestion(
-    id: Question.Id,
-    wording: Wording,
-    statement: Option[Statement],
-    afterStatement: Option[Statement] = None,
-    label: Option[Question.Label] = None,
-    hintText: Option[NonBulletStatementFragment] = None,
-    marking: ListMap[PossibleAnswer, Mark],
-    absence: Option[(String, Mark)] = None,
-    errorInfo: Option[ErrorInfo] = None
-  ) extends ChoiceQuestion {
-  lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
-}
-
-case class ChooseOneOfQuestion(
-    id: Question.Id,
-    wording: Wording,
-    statement: Option[Statement],
-    afterStatement: Option[Statement] = None,
-    label: Option[Question.Label] = None,
-    hintText: Option[NonBulletStatementFragment] = None,
-    marking: ListMap[PossibleAnswer, Mark],
-    absence: Option[(String, Mark)] = None,
-    errorInfo: Option[ErrorInfo] = None
-  ) extends SingleChoiceQuestion {
-  lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
-}
-
-case class YesNoQuestion(
-    id: Question.Id,
-    wording: Wording,
-    statement: Option[Statement],
-    afterStatement: Option[Statement] = None,
-    label: Option[Question.Label] = None,
-    hintText: Option[NonBulletStatementFragment] = None,
-    yesMarking: Mark,
-    noMarking: Mark,
-    absence: Option[(String, Mark)] = None,
-    errorInfo: Option[ErrorInfo] = None
-  ) extends SingleChoiceQuestion {
-
-  val YES = PossibleAnswer("Yes")
-  val NO  = PossibleAnswer("No")
-
-  lazy val marking: ListMap[PossibleAnswer, Mark] = ListMap(YES -> yesMarking, NO -> noMarking)
-  lazy val choices                                = ListSet(YES, NO)
 }

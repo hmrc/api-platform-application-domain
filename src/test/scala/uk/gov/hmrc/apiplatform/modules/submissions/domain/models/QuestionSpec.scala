@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "question absence mark" in {
     OrganisationDetails.questionRI2.absenceMark shouldBe None
-    OrganisationDetails.question1.absenceMark shouldBe Some(Fail)
+    OrganisationDetails.question1.absenceMark shouldBe Some(Mark.Fail)
   }
 
   "question is optional" in {
@@ -113,12 +113,12 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   }
 
   "read text question from json" in {
-    testFromJson[TextQuestion](jsonTextQuestion())(OrganisationDetails.question1)
+    testFromJson[Question.TextQuestion](jsonTextQuestion())(OrganisationDetails.question1)
   }
 
   "read invalid text question from json" in {
     intercept[Exception] {
-      testFromJson[TextQuestion](jsonTextQuestion("invalid"))(OrganisationDetails.question1)
+      testFromJson[Question.TextQuestion](jsonTextQuestion("invalid"))(OrganisationDetails.question1)
     }
   }
 
@@ -127,7 +127,7 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   }
 
   "read yes no question from json" in {
-    testFromJson[YesNoQuestion](jsonYesNoQuestion)(DevelopmentPractices.question1)
+    testFromJson[Question.YesNoQuestion](jsonYesNoQuestion)(DevelopmentPractices.question1)
   }
 
   "toJson for choose one of question" in {
@@ -135,6 +135,6 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   }
 
   "read choose one of question from json" in {
-    testFromJson[ChooseOneOfQuestion](jsonChooseOneOfQuestion)(OrganisationDetails.question2)
+    testFromJson[Question.ChooseOneOfQuestion](jsonChooseOneOfQuestion)(OrganisationDetails.question2)
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,20 @@ import cats.data.NonEmptyList
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
 
+sealed trait AskWhen
+
 object AskWhen {
-  import Submission.AnswersToQuestions
+  case class AskWhenContext(contextKey: String, expectedValue: String)                              extends AskWhen
+  case class AskWhenAnswer(questionId: Question.Id, expectedValue: ActualAnswer.SingleChoiceAnswer) extends AskWhen
+  case object AlwaysAsk                                                                             extends AskWhen
+
+  object AskWhenAnswer {
+
+    def apply(question: Question.SingleChoiceQuestion, expectedValue: String): AskWhen = {
+      require(question.choices.find(qc => qc.value == expectedValue).isDefined)
+      AskWhenAnswer(question.id, ActualAnswer.SingleChoiceAnswer(expectedValue))
+    }
+  }
 
   type Context = Map[String, String]
 
@@ -35,25 +47,12 @@ object AskWhen {
     }
   }
 
-  def shouldAsk(context: Context, answersToQuestions: AnswersToQuestions)(askWhen: AskWhen): Boolean = {
+  def shouldAsk(context: Context, answersToQuestions: Submission.AnswersToQuestions)(askWhen: AskWhen): Boolean = {
     askWhen match {
       case AlwaysAsk                                 => true
       case AskWhenContext(contextKey, expectedValue) => context.get(contextKey).map(_.equalsIgnoreCase(expectedValue)).getOrElse(false)
       case AskWhenAnswer(questionId, expectedAnswer) => answersToQuestions.get(questionId).map(_ == expectedAnswer).getOrElse(false)
     }
-  }
-}
-
-sealed trait AskWhen
-case class AskWhenContext(contextKey: String, expectedValue: String)                 extends AskWhen
-case class AskWhenAnswer(questionId: Question.Id, expectedValue: SingleChoiceAnswer) extends AskWhen
-case object AlwaysAsk                                                                extends AskWhen
-
-object AskWhenAnswer {
-
-  def apply(question: SingleChoiceQuestion, expectedValue: String): AskWhen = {
-    require(question.choices.find(qc => qc.value == expectedValue).isDefined)
-    AskWhenAnswer(question.id, SingleChoiceAnswer(expectedValue))
   }
 
   import play.api.libs.json._
@@ -73,11 +72,11 @@ object AskWhenAnswer {
 case class QuestionItem(question: Question, askWhen: AskWhen)
 
 object QuestionItem extends NonEmptyListFormatters {
-  def apply(question: Question): QuestionItem                   = QuestionItem(question, AlwaysAsk)
+  def apply(question: Question): QuestionItem                   = QuestionItem(question, AskWhen.AlwaysAsk)
   def apply(question: Question, askWhen: AskWhen): QuestionItem = new QuestionItem(question, askWhen)
 
   import play.api.libs.json._
-  import AskWhenAnswer._
+  import AskWhen._
 
   implicit val jsonFormatQuestionItem: OFormat[QuestionItem] = Json.format[QuestionItem]
 }

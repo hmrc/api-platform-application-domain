@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ object MarkAnswer {
   // Assume answer is valid for question as it is only called for validated completed submissions
   //
 
-  protected def markSingleChoiceAnswer(question: SingleChoiceQuestion, answer: SingleChoiceAnswer): Mark =
+  protected def markSingleChoiceAnswer(question: Question.SingleChoiceQuestion, answer: ActualAnswer.SingleChoiceAnswer): Mark =
     question.marking.get(PossibleAnswer(answer.value)).get
 
-  protected def markMultiChoiceAnswer(question: MultiChoiceQuestion, answer: MultipleChoiceAnswer): Mark = {
+  protected def markMultiChoiceAnswer(question: Question.MultiChoiceQuestion, answer: ActualAnswer.MultipleChoiceAnswer): Mark = {
     import cats.Monoid
     import Mark._
 
@@ -39,12 +39,12 @@ object MarkAnswer {
 
   protected def markQuestion(question: Question, answer: ActualAnswer): Mark = {
     (question, answer) match {
-      case (_, NoAnswer)                                     => question.absenceMark.getOrElse(throw new RuntimeException(s"Failed with $answer for $question"))
-      case (q: TextQuestion, a: TextAnswer)                  => Pass
-      case (q: MultiChoiceQuestion, a: MultipleChoiceAnswer) => markMultiChoiceAnswer(q, a)
-      case (q: SingleChoiceQuestion, a: SingleChoiceAnswer)  => markSingleChoiceAnswer(q, a)
-      case (q: AcknowledgementOnly, AcknowledgedAnswer)      => Pass
-      case _                                                 => throw new IllegalArgumentException("Unexpectely the answer is not valid")
+      case (_, ActualAnswer.NoAnswer)                                              => question.absenceMark.getOrElse(throw new RuntimeException(s"Failed with $answer for $question"))
+      case (q: Question.TextQuestion, a: ActualAnswer.TextAnswer)                  => Mark.Pass
+      case (q: Question.MultiChoiceQuestion, a: ActualAnswer.MultipleChoiceAnswer) => markMultiChoiceAnswer(q, a)
+      case (q: Question.SingleChoiceQuestion, a: ActualAnswer.SingleChoiceAnswer)  => markSingleChoiceAnswer(q, a)
+      case (q: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)      => Mark.Pass
+      case _                                                                       => throw new IllegalArgumentException("Unexpectely the answer is not valid")
     }
   }
 
