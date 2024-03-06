@@ -55,6 +55,17 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     aSubmission.status.isOpenToAnswers shouldBe true
   }
 
+  "submission is read only" in {
+    aSubmission.status.isReadOnly shouldBe false
+    submittedSubmission.status.isReadOnly shouldBe true
+    grantedSubmission.status.isReadOnly shouldBe true
+    grantedWithWarningsSubmission.status.isReadOnly shouldBe true
+    declinedSubmission.instances.tail.head.status.isReadOnly shouldBe true
+    failSubmission.status.isReadOnly shouldBe true
+    warningsSubmission.status.isReadOnly shouldBe true
+    pendingRISubmission.status.isReadOnly shouldBe true
+  }
+
   "submission findQuestionnaireContaining" in {
     aSubmission.findQuestionnaireContaining(aSubmission.questionIdsOfInterest.applicationNameId) shouldBe Some(CustomersAuthorisingYourSoftware.questionnaire)
   }
