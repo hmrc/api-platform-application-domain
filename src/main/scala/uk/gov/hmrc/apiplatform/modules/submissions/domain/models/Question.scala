@@ -58,7 +58,9 @@ sealed trait Question {
   final def isOptional: Boolean = absence.isDefined
 }
 
-case class PossibleAnswer(value: String) extends AnyVal
+case class PossibleAnswer(value: String) extends AnyVal {
+  def htmlValue: String = value.replace(" ", "-").filter(c => c.isLetterOrDigit || c == '-')
+}
 
 trait LabelAndHints {
   self: Question =>

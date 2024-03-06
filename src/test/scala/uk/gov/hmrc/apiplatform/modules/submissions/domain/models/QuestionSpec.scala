@@ -108,6 +108,10 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     OrganisationDetails.question1.isOptional shouldBe true
   }
 
+  "question html value" in {
+    OrganisationDetails.question2.choices.head.htmlValue shouldBe "Unique-Taxpayer-Reference-UTR"
+  }
+
   "toJson for text question" in {
     Json.prettyPrint(Json.toJson(OrganisationDetails.question1)) shouldBe jsonTextQuestion()
   }
