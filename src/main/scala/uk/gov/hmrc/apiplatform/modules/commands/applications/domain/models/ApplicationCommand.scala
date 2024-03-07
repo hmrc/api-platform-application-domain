@@ -47,6 +47,13 @@ object ApplicationCommands {
   case class ChangeRedirectUri(actor: Actor, redirectUriToReplace: RedirectUri, redirectUri: RedirectUri, timestamp: Instant)                       extends ApplicationCommand
   case class ChangeResponsibleIndividualToSelf(instigator: UserId, timestamp: Instant, name: String, email: LaxEmailAddress)                        extends ApplicationCommand
   case class ChangeResponsibleIndividualToOther(code: String, timestamp: Instant)                                                                   extends ApplicationCommand
+  case class ChangeSandboxApplicationName(actor: Actors.AppCollaborator, timestamp: Instant, newName: String)                                       extends ApplicationCommand
+  case class ChangeSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant, description: String)                            extends ApplicationCommand
+  case class ChangeSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant, privacyPolicyUrl: String)                  extends ApplicationCommand
+  case class ChangeSandboxApplicationTermsAndConditionsUrl(actor: Actors.AppCollaborator, timestamp: Instant, termsAndConditionsUrl: String)        extends ApplicationCommand
+  case class ClearSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant)                                                  extends ApplicationCommand
+  case class RemoveSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant)                                            extends ApplicationCommand
+  case class RemoveSandboxApplicationTermsAndConditionsUrl(actor: Actors.AppCollaborator, timestamp: Instant)                                       extends ApplicationCommand
   case class DeclineApplicationApprovalRequest(gatekeeperUser: String, reasons: String, timestamp: Instant)                                         extends GatekeeperApplicationCommand
   case class DeclineResponsibleIndividual(code: String, timestamp: Instant)                                                                         extends ApplicationCommand
   case class DeclineResponsibleIndividualDidNotVerify(code: String, timestamp: Instant)                                                             extends ApplicationCommand
@@ -75,19 +82,30 @@ object ApplicationCommands {
 object ApplicationCommand {
   import ApplicationCommands._
 
-  implicit private val instantFormat: Format[Instant]                                                     = InstantJsonFormatter.WithTimeZone.instantWithTimeZoneFormat
-  implicit private val addCollaboratorFormatter: OFormat[AddCollaborator]                                 = Json.format[AddCollaborator]
-  implicit private val removeCollaboratorFormatter: OFormat[RemoveCollaborator]                           = Json.format[RemoveCollaborator]
-  implicit private val addClientSecretFormatter: OFormat[AddClientSecret]                                 = Json.format[AddClientSecret]
-  implicit private val removeClientSecretFormatter: OFormat[RemoveClientSecret]                           = Json.format[RemoveClientSecret]
-  implicit private val addRedirectUriFormatter: OFormat[AddRedirectUri]                                   = Json.format[AddRedirectUri]
-  implicit private val changeCollaboratorFormatter: OFormat[ChangeRedirectUri]                            = Json.format[ChangeRedirectUri]
-  implicit private val deleteRedirectUriFormatter: OFormat[DeleteRedirectUri]                             = Json.format[DeleteRedirectUri]
-  implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]           = Json.format[AllowApplicationAutoDelete]
-  implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]           = Json.format[BlockApplicationAutoDelete]
-  implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                             = Json.format[ChangeGrantLength]
-  implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                         = Json.format[ChangeRateLimitTier]
-  implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName] = Json.format[ChangeProductionApplicationName]
+  implicit private val instantFormat: Format[Instant]                                                                       = InstantJsonFormatter.WithTimeZone.instantWithTimeZoneFormat
+  implicit private val addCollaboratorFormatter: OFormat[AddCollaborator]                                                   = Json.format[AddCollaborator]
+  implicit private val removeCollaboratorFormatter: OFormat[RemoveCollaborator]                                             = Json.format[RemoveCollaborator]
+  implicit private val addClientSecretFormatter: OFormat[AddClientSecret]                                                   = Json.format[AddClientSecret]
+  implicit private val removeClientSecretFormatter: OFormat[RemoveClientSecret]                                             = Json.format[RemoveClientSecret]
+  implicit private val addRedirectUriFormatter: OFormat[AddRedirectUri]                                                     = Json.format[AddRedirectUri]
+  implicit private val changeSandboxApplicationNameFormatter: OFormat[ChangeSandboxApplicationName]                         = Json.format[ChangeSandboxApplicationName]
+  implicit private val changeSandboxApplicationDescriptionFormatter: OFormat[ChangeSandboxApplicationDescription]           = Json.format[ChangeSandboxApplicationDescription]
+  implicit private val changeSandboxApplicationPrivacyPolicyUrlFormatter: OFormat[ChangeSandboxApplicationPrivacyPolicyUrl] = Json.format[ChangeSandboxApplicationPrivacyPolicyUrl]
+
+  implicit private val changeSandboxApplicationTermsAndConditionsUrlFormatter: OFormat[ChangeSandboxApplicationTermsAndConditionsUrl] =
+    Json.format[ChangeSandboxApplicationTermsAndConditionsUrl]
+  implicit private val clearSandboxApplicationDescriptionFormatter: OFormat[ClearSandboxApplicationDescription]                       = Json.format[ClearSandboxApplicationDescription]
+  implicit private val removeSandboxApplicationPrivacyPolicyUrlFormatter: OFormat[RemoveSandboxApplicationPrivacyPolicyUrl]           = Json.format[RemoveSandboxApplicationPrivacyPolicyUrl]
+
+  implicit private val removeSandboxApplicationTermsAndConditionsUrlFormatter: OFormat[RemoveSandboxApplicationTermsAndConditionsUrl] =
+    Json.format[RemoveSandboxApplicationTermsAndConditionsUrl]
+  implicit private val changeCollaboratorFormatter: OFormat[ChangeRedirectUri]                                                        = Json.format[ChangeRedirectUri]
+  implicit private val deleteRedirectUriFormatter: OFormat[DeleteRedirectUri]                                                         = Json.format[DeleteRedirectUri]
+  implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]                                       = Json.format[AllowApplicationAutoDelete]
+  implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]                                       = Json.format[BlockApplicationAutoDelete]
+  implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                                                         = Json.format[ChangeGrantLength]
+  implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                                                     = Json.format[ChangeRateLimitTier]
+  implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName]                             = Json.format[ChangeProductionApplicationName]
 
   implicit private val changePrivacyPolicyLocationFormatter: OFormat[ChangeProductionApplicationPrivacyPolicyLocation] =
     Json.format[ChangeProductionApplicationPrivacyPolicyLocation]
@@ -138,6 +156,13 @@ object ApplicationCommand {
     .and[UpdateRedirectUris]("updateRedirectUris")
     .and[VerifyResponsibleIndividual]("verifyResponsibleIndividual")
     .and[ChangeIpAllowlist]("changeIpAllowlist")
+    .and[ChangeSandboxApplicationName]("changeSandboxApplicationName")
+    .and[ChangeSandboxApplicationDescription]("changeSandboxApplicationDescription")
+    .and[ChangeSandboxApplicationPrivacyPolicyUrl]("changeSandboxApplicationPrivacyPolicyUrl")
+    .and[ChangeSandboxApplicationTermsAndConditionsUrl]("changeSandboxApplicationTermsAndConditionsUrl")
+    .and[ClearSandboxApplicationDescription]("clearSandboxApplicationDescription")
+    .and[RemoveSandboxApplicationPrivacyPolicyUrl]("removeSandboxApplicationPrivacyPolicyUrl")
+    .and[RemoveSandboxApplicationTermsAndConditionsUrl]("removeSandboxApplicationTermsAndConditionsUrl")
     .format
 }
 
