@@ -73,7 +73,7 @@ object ApplicationCommands {
 
   case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLengthInDays: GrantLength)                                          extends ApplicationCommand with GatekeeperMixin
   case class ChangeRateLimitTier(gatekeeperUser: String, timestamp: Instant, rateLimitTier: RateLimitTier)                                          extends ApplicationCommand with GatekeeperMixin
-  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: String)                       extends ApplicationCommand with GatekeeperMixin with ProductionMixin
+  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: String)                       extends ApplicationCommand with GatekeeperMixin
   case class ChangeProductionApplicationPrivacyPolicyLocation(instigator: UserId, timestamp: Instant, newLocation: PrivacyPolicyLocation)           extends ApplicationCommand with ProductionMixin
   case class ChangeProductionApplicationTermsAndConditionsLocation(instigator: UserId, timestamp: Instant, newLocation: TermsAndConditionsLocation) extends ApplicationCommand with ProductionMixin
 
