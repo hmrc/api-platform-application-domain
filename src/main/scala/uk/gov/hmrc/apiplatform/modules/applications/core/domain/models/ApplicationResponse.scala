@@ -17,11 +17,12 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import java.time.Instant
+import scala.concurrent.duration.FiniteDuration
+
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-
-import scala.concurrent.duration.FiniteDuration
 
 case class ApplicationResponse(
     id: ApplicationId,

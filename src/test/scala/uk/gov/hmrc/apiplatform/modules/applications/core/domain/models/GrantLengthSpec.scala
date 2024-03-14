@@ -43,6 +43,12 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       }
     }
 
+    "apply throws when given a bad value" in {
+      intercept[Exception] {
+        GrantLength.apply(5, "hours")
+      }
+    }
+
     "convert to json" in {
       Json.toJson[GrantLength](GrantLength.ONE_DAY) shouldBe JsNumber(1)
       Json.toJson[GrantLength](GrantLength.ONE_MONTH) shouldBe JsNumber(30)

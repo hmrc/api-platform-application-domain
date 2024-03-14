@@ -103,6 +103,7 @@ object ApplicationCommand {
   implicit private val deleteRedirectUriFormatter: OFormat[DeleteRedirectUri]                                                         = Json.format[DeleteRedirectUri]
   implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]                                       = Json.format[AllowApplicationAutoDelete]
   implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]                                       = Json.format[BlockApplicationAutoDelete]
+//  implicit private val grantLengthFormatter: OFormat[GrantLength]                                                                     = Json.format[GrantLength]
   implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                                                         = Json.format[ChangeGrantLength]
   implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                                                     = Json.format[ChangeRateLimitTier]
   implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName]                             = Json.format[ChangeProductionApplicationName]
