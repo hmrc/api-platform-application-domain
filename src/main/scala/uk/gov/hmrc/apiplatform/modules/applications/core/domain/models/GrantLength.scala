@@ -134,24 +134,7 @@ object GrantLength {
 
   implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Int]].contramap(x => x.duration.toDays.toInt)
 
-  /* ANJUM version 1. ChangeGrantLengthSpec runs. The Int test passes but the Duration test fails */
-  /*  implicit val readsGrantLength: Reads[GrantLength] = {
-    implicitly[Reads[Int]].flatMapResult {
-      case i: Int if (allowedIntValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))
-      case e => JsError(s"Invalid grant length $e")
-    } match {
-      case i: Reads[GrantLength] => i
-      case _ => {
-        println("\n*******We didn't get an Int")
-        ((JsPath \ "grantLength" \ "length").read[Long] and
-          (JsPath \ "grantLength" \ "unit").read[String]
-          )(GrantLength.apply(_,_))
-      }
-    }
-  }*/
-
-  implicit val readsGrantLength2: Reads[GrantLength] = {
-
+  implicit val readsGrantLength: Reads[GrantLength] = {
     ((JsPath \ "length").read[Long] and
       (JsPath \ "unit").read[String]).apply(GrantLength.apply(_, _)).orElse(
       implicitly[Reads[Int]].flatMapResult {
@@ -160,56 +143,4 @@ object GrantLength {
       }
     )
   }
-
-  /* ANJUM version 2. Doesn't compile.
-  implicit val readsGrantLength: Reads[GrantLength] = {
-          implicitly[Reads[Int]].flatMapResult {
-            case i: Int if (allowedIntValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))
-            case e => { implicitly[Reads[FiniteDuration]].flatMapResult {
-              case j: FiniteDuration if (allowedValues.contains(j)) => JsSuccess(GrantLength.apply(j))
-              case e => JsError(s"Invalid grant length $e")
-              }
-            }
-          }
-      }
-   */
-
-  /* ANJUM version 3. Tried to take the internalHeader / authBearerToken approach from TPDA MongoFormatters. Doesn't compile
-implicit val readsGrantLength : Reads[GrantLength] = (
-(__ \ "grantLength").read[FiniteDuration].orElse((__ \ "grantLength").read[GrantLengthAsInt].map((_.asFiniteDuration))
-)(GrantLength.apply _)
-   */
-
-  /* NEIL'S version
-        val l: Reads[Option[Long]] = (JsPath \ "length").readNullable[Long]
-        val u: Reads[Option[String]] = (JsPath \ "unit").readNullable[String]
-        (l,u) map {
-          case (Some(l), Some(u)) => (l and u)(GrantLength.apply(_, _))
-
-
-            val lengthReads: Reads[String] = (JsPath \ "length").read[Long]
-
-            val nameResult: JsResult[String] = json.validate[String](lengthReads)
-
-            nameResult match {
-              case JsSuccess(nme, _) => println(s"Name: $nme")
-              case e: JsError        => println(s"Errors: ${JsError.toJson(e)}")
-            }
-        }
-   */
-
-  /*  implicitly[Reads[Int]].flatMapResult {
-        case i: Int if (allowedIntValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))
-        case _ => throw new IllegalArgumentException("Invalid grant length")
-//                case i => JsError(s"Invalid grant length $i")
-      }*/
-
-  // phase 1
-  // requests to TPA = """{"grantLength":"547"}"""
-  // responses from TPA = """{"grantLength":"547"}""" OR  """{"length":"547", "unit": "DAYS"}"""
-
-  // phase 2
-  // requests to TPA = """{"length":"547", "unit": "DAYS"}"""
-  // responses from TPA = """{"length":"547", "unit": "DAYS"}"""
-
 }
