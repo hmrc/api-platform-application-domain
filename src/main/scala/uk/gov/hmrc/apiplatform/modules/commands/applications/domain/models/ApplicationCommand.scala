@@ -31,52 +31,86 @@ sealed trait ApplicationCommand {
   def timestamp: Instant
 }
 
-sealed trait GatekeeperApplicationCommand extends ApplicationCommand {
+sealed trait GatekeeperMixin {
   def gatekeeperUser: String
 }
 
+sealed trait JobsMixin {
+  def jobId: String
+}
+
+// No good way to classify commands but we don't want to have to deal with 50 types in one pattern match....
+// Maybe this will improve in future
+sealed abstract class RedirectCommand        extends ApplicationCommand
+sealed abstract class ClientSecretCommand    extends ApplicationCommand
+sealed abstract class CollaboratorCommand    extends ApplicationCommand
+sealed abstract class SubscriptionCommand    extends ApplicationCommand
+sealed abstract class IpAllowListCommand     extends ApplicationCommand
+sealed abstract class GrantLengthCommand     extends ApplicationCommand
+sealed abstract class RateLimitCommand       extends ApplicationCommand
+sealed abstract class NameDescriptionCommand extends ApplicationCommand
+sealed abstract class DeleteCommand          extends ApplicationCommand
+sealed abstract class PolicyCommand          extends ApplicationCommand
+sealed abstract class SubmissionCommand      extends ApplicationCommand
+
+/*
+   get list of available commands
+   some map of handler vs command.
+    2 contexts
+    1). library update with new command -> in tpa need way of compile or start saying command in lib not handled in TPA so Error / wont start app
+    2). command comes in... of type A what is the handler for type A
+
+    1 was solved in past by exhaustivity check i.e. that was one way of solving this...
+
+ */
 object ApplicationCommands {
-  case class AddClientSecret(actor: Actors.AppCollaborator, name: String, id: ClientSecret.Id, hashedSecret: String, timestamp: Instant)            extends ApplicationCommand
-  case class AddCollaborator(actor: Actor, collaborator: Collaborator, timestamp: Instant)                                                          extends ApplicationCommand
-  case class AddRedirectUri(actor: Actor, redirectUriToAdd: RedirectUri, timestamp: Instant)                                                        extends ApplicationCommand
-  case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLength: GrantLength)                                                extends GatekeeperApplicationCommand
-  case class ChangeRateLimitTier(gatekeeperUser: String, timestamp: Instant, rateLimitTier: RateLimitTier)                                          extends GatekeeperApplicationCommand
-  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: String)                       extends GatekeeperApplicationCommand
-  case class ChangeProductionApplicationPrivacyPolicyLocation(instigator: UserId, timestamp: Instant, newLocation: PrivacyPolicyLocation)           extends ApplicationCommand
-  case class ChangeProductionApplicationTermsAndConditionsLocation(instigator: UserId, timestamp: Instant, newLocation: TermsAndConditionsLocation) extends ApplicationCommand
-  case class ChangeRedirectUri(actor: Actor, redirectUriToReplace: RedirectUri, redirectUri: RedirectUri, timestamp: Instant)                       extends ApplicationCommand
-  case class ChangeResponsibleIndividualToSelf(instigator: UserId, timestamp: Instant, name: String, email: LaxEmailAddress)                        extends ApplicationCommand
-  case class ChangeResponsibleIndividualToOther(code: String, timestamp: Instant)                                                                   extends ApplicationCommand
-  case class ChangeSandboxApplicationName(actor: Actors.AppCollaborator, timestamp: Instant, newName: String)                                       extends ApplicationCommand
-  case class ChangeSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant, description: String)                            extends ApplicationCommand
-  case class ChangeSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant, privacyPolicyUrl: String)                  extends ApplicationCommand
-  case class ChangeSandboxApplicationTermsAndConditionsUrl(actor: Actors.AppCollaborator, timestamp: Instant, termsAndConditionsUrl: String)        extends ApplicationCommand
-  case class ClearSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant)                                                  extends ApplicationCommand
-  case class RemoveSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant)                                            extends ApplicationCommand
-  case class RemoveSandboxApplicationTermsAndConditionsUrl(actor: Actors.AppCollaborator, timestamp: Instant)                                       extends ApplicationCommand
-  case class DeclineApplicationApprovalRequest(gatekeeperUser: String, reasons: String, timestamp: Instant)                                         extends GatekeeperApplicationCommand
-  case class DeclineResponsibleIndividual(code: String, timestamp: Instant)                                                                         extends ApplicationCommand
-  case class DeclineResponsibleIndividualDidNotVerify(code: String, timestamp: Instant)                                                             extends ApplicationCommand
-  case class DeleteApplicationByCollaborator(instigator: UserId, reasons: String, timestamp: Instant)                                               extends ApplicationCommand
+  case class AddRedirectUri(actor: Actor, redirectUriToAdd: RedirectUri, timestamp: Instant)                                              extends RedirectCommand
+  case class ChangeRedirectUri(actor: Actor, redirectUriToReplace: RedirectUri, redirectUri: RedirectUri, timestamp: Instant)             extends RedirectCommand
+  case class DeleteRedirectUri(actor: Actor, redirectUriToDelete: RedirectUri, timestamp: Instant)                                        extends RedirectCommand
+  case class UpdateRedirectUris(actor: Actor, oldRedirectUris: List[RedirectUri], newRedirectUris: List[RedirectUri], timestamp: Instant) extends RedirectCommand
 
-  case class DeleteApplicationByGatekeeper(gatekeeperUser: String, requestedByEmailAddress: LaxEmailAddress, reasons: String, timestamp: Instant)
-      extends GatekeeperApplicationCommand
+//----
+  case class AddClientSecret(actor: Actors.AppCollaborator, name: String, id: ClientSecret.Id, hashedSecret: String, timestamp: Instant)              extends ClientSecretCommand
+  case class RemoveClientSecret(actor: Actors.AppCollaborator, clientSecretId: ClientSecret.Id, timestamp: Instant)                                   extends ClientSecretCommand
+//----
+  case class AddCollaborator(actor: Actor, collaborator: Collaborator, timestamp: Instant)                                                            extends CollaboratorCommand
+  case class RemoveCollaborator(actor: Actor, collaborator: Collaborator, timestamp: Instant)                                                         extends CollaboratorCommand
+//----
+  case class SubscribeToApi(actor: Actor, apiIdentifier: ApiIdentifier, timestamp: Instant)                                                           extends SubscriptionCommand
+  case class UnsubscribeFromApi(actor: Actor, apiIdentifier: ApiIdentifier, timestamp: Instant)                                                       extends SubscriptionCommand
+//----
+  case class ChangeIpAllowlist(actor: Actor, timestamp: Instant, required: Boolean, oldIpAllowlist: List[CidrBlock], newIpAllowlist: List[CidrBlock]) extends IpAllowListCommand
 
-  case class AllowApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant) extends GatekeeperApplicationCommand
-  case class BlockApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant) extends GatekeeperApplicationCommand
+  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: String) extends NameDescriptionCommand with GatekeeperMixin
+  case class ChangeSandboxApplicationName(actor: Actors.AppCollaborator, timestamp: Instant, newName: String)                 extends NameDescriptionCommand
+  case class ChangeSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant, description: String)      extends NameDescriptionCommand
+  case class ClearSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant)                            extends NameDescriptionCommand
 
-  case class DeleteRedirectUri(actor: Actor, redirectUriToDelete: RedirectUri, timestamp: Instant)                                                extends ApplicationCommand
-  case class DeleteProductionCredentialsApplication(jobId: String, reasons: String, timestamp: Instant)                                           extends ApplicationCommand
-  case class DeleteUnusedApplication(jobId: String, authorisationKey: String, reasons: String, timestamp: Instant)                                extends ApplicationCommand
-  case class RemoveClientSecret(actor: Actors.AppCollaborator, clientSecretId: ClientSecret.Id, timestamp: Instant)                               extends ApplicationCommand
-  case class RemoveCollaborator(actor: Actor, collaborator: Collaborator, timestamp: Instant)                                                     extends ApplicationCommand
-  case class SubscribeToApi(actor: Actor, apiIdentifier: ApiIdentifier, timestamp: Instant)                                                       extends ApplicationCommand
-  case class UnsubscribeFromApi(actor: Actor, apiIdentifier: ApiIdentifier, timestamp: Instant)                                                   extends ApplicationCommand
-  case class UpdateRedirectUris(actor: Actor, oldRedirectUris: List[RedirectUri], newRedirectUris: List[RedirectUri], timestamp: Instant)         extends ApplicationCommand
-  case class VerifyResponsibleIndividual(instigator: UserId, timestamp: Instant, requesterName: String, riName: String, riEmail: LaxEmailAddress) extends ApplicationCommand
+  case class DeleteApplicationByGatekeeper(gatekeeperUser: String, requestedByEmailAddress: LaxEmailAddress, reasons: String, timestamp: Instant) extends DeleteCommand
+      with GatekeeperMixin
+  case class DeleteProductionCredentialsApplication(jobId: String, reasons: String, timestamp: Instant)                                           extends DeleteCommand with JobsMixin
+  case class DeleteApplicationByCollaborator(instigator: UserId, reasons: String, timestamp: Instant)                                             extends DeleteCommand
+  case class DeleteUnusedApplication(jobId: String, authorisationKey: String, reasons: String, timestamp: Instant)                                extends DeleteCommand with JobsMixin
+  case class AllowApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
+  case class BlockApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
 
-  case class ChangeIpAllowlist(actor: Actor, timestamp: Instant, required: Boolean, oldIpAllowlist: List[CidrBlock], newIpAllowlist: List[CidrBlock])
-      extends ApplicationCommand
+  case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLength: GrantLength)       extends GrantLengthCommand with GatekeeperMixin
+  case class ChangeRateLimitTier(gatekeeperUser: String, timestamp: Instant, rateLimitTier: RateLimitTier) extends RateLimitCommand with GatekeeperMixin
+
+  case class ChangeResponsibleIndividualToSelf(instigator: UserId, timestamp: Instant, name: String, email: LaxEmailAddress)                      extends SubmissionCommand
+  case class ChangeResponsibleIndividualToOther(code: String, timestamp: Instant)                                                                 extends SubmissionCommand
+  case class VerifyResponsibleIndividual(instigator: UserId, timestamp: Instant, requesterName: String, riName: String, riEmail: LaxEmailAddress) extends SubmissionCommand
+  case class DeclineResponsibleIndividual(code: String, timestamp: Instant)                                                                       extends SubmissionCommand
+  case class DeclineResponsibleIndividualDidNotVerify(code: String, timestamp: Instant)                                                           extends SubmissionCommand
+  case class DeclineApplicationApprovalRequest(gatekeeperUser: String, reasons: String, timestamp: Instant)                                       extends SubmissionCommand with GatekeeperMixin
+
+  case class ChangeProductionApplicationTermsAndConditionsLocation(instigator: UserId, timestamp: Instant, newLocation: TermsAndConditionsLocation) extends PolicyCommand
+  case class ChangeSandboxApplicationTermsAndConditionsUrl(actor: Actors.AppCollaborator, timestamp: Instant, termsAndConditionsUrl: String)        extends PolicyCommand
+  case class RemoveSandboxApplicationTermsAndConditionsUrl(actor: Actors.AppCollaborator, timestamp: Instant)                                       extends PolicyCommand
+  case class ChangeProductionApplicationPrivacyPolicyLocation(instigator: UserId, timestamp: Instant, newLocation: PrivacyPolicyLocation)           extends PolicyCommand
+  case class ChangeSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant, privacyPolicyUrl: String)                  extends PolicyCommand
+  case class RemoveSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant)                                            extends PolicyCommand
+
 }
 
 object ApplicationCommand {
@@ -103,7 +137,6 @@ object ApplicationCommand {
   implicit private val deleteRedirectUriFormatter: OFormat[DeleteRedirectUri]                                                         = Json.format[DeleteRedirectUri]
   implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]                                       = Json.format[AllowApplicationAutoDelete]
   implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]                                       = Json.format[BlockApplicationAutoDelete]
-//  implicit private val grantLengthFormatter: OFormat[GrantLength]                                                                     = Json.format[GrantLength]
   implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                                                         = Json.format[ChangeGrantLength]
   implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                                                     = Json.format[ChangeRateLimitTier]
   implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName]                             = Json.format[ChangeProductionApplicationName]
@@ -166,58 +199,3 @@ object ApplicationCommand {
     .and[RemoveSandboxApplicationTermsAndConditionsUrl]("removeSandboxApplicationTermsAndConditionsUrl")
     .format
 }
-
-/*
---- Used in TPDFE ---
-  *** Extends ApplicationUpdate ***
-  ChangeProductionApplicationPrivacyPolicyLocation
-  ChangeProductionApplicationTermsAndConditionsLocation
-  ChangeResponsibleIndividualToSelf
-  ChangeResponsibleIndividualToOther
-  DeclineResponsibleIndividual
-  RemoveClientSecret
-  VerifyResponsibleIndividual
-  DeleteApplicationByCollaborator
-
-  *** Extends ApplicationCommand ***
-  AddCollaborator
-  RemoveCollaborator
-
---- Used in GKFE---
-  *** Extends ApplicationCommand ***
-  AddCollaborator
-  RemoveCollaborator
-
-  *** Extends Application Update ***
-  ChangeProductionApplicationName
-  DeleteApplicationByGatekeeper
-
-
---- Used in GKAFE ---
-  *** extends GatekeeperApplicationUpdate ***
-  DeclineApplicationApprovalRequest
-
---- Used in APJ ---
-  ***  extends ApplicationUpdate ***
-  DeleteUnusedApplication
-
-  *** Extends ApplicationCommand ***
-  AddCollaborator
-  RemoveCollaborator
-
-
---- Used in APM ---
-  ***   extends UpdateRequest ***
-  AddCollaboratorRequest
-  RemoveCollaboratorRequest
-
-  ***  extends ApplicationUpdate ***
-  AddCollaborator
-  RemoveCollaborator
-  SubscribeToApi
-  UnsubscribeFromApi
-  UpdateRedirectUris
-
-
-
- */
