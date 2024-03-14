@@ -39,7 +39,7 @@ object ApplicationCommands {
   case class AddClientSecret(actor: Actors.AppCollaborator, name: String, id: ClientSecret.Id, hashedSecret: String, timestamp: Instant)            extends ApplicationCommand
   case class AddCollaborator(actor: Actor, collaborator: Collaborator, timestamp: Instant)                                                          extends ApplicationCommand
   case class AddRedirectUri(actor: Actor, redirectUriToAdd: RedirectUri, timestamp: Instant)                                                        extends ApplicationCommand
-  case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLengthInDays: GrantLength)                                          extends GatekeeperApplicationCommand
+  case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLength: GrantLength)                                                extends GatekeeperApplicationCommand
   case class ChangeRateLimitTier(gatekeeperUser: String, timestamp: Instant, rateLimitTier: RateLimitTier)                                          extends GatekeeperApplicationCommand
   case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: String)                       extends GatekeeperApplicationCommand
   case class ChangeProductionApplicationPrivacyPolicyLocation(instigator: UserId, timestamp: Instant, newLocation: PrivacyPolicyLocation)           extends ApplicationCommand

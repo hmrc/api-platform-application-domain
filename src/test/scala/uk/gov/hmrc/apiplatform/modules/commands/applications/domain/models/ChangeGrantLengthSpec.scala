@@ -32,14 +32,23 @@ class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
         "gatekeeperUser"    -> s"${aGatekeeperUser}",
         "timestamp"         -> s"$nowAsText",
-        "grantLengthInDays" -> aGrantLength.days,
+        "grantLength" -> aGrantLength.duration.toDays,
         "updateType"        -> s"$updateType"
       )
     }
 
-    "read from json" in {
+    "read from json where grant length is Int" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLengthInDays":${aGrantLength.days},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":${aGrantLength.duration.toDays},"updateType":"$updateType"} """
+
+      Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
+    }
+
+    "read from json where grant length is Duration" in {
+      val jsonText =
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"length":180, "unit":"days"},"updateType":"$updateType"} """
+
+      println(s"****** $jsonText")
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }

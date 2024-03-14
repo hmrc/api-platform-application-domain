@@ -63,7 +63,7 @@ object ApplicationResponseSpec extends FixedClock {
     collaborators = Set(CollaboratorSpec.exampleAdmin),
     createdOn = instant,
     lastAccess = None,
-    grantLength = GrantLength.EIGHTEEN_MONTHS.days,
+    grantLength = GrantLength.EIGHTEEN_MONTHS.duration,
     lastAccessTokenUsage = None,
     termsAndConditionsUrl = None,
     privacyPolicyUrl = None,
