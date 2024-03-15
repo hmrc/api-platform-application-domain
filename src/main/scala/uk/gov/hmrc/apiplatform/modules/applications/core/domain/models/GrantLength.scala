@@ -96,7 +96,6 @@ object GrantLength {
 
   val values = SortedSet[GrantLength](FOUR_HOURS, ONE_DAY, ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR, EIGHTEEN_MONTHS, THREE_YEARS, FIVE_YEARS, TEN_YEARS, ONE_HUNDRED_YEARS)
 
-  private val allowedValues    = values.map(_.duration)
   private val allowedIntValues = values.map(_.duration.toDays)
 
   private val errorMsg: String = "It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', " +
