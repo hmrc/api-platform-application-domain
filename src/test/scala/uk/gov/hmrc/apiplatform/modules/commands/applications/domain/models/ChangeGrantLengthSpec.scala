@@ -58,14 +58,24 @@ class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd.copy(grantLength = GrantLength.FOUR_HOURS)
     }
 
-    "block setting grant length to a disallowed value" in {
+    "block setting grant length to a disallowed length value" in {
       val jsonText =
         s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"length":13, "unit":"hours"},"updateType":"$updateType"} """
 
       val ex = intercept[Exception] {
         Json.parse(jsonText).as[ApplicationCommand]
       }
-      ex.getMessage shouldBe "13 hours is not an expected value. It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
+      ex.getMessage shouldBe "PT13H is not an expected value. It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
+    }
+
+    "block setting grant length when invalid unit" in {
+      val jsonText =
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"length":4, "unit":"hour"},"updateType":"$updateType"} """
+
+      val ex = intercept[Exception] {
+        Json.parse(jsonText).as[ApplicationCommand]
+      }
+      ex.getMessage shouldBe "HOUR is not an expected value for Unit in GrantLength. Must be one of the enum ChronoUnit."
     }
   }
 }

@@ -17,12 +17,10 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import java.time.Instant
-import scala.concurrent.duration.FiniteDuration
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 case class ApplicationResponse(
     id: ApplicationId,
@@ -34,7 +32,7 @@ case class ApplicationResponse(
     collaborators: Set[Collaborator],
     createdOn: Instant,
     lastAccess: Option[Instant],
-    grantLength: FiniteDuration,
+    grantLength: GrantLength,
     lastAccessTokenUsage: Option[Instant],
     termsAndConditionsUrl: Option[String],
     privacyPolicyUrl: Option[String],
@@ -55,7 +53,6 @@ case class ApplicationResponse(
 
 object ApplicationResponse {
   import play.api.libs.json.{Json, OFormat}
-  import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.GrantLength.finiteDurationFormat
 
   implicit val format: OFormat[ApplicationResponse] = Json.format[ApplicationResponse]
 }

@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import java.time.Duration
+import java.time.temporal.ChronoUnit
+import java.time.temporal.ChronoUnit.{DAYS, HOURS}
 import scala.collection.immutable.SortedSet
-import scala.concurrent.duration.FiniteDuration._
-import scala.concurrent.duration.{DAYS, FiniteDuration, HOURS}
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.Reads._
@@ -27,7 +28,7 @@ import play.api.libs.json.{Reads, _}
 /** This class is retained for as long as there are GrantLengthAsInt floating around */
 
 trait GrantLength {
-  val duration: FiniteDuration
+  val duration: Duration
 
   override def toString() = GrantLength.show(this)
 }
@@ -35,61 +36,61 @@ trait GrantLength {
 object GrantLength {
 
   val lengthRead: Reads[Long] = (JsPath \ "length").read[Long]
-  val unitRead: Reads[String] = (JsPath \ "unit").read[String]
+  val unitRead: Reads[String] = (JsPath \ "unit").read[String].map(u => u.toUpperCase)
 
-  implicit val finiteDurationReads: Reads[FiniteDuration] = (
-    lengthRead and unitRead.map(unit => unit.toLowerCase)
-  )(FiniteDuration.apply(_, _))
+  implicit val durationReads: Reads[Duration] = (
+    lengthRead and unitRead.map(ChronoUnit.valueOf(_))
+  )(Duration.of(_, _))
 
-  implicit val finiteDurationWrites: Writes[FiniteDuration] = (
+  implicit val durationWrites: Writes[Duration] = (
     (JsPath \ "length").write[Long] and
       (JsPath \ "unit").write[String]
-  )(l => (l.length, l.unit.toString))
+  )(d => (d.toSeconds, ChronoUnit.SECONDS.name()))
 
-  implicit val finiteDurationFormat: Format[FiniteDuration] = Format(finiteDurationReads, finiteDurationWrites)
+  implicit val durationFormat: Format[Duration] = Format(durationReads, durationWrites)
 
   case object FOUR_HOURS extends GrantLength {
-    val duration = FiniteDuration(4, HOURS)
+    val duration = Duration.of(4, HOURS)
   }
 
   case object ONE_DAY extends GrantLength {
-    val duration = FiniteDuration(1, DAYS)
+    val duration = Duration.of(1, DAYS)
   }
 
   case object ONE_MONTH extends GrantLength {
-    val duration = FiniteDuration(30, DAYS)
+    val duration = Duration.of(30, DAYS)
   }
 
   case object THREE_MONTHS extends GrantLength {
-    val duration = FiniteDuration(90, DAYS)
+    val duration = Duration.of(90, DAYS)
   }
 
   case object SIX_MONTHS extends GrantLength {
-    val duration = FiniteDuration(180, DAYS)
+    val duration = Duration.of(180, DAYS)
   }
 
   case object ONE_YEAR extends GrantLength {
-    val duration = FiniteDuration(365, DAYS)
+    val duration = Duration.of(365, DAYS)
   }
 
   case object EIGHTEEN_MONTHS extends GrantLength {
-    val duration = FiniteDuration(547, DAYS)
+    val duration = Duration.of(547, DAYS)
   }
 
   case object THREE_YEARS extends GrantLength {
-    val duration = FiniteDuration(1095, DAYS)
+    val duration = Duration.of(1095, DAYS)
   }
 
   case object FIVE_YEARS extends GrantLength {
-    val duration = FiniteDuration(1825, DAYS)
+    val duration = Duration.of(1825, DAYS)
   }
 
   case object TEN_YEARS extends GrantLength {
-    val duration = FiniteDuration(3650, DAYS)
+    val duration = Duration.of(3650, DAYS)
   }
 
   case object ONE_HUNDRED_YEARS extends GrantLength {
-    val duration = FiniteDuration(36500, DAYS)
+    val duration = Duration.of(36500, DAYS)
   }
 
   implicit val ordering: Ordering[GrantLength] = Ordering.by(_.duration)
@@ -102,17 +103,21 @@ object GrantLength {
     "'3 years', '5 years', '10 years', '100 years')"
 
   def unsafeApply(grantLengthInDays: Int): GrantLength = {
+    def fromInt(grantLengthInDays: Int): Option[GrantLength] = {
+      GrantLength.values.find(e => e.duration.toDays == grantLengthInDays)
+    }
+
     fromInt(grantLengthInDays).getOrElse(throw new IllegalStateException(s"$grantLengthInDays is not an expected value. $errorMsg"))
   }
 
-  def fromInt(grantLengthInDays: Int): Option[GrantLength] = {
-    GrantLength.values.find(e => e.duration.toDays == grantLengthInDays)
-  }
-
   def apply(length: Long, unit: String): GrantLength = {
-
-    val duration = FiniteDuration(length, unit)
-    GrantLength.values.find(e => e.duration == duration).getOrElse(throw new IllegalStateException(s"$duration is not an expected value. $errorMsg"))
+    try {
+      val duration = Duration.of(length, ChronoUnit.valueOf(unit))
+      GrantLength.values.find(e => e.duration == duration).getOrElse(throw new IllegalStateException(s"$duration is not an expected value. $errorMsg"))
+    } catch {
+      case e: IllegalArgumentException if (e.getMessage.contains("No enum constant java.time.temporal.ChronoUnit")) =>
+        throw new IllegalStateException(s"$unit is not an expected value for Unit in GrantLength. Must be one of the enum ChronoUnit.")
+    }
   }
 
   def show(grantLength: GrantLength): String = grantLength match {
@@ -135,7 +140,7 @@ object GrantLength {
 
   implicit val readsGrantLength: Reads[GrantLength] = {
     ((JsPath \ "length").read[Long] and
-      (JsPath \ "unit").read[String]).apply(GrantLength.apply(_, _)).orElse(
+      (JsPath \ "unit").read[String].map(u => u.toUpperCase)).apply(GrantLength.apply(_, _)).orElse(
       implicitly[Reads[Int]].flatMapResult {
         case i: Int if (allowedIntValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))
         case e                                        => JsError(s"Invalid grant length $e")
