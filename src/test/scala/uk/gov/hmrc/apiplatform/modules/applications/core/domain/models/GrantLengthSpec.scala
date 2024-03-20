@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import java.time.temporal.ChronoUnit
+
 import org.scalatest.prop.TableDrivenPropertyChecks
 
 import play.api.libs.json._
@@ -33,8 +35,12 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       }
     }
 
-    "apply succeeds for valid value" in {
+    "1-param apply succeeds for valid value" in {
       GrantLength.apply(30) shouldBe Some(GrantLength.ONE_MONTH)
+    }
+
+    "2-param apply succeeds for valid value" in {
+      GrantLength.apply(30, ChronoUnit.DAYS.name) shouldBe GrantLength.ONE_MONTH
     }
 
     "unsafeFrom succeeds for valid value" in {
