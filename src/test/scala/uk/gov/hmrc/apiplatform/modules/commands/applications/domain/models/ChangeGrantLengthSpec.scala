@@ -46,21 +46,21 @@ class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
 
     "read from json where grant length is Duration" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"length":180, "unit":"days"},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":180, "unit":"days"},"updateType":"$updateType"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }
 
     "read from json where grant length is 4 hours as Duration" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"length":4, "unit":"hours"},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":4, "unit":"hours"},"updateType":"$updateType"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd.copy(grantLength = GrantLength.FOUR_HOURS)
     }
 
-    "block setting grant length to a disallowed length value" in {
+    "block setting grant length to a disallowed amount value" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"length":13, "unit":"hours"},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":13, "unit":"hours"},"updateType":"$updateType"} """
 
       val ex = intercept[Exception] {
         Json.parse(jsonText).as[ApplicationCommand]
@@ -70,7 +70,7 @@ class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
 
     "block setting grant length when invalid unit" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"length":4, "unit":"hour"},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":4, "unit":"hour"},"updateType":"$updateType"} """
 
       val ex = intercept[Exception] {
         Json.parse(jsonText).as[ApplicationCommand]

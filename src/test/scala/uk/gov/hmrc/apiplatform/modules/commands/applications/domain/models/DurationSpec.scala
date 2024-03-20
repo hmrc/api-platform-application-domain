@@ -32,14 +32,14 @@ class DurationSpec extends HmrcSpec with FixedClock {
     "write to json" in {
 
       Json.toJson[Duration](duration) shouldBe Json.obj(
-        "length" -> 86400,
+        "amount" -> 86400,
         "unit"   -> s"${ChronoUnit.SECONDS.name()}"
       )
     }
 
     "read from json" in {
 
-      val jsonText = s""" {"length":1, "unit":"days"} """
+      val jsonText = s""" {"amount":1, "unit":"days"} """
       Json.parse(jsonText).as[Duration] shouldBe duration
     }
   }

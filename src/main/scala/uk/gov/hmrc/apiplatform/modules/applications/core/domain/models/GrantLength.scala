@@ -35,15 +35,15 @@ trait GrantLength {
 
 object GrantLength {
 
-  val lengthRead: Reads[Long] = (JsPath \ "length").read[Long]
-  val unitRead: Reads[String] = (JsPath \ "unit").read[String].map(u => u.toUpperCase)
+  private val amountRead: Reads[Long] = (JsPath \ "amount").read[Long]
+  private val unitRead: Reads[String] = (JsPath \ "unit").read[String].map(u => u.toUpperCase)
 
   implicit val durationReads: Reads[Duration] = (
-    lengthRead and unitRead.map(ChronoUnit.valueOf(_))
+    amountRead and unitRead.map(ChronoUnit.valueOf(_))
   )(Duration.of(_, _))
 
   implicit val durationWrites: Writes[Duration] = (
-    (JsPath \ "length").write[Long] and
+    (JsPath \ "amount").write[Long] and
       (JsPath \ "unit").write[String]
   )(d => (d.toSeconds, ChronoUnit.SECONDS.name()))
 
@@ -110,9 +110,13 @@ object GrantLength {
     fromInt(grantLengthInDays).getOrElse(throw new IllegalStateException(s"$grantLengthInDays is not an expected value. $errorMsg"))
   }
 
-  def apply(length: Long, unit: String): GrantLength = {
+  def apply(grantLengthInDays: Int): Option[GrantLength] = {
+    GrantLength.values.find(e => e.duration.toDays == grantLengthInDays)
+  }
+
+  def apply(amount: Long, unit: String): GrantLength = {
     try {
-      val duration = Duration.of(length, ChronoUnit.valueOf(unit))
+      val duration = Duration.of(amount, ChronoUnit.valueOf(unit))
       GrantLength.values.find(e => e.duration == duration).getOrElse(throw new IllegalStateException(s"$duration is not an expected value. $errorMsg"))
     } catch {
       case e: IllegalArgumentException if (e.getMessage.contains("No enum constant java.time.temporal.ChronoUnit")) =>
@@ -139,7 +143,7 @@ object GrantLength {
   implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Int]].contramap(x => x.duration.toDays.toInt)
 
   implicit val readsGrantLength: Reads[GrantLength] = {
-    ((JsPath \ "length").read[Long] and
+    ((JsPath \ "amount").read[Long] and
       (JsPath \ "unit").read[String].map(u => u.toUpperCase)).apply(GrantLength.apply(_, _)).orElse(
       implicitly[Reads[Int]].flatMapResult {
         case i: Int if (allowedIntValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))

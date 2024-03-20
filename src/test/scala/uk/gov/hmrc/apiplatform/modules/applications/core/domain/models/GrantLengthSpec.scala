@@ -33,6 +33,10 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       }
     }
 
+    "apply succeeds for valid value" in {
+      GrantLength.apply(30) shouldBe Some(GrantLength.ONE_MONTH)
+    }
+
     "unsafeFrom succeeds for valid value" in {
       GrantLength.unsafeApply(30) shouldBe GrantLength.ONE_MONTH
     }
