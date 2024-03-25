@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import java.time.temporal.ChronoUnit
+import java.time.Period
 
 import org.scalatest.prop.TableDrivenPropertyChecks
 
@@ -39,23 +39,9 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       GrantLength.apply(30) shouldBe Some(GrantLength.ONE_MONTH)
     }
 
-    "2-param apply succeeds for valid value" in {
-      GrantLength.apply(30, ChronoUnit.DAYS.name) shouldBe GrantLength.ONE_MONTH
-    }
-
-    "unsafeFrom succeeds for valid value" in {
-      GrantLength.unsafeApply(30) shouldBe GrantLength.ONE_MONTH
-    }
-
-    "unsafeFrom throws when given a bad value" in {
-      intercept[Exception] {
-        GrantLength.unsafeApply(2)
-      }
-    }
-
     "apply throws when given a bad value" in {
       intercept[Exception] {
-        GrantLength.apply(5, "hours")
+        GrantLength.apply(Period.ofDays(5))
       }
     }
 
@@ -69,11 +55,16 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       testFromJson[GrantLength]("""30""")(GrantLength.ONE_MONTH)
     }
 
-    "not read invalid json but return a JsError instead" in {
-      Json.fromJson[GrantLength](JsNumber(2)) match {
-        case e: JsError if (JsError.Message.unapply(e) == Some("Invalid grant length 2")) => succeed
-        case _                                                                            => fail("Should have failed validation")
+    "read Int grant length into Period" in {
+      val grantLength = GrantLength.ONE_DAY
+      Json.fromJson[GrantLength](JsNumber(1)) shouldBe JsSuccess(grantLength)
+    }
+
+    "not read invalid json but throw an IllegalStateException instead" in {
+      val e = intercept[IllegalStateException] {
+        Json.fromJson[GrantLength](JsNumber(2))
       }
+      e.getMessage shouldBe "P2D is not an expected value. It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
     }
   }
 }

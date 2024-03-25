@@ -32,50 +32,40 @@ class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
         "gatekeeperUser" -> s"${aGatekeeperUser}",
         "timestamp"      -> s"$nowAsText",
-        "grantLength"    -> aGrantLength.duration.toDays,
+        "grantLength"    -> aGrantLength.period.getDays,
         "updateType"     -> s"$updateType"
       )
     }
 
     "read from json where grant length is Int" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":${aGrantLength.duration.toDays},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":${aGrantLength.period.getDays},"updateType":"$updateType"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }
 
-    "read from json where grant length is Duration" in {
+    "read from json where grant length is Period" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":180, "unit":"days"},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":"P180D","updateType":"$updateType"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }
 
-    "read from json where grant length is 4 hours as Duration" in {
+    "read from json where grant length is 4 hours as Period" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":4, "unit":"hours"},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":"P0D","updateType":"$updateType"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd.copy(grantLength = GrantLength.FOUR_HOURS)
     }
 
     "block setting grant length to a disallowed amount value" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":13, "unit":"hours"},"updateType":"$updateType"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":"P19D","updateType":"$updateType"} """
 
       val ex = intercept[Exception] {
         Json.parse(jsonText).as[ApplicationCommand]
       }
-      ex.getMessage shouldBe "PT13H is not an expected value. It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
-    }
-
-    "block setting grant length when invalid unit" in {
-      val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","grantLength":{"amount":4, "unit":"hour"},"updateType":"$updateType"} """
-
-      val ex = intercept[Exception] {
-        Json.parse(jsonText).as[ApplicationCommand]
-      }
-      ex.getMessage shouldBe "HOUR is not an expected value for Unit in GrantLength. Must be one of the enum ChronoUnit."
+      ex.getMessage shouldBe "P19D is not an expected value. It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
     }
   }
 }
