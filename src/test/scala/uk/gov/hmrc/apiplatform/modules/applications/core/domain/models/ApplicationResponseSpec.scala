@@ -32,7 +32,7 @@ class ApplicationResponseSpec extends BaseJsonFormattersSpec {
     }
 
     "read from json with Grant Length as Period" in {
-      testFromJson[ApplicationResponse](jsonTextWithGrantLengthDuration)(example)
+      testFromJson[ApplicationResponse](jsonTextWithGrantLengthPeriod)(example)
     }
 
     "read from json with Grant Length as Int" in {
@@ -81,7 +81,7 @@ object ApplicationResponseSpec extends FixedClock {
     moreApplication = MoreApplication(false)
   )
 
-  val jsonTextWithGrantLengthDuration =
+  val jsonTextWithGrantLengthPeriod =
     s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.jsonTextForAdmin}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false}}"""
 
   val jsonTextWithGrantLengthInt =
