@@ -64,7 +64,7 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       val e = intercept[IllegalStateException] {
         Json.fromJson[GrantLength](JsNumber(2))
       }
-      e.getMessage shouldBe "P2D is not an expected value. It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
+      e.getMessage shouldBe "P2D is not an expected value. It should only be one of ('0 days, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
     }
   }
 }

@@ -81,7 +81,7 @@ object GrantLength {
 
   val values = SortedSet[GrantLength](FOUR_HOURS, ONE_DAY, ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR, EIGHTEEN_MONTHS, THREE_YEARS, FIVE_YEARS, TEN_YEARS, ONE_HUNDRED_YEARS)
 
-  private val errorMsg: String = "It should only be one of ('4 hours, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', " +
+  private val errorMsg: String = "It should only be one of ('0 days, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', " +
     "'3 years', '5 years', '10 years', '100 years')"
 
   def apply(grantLengthInDays: Int): Option[GrantLength] = {
