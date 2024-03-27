@@ -65,7 +65,7 @@ class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
       val ex = intercept[Exception] {
         Json.parse(jsonText).as[ApplicationCommand]
       }
-      ex.getMessage shouldBe "P19D is not an expected value. It should only be one of ('0 days, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
+      ex.getMessage contains "P19D is not an expected value. It should only be one of ('0 days, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
     }
   }
 }

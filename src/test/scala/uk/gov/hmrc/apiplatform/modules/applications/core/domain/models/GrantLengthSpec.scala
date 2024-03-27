@@ -39,10 +39,12 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       GrantLength.apply(30) shouldBe Some(GrantLength.ONE_MONTH)
     }
 
-    "apply throws when given a bad value" in {
-      intercept[Exception] {
-        GrantLength.apply(Period.ofDays(5))
-      }
+    "apply returns None when given a bad period" in {
+      GrantLength.apply(Period.ofDays(5)) shouldBe None
+    }
+
+    "apply returns None when given a bad number" in {
+      GrantLength.apply(5) shouldBe None
     }
 
     "convert to json" in {
@@ -60,11 +62,8 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       Json.fromJson[GrantLength](JsNumber(1)) shouldBe JsSuccess(grantLength)
     }
 
-    "not read invalid json but throw an IllegalStateException instead" in {
-      val e = intercept[IllegalStateException] {
-        Json.fromJson[GrantLength](JsNumber(2))
-      }
-      e.getMessage shouldBe "P2D is not an expected value. It should only be one of ('0 days, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', '3 years', '5 years', '10 years', '100 years')"
+    "return JsError for invalid json" in {
+      Json.fromJson[GrantLength](JsString("Hello")) shouldBe JsError(JsonValidationError("error.invalid.stringPeriod"))
     }
   }
 }
