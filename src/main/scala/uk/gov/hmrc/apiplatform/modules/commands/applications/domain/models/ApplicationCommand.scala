@@ -35,7 +35,7 @@ sealed trait GatekeeperMixin {
   def gatekeeperUser: String
 }
 
-sealed trait JobsMixin       {
+sealed trait JobsMixin {
   def jobId: String
 }
 
@@ -94,7 +94,7 @@ object ApplicationCommands {
   case class AllowApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
   case class BlockApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
 
-  case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLengthInDays: GrantLength) extends GrantLengthCommand with GatekeeperMixin
+  case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLength: GrantLength)       extends GrantLengthCommand with GatekeeperMixin
   case class ChangeRateLimitTier(gatekeeperUser: String, timestamp: Instant, rateLimitTier: RateLimitTier) extends RateLimitCommand with GatekeeperMixin
 
   case class ChangeResponsibleIndividualToSelf(instigator: UserId, timestamp: Instant, name: String, email: LaxEmailAddress)                      extends SubmissionCommand

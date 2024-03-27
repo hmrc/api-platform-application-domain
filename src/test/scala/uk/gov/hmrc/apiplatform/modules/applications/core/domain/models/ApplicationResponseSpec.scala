@@ -28,11 +28,15 @@ class ApplicationResponseSpec extends BaseJsonFormattersSpec {
 
   "Application" should {
     "convert to json" in {
-      Json.toJson[ApplicationResponse](example) shouldBe Json.parse(jsonText)
+      Json.toJson[ApplicationResponse](example) shouldBe Json.parse(jsonTextWithGrantLengthInt)
     }
 
-    "read from json" in {
-      testFromJson[ApplicationResponse](jsonText)(example)
+    "read from json with Grant Length as Period" in {
+      testFromJson[ApplicationResponse](jsonTextWithGrantLengthPeriod)(example)
+    }
+
+    "read from json with Grant Length as Int" in {
+      testFromJson[ApplicationResponse](jsonTextWithGrantLengthInt)(example)
     }
 
     "return the admins" in {
@@ -63,7 +67,7 @@ object ApplicationResponseSpec extends FixedClock {
     collaborators = Set(CollaboratorSpec.exampleAdmin),
     createdOn = instant,
     lastAccess = None,
-    grantLength = GrantLength.EIGHTEEN_MONTHS.days,
+    grantLength = GrantLength.EIGHTEEN_MONTHS,
     lastAccessTokenUsage = None,
     termsAndConditionsUrl = None,
     privacyPolicyUrl = None,
@@ -77,6 +81,10 @@ object ApplicationResponseSpec extends FixedClock {
     moreApplication = MoreApplication(false)
   )
 
-  val jsonText =
+  val jsonTextWithGrantLengthPeriod =
+    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.jsonTextForAdmin}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false}}"""
+
+  val jsonTextWithGrantLengthInt =
     s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.jsonTextForAdmin}],"createdOn":"$nowAsText","grantLength":547,"access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false}}"""
+
 }

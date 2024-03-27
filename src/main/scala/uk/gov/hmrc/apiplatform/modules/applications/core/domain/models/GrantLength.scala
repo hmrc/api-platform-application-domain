@@ -16,45 +16,81 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import java.time.Period
 import scala.collection.immutable.SortedSet
 
-import play.api.libs.json._
+import play.api.libs.json.{Reads, _}
 
-sealed trait GrantLength {
-  val days: Int
+/** This class is retained for as long as there are GrantLengthAsInt floating around */
+
+trait GrantLength {
+  val period: Period
 
   override def toString() = GrantLength.show(this)
 }
 
 object GrantLength {
-  case object ONE_DAY           extends GrantLength { val days = 1     }
-  case object ONE_MONTH         extends GrantLength { val days = 30    }
-  case object THREE_MONTHS      extends GrantLength { val days = 90    }
-  case object SIX_MONTHS        extends GrantLength { val days = 180   }
-  case object ONE_YEAR          extends GrantLength { val days = 365   }
-  case object EIGHTEEN_MONTHS   extends GrantLength { val days = 547   }
-  case object THREE_YEARS       extends GrantLength { val days = 1095  }
-  case object FIVE_YEARS        extends GrantLength { val days = 1825  }
-  case object TEN_YEARS         extends GrantLength { val days = 3650  }
-  case object ONE_HUNDRED_YEARS extends GrantLength { val days = 36500 }
 
-  implicit val ordering: Ordering[GrantLength] = Ordering.by(_.days)
-  val values                                   = SortedSet[GrantLength](ONE_DAY, ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR, EIGHTEEN_MONTHS, THREE_YEARS, FIVE_YEARS, TEN_YEARS, ONE_HUNDRED_YEARS)
-
-  private val allowedIntegerValues = values.map(_.days)
-
-  def unsafeApply(grantLengthInDays: Int): GrantLength = {
-    val errorMsg: String = "It should only be one of ('1 day', '1 month', '3 months', '6 months', '1 year', '18 months', " +
-      "'3 years', '5 years', '10 years', '100 years') represented in days"
-
-    apply(grantLengthInDays).getOrElse(throw new IllegalStateException(s"$grantLengthInDays is not an expected value. $errorMsg"))
+  case object FOUR_HOURS extends GrantLength {
+    val period = Period.ofDays(0)
   }
 
+  case object ONE_DAY extends GrantLength {
+    val period = Period.ofDays(1)
+  }
+
+  case object ONE_MONTH extends GrantLength {
+    val period = Period.ofDays(30)
+  }
+
+  case object THREE_MONTHS extends GrantLength {
+    val period = Period.ofDays(90)
+  }
+
+  case object SIX_MONTHS extends GrantLength {
+    val period = Period.ofDays(180)
+  }
+
+  case object ONE_YEAR extends GrantLength {
+    val period = Period.ofDays(365)
+  }
+
+  case object EIGHTEEN_MONTHS extends GrantLength {
+    val period = Period.ofDays(547)
+  }
+
+  case object THREE_YEARS extends GrantLength {
+    val period = Period.ofDays(1095)
+  }
+
+  case object FIVE_YEARS extends GrantLength {
+    val period = Period.ofDays(1825)
+  }
+
+  case object TEN_YEARS extends GrantLength {
+    val period = Period.ofDays(3650)
+  }
+
+  case object ONE_HUNDRED_YEARS extends GrantLength {
+    val period = Period.ofDays(36500)
+  }
+
+  implicit val orderingPeriod: Ordering[Period] = Ordering.by(_.getDays)
+
+  implicit val ordering: Ordering[GrantLength] = Ordering.by(_.period)
+
+  val values = SortedSet[GrantLength](FOUR_HOURS, ONE_DAY, ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR, EIGHTEEN_MONTHS, THREE_YEARS, FIVE_YEARS, TEN_YEARS, ONE_HUNDRED_YEARS)
+
   def apply(grantLengthInDays: Int): Option[GrantLength] = {
-    GrantLength.values.find(e => e.days == grantLengthInDays)
+    GrantLength.values.find(e => e.period.getDays == grantLengthInDays)
+  }
+
+  def apply(period: Period): Option[GrantLength] = {
+    GrantLength.values.find(possibleValues => possibleValues.period == period)
   }
 
   def show(grantLength: GrantLength): String = grantLength match {
+    case FOUR_HOURS        => "4 hours"
     case ONE_DAY           => "1 day"
     case ONE_MONTH         => "1 month"
     case THREE_MONTHS      => "3 months"
@@ -69,10 +105,18 @@ object GrantLength {
 
   import play.api.libs.json.Reads._
 
-  implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Int]].contramap(_.days)
+  implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Int]].contramap(x => x.period.getDays)
 
-  implicit val readsGrantLength: Reads[GrantLength] = implicitly[Reads[Int]].flatMapResult {
-    case i if (allowedIntegerValues.contains(i)) => JsSuccess(GrantLength.unsafeApply(i))
-    case i                                       => JsError(s"Invalid grant length $i")
+  implicit val readsGrantLength: Reads[GrantLength] = {
+
+    val errorMsg: String = "It should only be one of ('0 days, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', " +
+      "'3 years', '5 years', '10 years', '100 years')"
+
+    def error(period: Period): JsResult[GrantLength]             = JsError(s"$period is not an expected value. $errorMsg")
+    def success(grantLength: GrantLength): JsResult[GrantLength] = JsSuccess(grantLength)
+
+    JsPath.read[Period].flatMapResult {
+      case p: Period => GrantLength.apply(p).fold(error(p))(success(_))
+    }
   }
 }

@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import java.time.Period
+
 import org.scalatest.prop.TableDrivenPropertyChecks
 
 import play.api.libs.json._
@@ -33,14 +35,16 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       }
     }
 
-    "unsafeFrom succeeds for valid value" in {
-      GrantLength.unsafeApply(30) shouldBe GrantLength.ONE_MONTH
+    "1-param apply succeeds for valid value" in {
+      GrantLength.apply(30) shouldBe Some(GrantLength.ONE_MONTH)
     }
 
-    "unsafeFrom throws when given a bad value" in {
-      intercept[Exception] {
-        GrantLength.unsafeApply(2)
-      }
+    "apply returns None when given a bad period" in {
+      GrantLength.apply(Period.ofDays(5)) shouldBe None
+    }
+
+    "apply returns None when given a bad number" in {
+      GrantLength.apply(5) shouldBe None
     }
 
     "convert to json" in {
@@ -53,11 +57,13 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
       testFromJson[GrantLength]("""30""")(GrantLength.ONE_MONTH)
     }
 
-    "not read invalid json but return a JsError instead" in {
-      Json.fromJson[GrantLength](JsNumber(2)) match {
-        case e: JsError if (JsError.Message.unapply(e) == Some("Invalid grant length 2")) => succeed
-        case _                                                                            => fail("Should have failed validation")
-      }
+    "read Int grant length into Period" in {
+      val grantLength = GrantLength.ONE_DAY
+      Json.fromJson[GrantLength](JsNumber(1)) shouldBe JsSuccess(grantLength)
+    }
+
+    "return JsError for invalid json" in {
+      Json.fromJson[GrantLength](JsString("Hello")) shouldBe JsError(JsonValidationError("error.invalid.stringPeriod"))
     }
   }
 }

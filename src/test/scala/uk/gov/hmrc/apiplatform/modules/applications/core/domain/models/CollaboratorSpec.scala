@@ -170,6 +170,6 @@ object CollaboratorSpec {
   val userId = UserId.random
 
   val exampleAdmin     = Collaborators.Administrator(userId, email)
-  val jsonTextForAdmin = s"""{"role":"ADMINISTRATOR","userId":"$userId","emailAddress":"bob@smith.com"}"""
+  val jsonTextForAdmin = s"""{"userId":"$userId","emailAddress":"bob@smith.com","role":"ADMINISTRATOR"}"""
   val exampleDeveloper = Collaborators.Developer(userId, email)
 }
