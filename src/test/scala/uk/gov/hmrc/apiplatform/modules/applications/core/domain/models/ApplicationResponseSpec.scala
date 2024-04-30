@@ -28,7 +28,7 @@ class ApplicationResponseSpec extends BaseJsonFormattersSpec {
 
   "Application" should {
     "convert to json" in {
-      Json.toJson[ApplicationResponse](example) shouldBe Json.parse(jsonTextWithGrantLengthInt)
+      Json.toJson[ApplicationResponse](example) shouldBe Json.parse(jsonTextWithGrantLengthPeriod)
     }
 
     "read from json with Grant Length as Period" in {

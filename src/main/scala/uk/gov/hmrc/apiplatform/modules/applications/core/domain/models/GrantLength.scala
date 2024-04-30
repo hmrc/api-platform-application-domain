@@ -105,7 +105,7 @@ object GrantLength {
 
   import play.api.libs.json.Reads._
 
-  implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Int]].contramap(x => x.period.getDays)
+  implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Period]].contramap(x => x.period)
 
   implicit val readsGrantLength: Reads[GrantLength] = {
 
