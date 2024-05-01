@@ -48,8 +48,8 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
     }
 
     "convert to json" in {
-      Json.toJson[GrantLength](GrantLength.ONE_DAY) shouldBe JsNumber(1)
-      Json.toJson[GrantLength](GrantLength.ONE_MONTH) shouldBe JsNumber(30)
+      Json.toJson[GrantLength](GrantLength.ONE_DAY) shouldBe Json.toJson(GrantLength.ONE_DAY.period)
+      Json.toJson[GrantLength](GrantLength.ONE_MONTH) shouldBe Json.toJson(GrantLength.ONE_MONTH.period)
     }
 
     "read from json" in {

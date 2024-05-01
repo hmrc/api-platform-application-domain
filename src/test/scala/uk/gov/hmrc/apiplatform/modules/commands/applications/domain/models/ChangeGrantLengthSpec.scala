@@ -32,7 +32,7 @@ class ChangeGrantLengthSpec extends ApplicationCommandBaseSpec {
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
         "gatekeeperUser" -> s"${aGatekeeperUser}",
         "timestamp"      -> s"$nowAsText",
-        "grantLength"    -> aGrantLength.period.getDays,
+        "grantLength"    -> aGrantLength.period,
         "updateType"     -> s"$updateType"
       )
     }
