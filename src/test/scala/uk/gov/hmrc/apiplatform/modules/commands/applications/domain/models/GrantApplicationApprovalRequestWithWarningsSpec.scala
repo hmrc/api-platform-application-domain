@@ -24,7 +24,7 @@ class GrantApplicationApprovalRequestWithWarningsSpec extends ApplicationCommand
   val escalatedTo   = "top dog"
 
   "GrantApplicationApprovalRequestWithWarnings" should {
-    val cmd = ApplicationCommands.GrantApplicationApprovalRequestWithWarnings(aGatekeeperUser, aTimestamp, warningString, escalatedTo)
+    val cmd = ApplicationCommands.GrantApplicationApprovalRequestWithWarnings(aGatekeeperUser, aTimestamp, warningString, Some(escalatedTo))
 
     "write to json (as a command)" in {
 

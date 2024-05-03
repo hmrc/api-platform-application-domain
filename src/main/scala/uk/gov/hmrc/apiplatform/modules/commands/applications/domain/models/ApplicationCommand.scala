@@ -102,7 +102,8 @@ object ApplicationCommands {
   case class DeclineResponsibleIndividualDidNotVerify(code: String, timestamp: Instant)                                                           extends SubmissionCommand
   case class DeclineApplicationApprovalRequest(gatekeeperUser: String, reasons: String, timestamp: Instant)                                       extends SubmissionCommand with GatekeeperMixin
   case class GrantApplicationApprovalRequest(gatekeeperUser: String, timestamp: Instant)                                                          extends SubmissionCommand with GatekeeperMixin
-  case class GrantApplicationApprovalRequestWithWarnings(gatekeeperUser: String, timestamp: Instant, warnings: String, escalatedTo: String)              extends SubmissionCommand
+
+  case class GrantApplicationApprovalRequestWithWarnings(gatekeeperUser: String, timestamp: Instant, warnings: String, escalatedTo: Option[String])      extends SubmissionCommand
       with GatekeeperMixin
   case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: String)                                   extends SubmissionCommand with GatekeeperMixin
   case class SubmitApplicationApprovalRequest(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress) extends SubmissionCommand
