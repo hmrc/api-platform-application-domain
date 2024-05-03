@@ -59,9 +59,7 @@ sealed abstract class SubmissionCommand      extends ApplicationCommand
     2 contexts
     1). library update with new command -> in tpa need way of compile or start saying command in lib not handled in TPA so Error / wont start app
     2). command comes in... of type A what is the handler for type A
-
     1 was solved in past by exhaustivity check i.e. that was one way of solving this...
-
  */
 object ApplicationCommands {
   case class AddRedirectUri(actor: Actor, redirectUriToAdd: RedirectUri, timestamp: Instant)                                              extends RedirectCommand
@@ -103,6 +101,15 @@ object ApplicationCommands {
   case class DeclineResponsibleIndividual(code: String, timestamp: Instant)                                                                       extends SubmissionCommand
   case class DeclineResponsibleIndividualDidNotVerify(code: String, timestamp: Instant)                                                           extends SubmissionCommand
   case class DeclineApplicationApprovalRequest(gatekeeperUser: String, reasons: String, timestamp: Instant)                                       extends SubmissionCommand with GatekeeperMixin
+  case class GrantApplicationApprovalRequest(gatekeeperUser: String, timestamp: Instant)                                                          extends SubmissionCommand with GatekeeperMixin
+
+  case class GrantApplicationApprovalRequestWithWarnings(gatekeeperUser: String, timestamp: Instant, warnings: String, escalatedTo: Option[String])      extends SubmissionCommand
+      with GatekeeperMixin
+  case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: Option[String])                           extends SubmissionCommand with GatekeeperMixin
+  case class SubmitApplicationApprovalRequest(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress) extends SubmissionCommand
+  case class SubmitTermsOfUseApproval(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress)         extends SubmissionCommand
+  case class ResendRequesterEmailVerification(gatekeeperUser: String, timestamp: Instant)                                                                extends SubmissionCommand with GatekeeperMixin
+  case class SendTermsOfUseInvitation(gatekeeperUser: String, timestamp: Instant)                                                                        extends SubmissionCommand with GatekeeperMixin
 
   case class ChangeProductionApplicationTermsAndConditionsLocation(instigator: UserId, timestamp: Instant, newLocation: TermsAndConditionsLocation) extends PolicyCommand
   case class ChangeSandboxApplicationTermsAndConditionsUrl(actor: Actors.AppCollaborator, timestamp: Instant, termsAndConditionsUrl: String)        extends PolicyCommand
@@ -156,10 +163,20 @@ object ApplicationCommand {
   implicit private val deleteApplicationByGatekeeperFormatter: OFormat[DeleteApplicationByGatekeeper]                            = Json.format[DeleteApplicationByGatekeeper]
   implicit private val deleteUnusedApplicationFormatter: OFormat[DeleteUnusedApplication]                                        = Json.format[DeleteUnusedApplication]
   implicit private val deleteProductionCredentialsApplicationFormatter: OFormat[DeleteProductionCredentialsApplication]          = Json.format[DeleteProductionCredentialsApplication]
-  implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]                                                          = Json.format[SubscribeToApi]
-  implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi]                                                  = Json.format[UnsubscribeFromApi]
-  implicit private val UpdateRedirectUrisFormatter: OFormat[UpdateRedirectUris]                                                  = Json.format[UpdateRedirectUris]
-  implicit private val ChangeIpAllowlistFormatter: OFormat[ChangeIpAllowlist]                                                    = Json.format[ChangeIpAllowlist]
+  implicit private val grantApplicationApprovalRequestFormatter: OFormat[GrantApplicationApprovalRequest]                        = Json.format[GrantApplicationApprovalRequest]
+
+  implicit private val grantApplicationApprovalRequestWithWarningsFormat: OFormat[GrantApplicationApprovalRequestWithWarnings] =
+    Json.format[GrantApplicationApprovalRequestWithWarnings]
+  implicit private val grantTermsOfUseApprovalFormat: OFormat[GrantTermsOfUseApproval]                                         = Json.format[GrantTermsOfUseApproval]
+  implicit private val submitApplicationApprovalRequestFormat: OFormat[SubmitApplicationApprovalRequest]                       = Json.format[SubmitApplicationApprovalRequest]
+  implicit private val submitTermsOfUseApprovalFormat: OFormat[SubmitTermsOfUseApproval]                                       = Json.format[SubmitTermsOfUseApproval]
+  implicit private val resendRequesterEmailVerificationFormat: OFormat[ResendRequesterEmailVerification]                       = Json.format[ResendRequesterEmailVerification]
+  implicit private val sendTermsOfUseInvitationFormat: OFormat[SendTermsOfUseInvitation]                                       = Json.format[SendTermsOfUseInvitation]
+
+  implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]         = Json.format[SubscribeToApi]
+  implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi] = Json.format[UnsubscribeFromApi]
+  implicit private val UpdateRedirectUrisFormatter: OFormat[UpdateRedirectUris] = Json.format[UpdateRedirectUris]
+  implicit private val ChangeIpAllowlistFormatter: OFormat[ChangeIpAllowlist]   = Json.format[ChangeIpAllowlist]
 
   implicit val formatter: OFormat[ApplicationCommand] = Union.from[ApplicationCommand]("updateType")
     .and[AddCollaborator]("addCollaborator")
@@ -185,6 +202,13 @@ object ApplicationCommand {
     .and[DeleteApplicationByGatekeeper]("deleteApplicationByGatekeeper")
     .and[DeleteUnusedApplication]("deleteUnusedApplication")
     .and[DeleteProductionCredentialsApplication]("deleteProductionCredentialsApplication")
+    .and[GrantApplicationApprovalRequest]("grantApplicationApprovalRequest")
+    .and[GrantApplicationApprovalRequestWithWarnings]("grantApplicationApprovalRequestWithWarnings")
+    .and[GrantTermsOfUseApproval]("grantTermsOfUseApproval")
+    .and[SubmitApplicationApprovalRequest]("submitApplicationApprovalRequest")
+    .and[SubmitTermsOfUseApproval]("submitTermsOfUseApproval")
+    .and[ResendRequesterEmailVerification]("resendRequesterEmailVerification")
+    .and[SendTermsOfUseInvitation]("sendTermsOfUseInvitation")
     .and[SubscribeToApi]("subscribeToApi")
     .and[UnsubscribeFromApi]("unsubscribeFromApi")
     .and[UpdateRedirectUris]("updateRedirectUris")
