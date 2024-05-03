@@ -105,7 +105,7 @@ object ApplicationCommands {
 
   case class GrantApplicationApprovalRequestWithWarnings(gatekeeperUser: String, timestamp: Instant, warnings: String, escalatedTo: Option[String])      extends SubmissionCommand
       with GatekeeperMixin
-  case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: String)                                   extends SubmissionCommand with GatekeeperMixin
+  case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: Option[String])                           extends SubmissionCommand with GatekeeperMixin
   case class SubmitApplicationApprovalRequest(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress) extends SubmissionCommand
   case class SubmitTermsOfUseApproval(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress)         extends SubmissionCommand
   case class ResendRequesterEmailVerification(gatekeeperUser: String, timestamp: Instant)                                                                extends SubmissionCommand with GatekeeperMixin

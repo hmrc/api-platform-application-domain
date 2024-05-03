@@ -21,27 +21,32 @@ import play.api.libs.json.Json
 class GrantApplicationApprovalRequestWithWarningsSpec extends ApplicationCommandBaseSpec {
 
   val warningString = "a warning for you"
-  val escalatedTo   = "top dog"
+  val escalatedTo   = Some("top dog")
 
   "GrantApplicationApprovalRequestWithWarnings" should {
-    val cmd = ApplicationCommands.GrantApplicationApprovalRequestWithWarnings(aGatekeeperUser, aTimestamp, warningString, Some(escalatedTo))
+    val cmd = ApplicationCommands.GrantApplicationApprovalRequestWithWarnings(aGatekeeperUser, aTimestamp, warningString, escalatedTo)
 
     "write to json (as a command)" in {
 
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
         "gatekeeperUser" -> s"${aGatekeeperUser}",
         "timestamp"      -> s"$nowAsText",
-        "warnings"       -> warningString,
-        "escalatedTo"    -> escalatedTo,
+        "warnings"       -> s"$warningString",
+        "escalatedTo"    -> s"${escalatedTo.get}",
         "updateType"     -> "grantApplicationApprovalRequestWithWarnings"
       )
     }
 
     "read from json" in {
-      val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","warnings":"$warningString", "escalatedTo":"$escalatedTo", "updateType":"grantApplicationApprovalRequestWithWarnings"} """
+      val jsonTextWitheEscalatedTo =
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","warnings":"$warningString", "escalatedTo":"${escalatedTo.get}", "updateType":"grantApplicationApprovalRequestWithWarnings"} """
 
-      Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
+      Json.parse(jsonTextWitheEscalatedTo).as[ApplicationCommand] shouldBe cmd
+
+      val jsonText =
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","warnings":"$warningString","updateType":"grantApplicationApprovalRequestWithWarnings"} """
+
+      Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd.copy(escalatedTo = None)
     }
   }
 }
