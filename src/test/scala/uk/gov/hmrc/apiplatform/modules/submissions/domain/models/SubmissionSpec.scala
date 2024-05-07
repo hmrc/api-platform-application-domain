@@ -197,6 +197,10 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
       Submission.Status.Granted(instant, "bob@example.com", None, None)
     ) shouldBe true
     Submission.Status.isLegalTransition(
+      Submission.Status.Granted(instant, "bob@example.com", Some("comments"), None),
+      Submission.Status.Declined(instant, "bob@example.com", "reasons")
+    ) shouldBe true
+    Submission.Status.isLegalTransition(
       Submission.Status.Answering(instant, false),
       Submission.Status.Granted(instant, "bob@example.com", None, None)
     ) shouldBe false
