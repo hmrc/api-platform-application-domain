@@ -289,8 +289,9 @@ object Submission extends EnvReads with NonEmptyListFormatters {
       case (f: Failed, d: Declined)                        => true
       case (w: Warnings, g: Granted)                       => true
       case (w: Warnings, g: GrantedWithWarnings)           => true
-      case (w: GrantedWithWarnings, d: Declined)           => true // ? Maybe
-      case (w: GrantedWithWarnings, g: Granted)            => true // ? Maybe
+      case (w: GrantedWithWarnings, d: Declined)           => true
+      case (w: GrantedWithWarnings, g: Granted)            => true
+      case (g: Granted, d: Declined)                       => true
       case _                                               => false
     }
   }
