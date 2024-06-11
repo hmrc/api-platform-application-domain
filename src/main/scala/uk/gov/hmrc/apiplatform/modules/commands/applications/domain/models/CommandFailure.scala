@@ -35,6 +35,8 @@ object CommandFailures {
   case object DuplicateSubscription                  extends CommandFailure
   case object SubscriptionNotAvailable               extends CommandFailure
   case object NotSubscribedToApi                     extends CommandFailure
+  case object DuplicateApplicationName               extends CommandFailure
+  case object InvalidApplicationName                 extends CommandFailure
   case class GenericFailure(describe: String)        extends CommandFailure
 
   // $COVERAGE-OFF$ - dont test text output other than the ones that have variable content
@@ -50,7 +52,9 @@ object CommandFailures {
       case _ @DuplicateSubscription          => "Duplicate subscription"
       case _ @SubscriptionNotAvailable       => "Subscription not available"
       case _ @NotSubscribedToApi             => "Not subscribed to API"
-      case _ @ClientSecretLimitExceeded      => "Client Secrets imit exceeded"
+      case _ @ClientSecretLimitExceeded      => "Client Secrets limit exceeded"
+      case _ @DuplicateApplicationName       => "New name is a duplicate"
+      case _ @InvalidApplicationName         => "New name is invalid"
       case GenericFailure(s)                 => s
     }
   }
@@ -76,5 +80,7 @@ object CommandFailure {
     .andType("DuplicateSubscription", () => DuplicateSubscription)
     .andType("SubscriptionNotAvailable", () => SubscriptionNotAvailable)
     .andType("NotSubscribedToApi", () => NotSubscribedToApi)
+    .andType("DuplicateApplicationName", () => DuplicateApplicationName)
+    .andType("InvalidApplicationName", () => InvalidApplicationName)
     .format
 }

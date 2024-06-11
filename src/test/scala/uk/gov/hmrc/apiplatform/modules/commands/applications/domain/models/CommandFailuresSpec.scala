@@ -78,6 +78,14 @@ class CommandFailuresSpec extends HmrcSpec {
       testCommandFailure("""{"failureType":"NotSubscribedToApi"}""", CommandFailures.NotSubscribedToApi)
     }
 
+    "handle json for DuplicateApplicationName" in {
+      testCommandFailure("""{"failureType":"DuplicateApplicationName"}""", CommandFailures.DuplicateApplicationName)
+    }
+
+    "handle json for InvalidApplicationName" in {
+      testCommandFailure("""{"failureType":"InvalidApplicationName"}""", CommandFailures.InvalidApplicationName)
+    }
+
     "handle json for GenericFailure" in {
       testCommandFailure("""{"describe":"someError","failureType":"GenericFailure"}""", CommandFailures.GenericFailure("someError"))
     }
