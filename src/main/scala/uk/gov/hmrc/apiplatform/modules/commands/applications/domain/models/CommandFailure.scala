@@ -35,8 +35,8 @@ object CommandFailures {
   case object DuplicateSubscription                  extends CommandFailure
   case object SubscriptionNotAvailable               extends CommandFailure
   case object NotSubscribedToApi                     extends CommandFailure
-  case object DuplicateApplicationName               extends CommandFailure
-  case object InvalidApplicationName                 extends CommandFailure
+  case class DuplicateApplicationName(name: String)  extends CommandFailure
+  case class InvalidApplicationName(name: String)    extends CommandFailure
   case class GenericFailure(describe: String)        extends CommandFailure
 
   // $COVERAGE-OFF$ - dont test text output other than the ones that have variable content
@@ -53,8 +53,8 @@ object CommandFailures {
       case _ @SubscriptionNotAvailable       => "Subscription not available"
       case _ @NotSubscribedToApi             => "Not subscribed to API"
       case _ @ClientSecretLimitExceeded      => "Client Secrets limit exceeded"
-      case _ @DuplicateApplicationName       => "New name is a duplicate"
-      case _ @InvalidApplicationName         => "New name is invalid"
+      case DuplicateApplicationName(name)    => s"An application already exists for the name '$name' "
+      case InvalidApplicationName(name)      => s"The application name '$name' contains words that are prohibited"
       case GenericFailure(s)                 => s
     }
   }
@@ -64,12 +64,16 @@ object CommandFailures {
 object CommandFailure {
   import CommandFailures._
 
-  implicit private val formatInsufficientPrivileges: OFormat[InsufficientPrivileges] = Json.format[InsufficientPrivileges]
-  implicit private val formatGenericFailure: OFormat[GenericFailure]                 = Json.format[GenericFailure]
+  implicit private val formatInsufficientPrivileges: OFormat[InsufficientPrivileges]     = Json.format[InsufficientPrivileges]
+  implicit private val formatGenericFailure: OFormat[GenericFailure]                     = Json.format[GenericFailure]
+  implicit private val formatDuplicateApplicationName: OFormat[DuplicateApplicationName] = Json.format[DuplicateApplicationName]
+  implicit private val formatInvalidApplicationName: OFormat[InvalidApplicationName]     = Json.format[InvalidApplicationName]
 
   implicit val format: Format[CommandFailure] = Union.from[CommandFailure]("failureType")
     .and[InsufficientPrivileges]("InsufficientPrivileges")
     .and[GenericFailure]("GenericFailure")
+    .and[DuplicateApplicationName]("DuplicateApplicationName")
+    .and[InvalidApplicationName]("InvalidApplicationName")
     .andType("ApplicationNotFound", () => ApplicationNotFound)
     .andType("CannotRemoveLastAdmin", () => CannotRemoveLastAdmin)
     .andType("ActorIsNotACollaboratorOnApp", () => ActorIsNotACollaboratorOnApp)
@@ -80,7 +84,5 @@ object CommandFailure {
     .andType("DuplicateSubscription", () => DuplicateSubscription)
     .andType("SubscriptionNotAvailable", () => SubscriptionNotAvailable)
     .andType("NotSubscribedToApi", () => NotSubscribedToApi)
-    .andType("DuplicateApplicationName", () => DuplicateApplicationName)
-    .andType("InvalidApplicationName", () => InvalidApplicationName)
     .format
 }

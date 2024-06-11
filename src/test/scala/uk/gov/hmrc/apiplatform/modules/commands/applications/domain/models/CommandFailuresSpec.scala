@@ -79,11 +79,11 @@ class CommandFailuresSpec extends HmrcSpec {
     }
 
     "handle json for DuplicateApplicationName" in {
-      testCommandFailure("""{"failureType":"DuplicateApplicationName"}""", CommandFailures.DuplicateApplicationName)
+      testCommandFailure("""{"name":"bob","failureType":"DuplicateApplicationName"}""", CommandFailures.DuplicateApplicationName("bob"))
     }
 
     "handle json for InvalidApplicationName" in {
-      testCommandFailure("""{"failureType":"InvalidApplicationName"}""", CommandFailures.InvalidApplicationName)
+      testCommandFailure("""{"name":"bob","failureType":"InvalidApplicationName"}""", CommandFailures.InvalidApplicationName("bob"))
     }
 
     "handle json for GenericFailure" in {
