@@ -52,7 +52,7 @@ object CommandFailures {
       case _ @DuplicateSubscription          => "Duplicate subscription"
       case _ @SubscriptionNotAvailable       => "Subscription not available"
       case _ @NotSubscribedToApi             => "Not subscribed to API"
-      case _ @ClientSecretLimitExceeded      => "Client Secrets imit exceeded"
+      case _ @ClientSecretLimitExceeded      => "Client Secrets limit exceeded"
       case _ @DuplicateApplicationName       => "New name is a duplicate"
       case _ @InvalidApplicationName         => "New name is invalid"
       case GenericFailure(s)                 => s
