@@ -101,10 +101,10 @@ object ApplicationCommands {
   case class DeclineResponsibleIndividual(code: String, timestamp: Instant)                                                                       extends SubmissionCommand
   case class DeclineResponsibleIndividualDidNotVerify(code: String, timestamp: Instant)                                                           extends SubmissionCommand
   case class DeclineApplicationApprovalRequest(gatekeeperUser: String, reasons: String, timestamp: Instant)                                       extends SubmissionCommand with GatekeeperMixin
-  case class GrantApplicationApprovalRequest(gatekeeperUser: String, timestamp: Instant)                                                          extends SubmissionCommand with GatekeeperMixin
 
-  case class GrantApplicationApprovalRequestWithWarnings(gatekeeperUser: String, timestamp: Instant, warnings: String, escalatedTo: Option[String])      extends SubmissionCommand
+  case class GrantApplicationApprovalRequest(gatekeeperUser: String, timestamp: Instant, warnings: Option[String], escalatedTo: Option[String])   extends SubmissionCommand
       with GatekeeperMixin
+
   case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: Option[String])                           extends SubmissionCommand with GatekeeperMixin
   case class SubmitApplicationApprovalRequest(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress) extends SubmissionCommand
   case class SubmitTermsOfUseApproval(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress)         extends SubmissionCommand
@@ -165,13 +165,11 @@ object ApplicationCommand {
   implicit private val deleteProductionCredentialsApplicationFormatter: OFormat[DeleteProductionCredentialsApplication]          = Json.format[DeleteProductionCredentialsApplication]
   implicit private val grantApplicationApprovalRequestFormatter: OFormat[GrantApplicationApprovalRequest]                        = Json.format[GrantApplicationApprovalRequest]
 
-  implicit private val grantApplicationApprovalRequestWithWarningsFormat: OFormat[GrantApplicationApprovalRequestWithWarnings] =
-    Json.format[GrantApplicationApprovalRequestWithWarnings]
-  implicit private val grantTermsOfUseApprovalFormat: OFormat[GrantTermsOfUseApproval]                                         = Json.format[GrantTermsOfUseApproval]
-  implicit private val submitApplicationApprovalRequestFormat: OFormat[SubmitApplicationApprovalRequest]                       = Json.format[SubmitApplicationApprovalRequest]
-  implicit private val submitTermsOfUseApprovalFormat: OFormat[SubmitTermsOfUseApproval]                                       = Json.format[SubmitTermsOfUseApproval]
-  implicit private val resendRequesterEmailVerificationFormat: OFormat[ResendRequesterEmailVerification]                       = Json.format[ResendRequesterEmailVerification]
-  implicit private val sendTermsOfUseInvitationFormat: OFormat[SendTermsOfUseInvitation]                                       = Json.format[SendTermsOfUseInvitation]
+  implicit private val grantTermsOfUseApprovalFormat: OFormat[GrantTermsOfUseApproval]                   = Json.format[GrantTermsOfUseApproval]
+  implicit private val submitApplicationApprovalRequestFormat: OFormat[SubmitApplicationApprovalRequest] = Json.format[SubmitApplicationApprovalRequest]
+  implicit private val submitTermsOfUseApprovalFormat: OFormat[SubmitTermsOfUseApproval]                 = Json.format[SubmitTermsOfUseApproval]
+  implicit private val resendRequesterEmailVerificationFormat: OFormat[ResendRequesterEmailVerification] = Json.format[ResendRequesterEmailVerification]
+  implicit private val sendTermsOfUseInvitationFormat: OFormat[SendTermsOfUseInvitation]                 = Json.format[SendTermsOfUseInvitation]
 
   implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]         = Json.format[SubscribeToApi]
   implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi] = Json.format[UnsubscribeFromApi]
@@ -203,7 +201,6 @@ object ApplicationCommand {
     .and[DeleteUnusedApplication]("deleteUnusedApplication")
     .and[DeleteProductionCredentialsApplication]("deleteProductionCredentialsApplication")
     .and[GrantApplicationApprovalRequest]("grantApplicationApprovalRequest")
-    .and[GrantApplicationApprovalRequestWithWarnings]("grantApplicationApprovalRequestWithWarnings")
     .and[GrantTermsOfUseApproval]("grantTermsOfUseApproval")
     .and[SubmitApplicationApprovalRequest]("submitApplicationApprovalRequest")
     .and[SubmitTermsOfUseApproval]("submitTermsOfUseApproval")
