@@ -18,35 +18,40 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
 
-class GrantApplicationApprovalRequestWithWarningsSpec extends ApplicationCommandBaseSpec {
+class GrantApplicationApprovalRequestSpec extends ApplicationCommandBaseSpec {
 
-  val warningString = "a warning for you"
+  val warningString = Some("a warning for you")
   val escalatedTo   = Some("top dog")
 
-  "GrantApplicationApprovalRequestWithWarnings" should {
-    val cmd = ApplicationCommands.GrantApplicationApprovalRequestWithWarnings(aGatekeeperUser, aTimestamp, warningString, escalatedTo)
+  "GrantApplicationApprovalRequest" should {
+    val cmd = ApplicationCommands.GrantApplicationApprovalRequest(aGatekeeperUser, aTimestamp, warningString, escalatedTo)
 
     "write to json (as a command)" in {
 
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
         "gatekeeperUser" -> s"${aGatekeeperUser}",
         "timestamp"      -> s"$nowAsText",
-        "warnings"       -> s"$warningString",
+        "warnings"       -> s"${warningString.get}",
         "escalatedTo"    -> s"${escalatedTo.get}",
-        "updateType"     -> "grantApplicationApprovalRequestWithWarnings"
+        "updateType"     -> "grantApplicationApprovalRequest"
       )
     }
 
     "read from json" in {
       val jsonTextWitheEscalatedTo =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","warnings":"$warningString", "escalatedTo":"${escalatedTo.get}", "updateType":"grantApplicationApprovalRequestWithWarnings"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","warnings":"${warningString.get}", "escalatedTo":"${escalatedTo.get}", "updateType":"grantApplicationApprovalRequest"} """
 
       Json.parse(jsonTextWitheEscalatedTo).as[ApplicationCommand] shouldBe cmd
 
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","warnings":"$warningString","updateType":"grantApplicationApprovalRequestWithWarnings"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","warnings":"${warningString.get}","updateType":"grantApplicationApprovalRequest"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd.copy(escalatedTo = None)
+
+      val jsonWithoutWarningsorEscalatedToText =
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","timestamp":"$nowAsText","updateType":"grantApplicationApprovalRequest"} """
+
+      Json.parse(jsonWithoutWarningsorEscalatedToText).as[ApplicationCommand] shouldBe cmd.copy(escalatedTo = None, warnings = None)
     }
   }
 }
