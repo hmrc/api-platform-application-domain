@@ -31,17 +31,16 @@ case class ApplicationName(value: String) extends AnyVal {
 
   def isValid: Boolean = validate().isValid
 
-  def validateCharacters(): ValidationResult[String] =
-    Validated.condNec(
+  private def validateCharacters(): ValidationResult[String] = Validated.condNec(
             !value.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
             value,
             ApplicationNameInvalidCharacters(disallowedCharacters)
         )
   
 
-  def validateLength(): ValidationResult[String] =
+  private def validateLength(): ValidationResult[String] =
   Validated.condNec(
-    minimumLength <= value.length || value.length <= maximumLength,
+    value.length >= minimumLength  && value.length <= maximumLength,
     value,
     ApplicationNameInvalidLength(minimumLength, maximumLength)
   )
