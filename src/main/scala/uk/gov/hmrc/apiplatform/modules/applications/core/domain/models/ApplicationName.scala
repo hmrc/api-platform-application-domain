@@ -1,0 +1,69 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+
+import play.api.libs.json.{Format, Json}
+
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName.disallowedCharacters
+
+import ApplicationName._
+import cats.data._
+import cats.data.Validated._
+import cats.syntax.all._
+
+
+case class ApplicationName(value: String) extends AnyVal {
+  override def toString(): String = value
+
+  def isValid: Boolean = validate().isValid
+
+  def validateCharacters(): ValidationResult[String] =
+    Validated.condNec(
+            !value.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
+            value,
+            ApplicationNameInvalidCharacters(disallowedCharacters)
+        )
+  
+
+  def validateLength(): ValidationResult[String] =
+  Validated.condNec(
+    minimumLength <= value.length || value.length <= maximumLength,
+    value,
+    ApplicationNameInvalidLength(minimumLength, maximumLength)
+  )
+
+  def validate(): ValidationResult[ApplicationName] = {
+    (validateCharacters(), validateLength()).mapN((_,_) => ApplicationName(value))
+  }
+
+}
+
+object ApplicationName {
+
+  type ValidationResult[A] = ValidatedNec[ApplicationNameValidationFailed, A]
+
+  val minimumLength        = 2
+  val maximumLength        = 50
+  val disallowedCharacters = """<>/\"'`"""
+
+  implicit val format: Format[ApplicationName] = Json.valueFormat[ApplicationName]
+}
+
+trait ApplicationNameValidationFailed
+
+case class ApplicationNameInvalidLength(minLength: Int, maxLength: Int) extends ApplicationNameValidationFailed
+case class ApplicationNameInvalidCharacters(disallowedChars: String)    extends ApplicationNameValidationFailed
