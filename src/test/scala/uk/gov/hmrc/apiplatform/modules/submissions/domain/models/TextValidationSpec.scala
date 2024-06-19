@@ -50,5 +50,15 @@ class TextValidationSpec extends HmrcSpec {
       TextValidation.MatchRegex("[0-9][0-9]").isValid("1A") shouldBe false
       TextValidation.MatchRegex("[0-9][A-Z]").isValid("12") shouldBe false
     }
+
+    "find a good application name" in {
+      TextValidation.ApplicationName.isValid("My App") shouldBe true
+      TextValidation.ApplicationName.isValid("1A$%^&") shouldBe true
+    }
+
+    "find a bad application name" in {
+      TextValidation.ApplicationName.isValid("1") shouldBe false
+      TextValidation.ApplicationName.isValid("12£") shouldBe false
+    }
   }
 }

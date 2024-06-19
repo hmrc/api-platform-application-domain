@@ -16,15 +16,13 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import play.api.libs.json.{Format, Json}
-
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName.disallowedCharacters
-
-import ApplicationName._
-import cats.data._
 import cats.data.Validated._
+import cats.data._
 import cats.syntax.all._
 
+import play.api.libs.json.{Format, Json}
+
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName._
 
 case class ApplicationName(value: String) extends AnyVal {
   override def toString(): String = value
@@ -32,21 +30,20 @@ case class ApplicationName(value: String) extends AnyVal {
   def isValid: Boolean = validate().isValid
 
   private def validateCharacters(): ValidationResult[String] = Validated.condNec(
-            !value.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
-            value,
-            ApplicationNameInvalidCharacters(disallowedCharacters)
-        )
-  
-
-  private def validateLength(): ValidationResult[String] =
-  Validated.condNec(
-    value.length >= minimumLength  && value.length <= maximumLength,
+    !value.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
     value,
-    ApplicationNameInvalidLength(minimumLength, maximumLength)
+    ApplicationNameInvalidCharacters
   )
 
+  private def validateLength(): ValidationResult[String] =
+    Validated.condNec(
+      value.length >= minimumLength && value.length <= maximumLength,
+      value,
+      ApplicationNameInvalidLength
+    )
+
   def validate(): ValidationResult[ApplicationName] = {
-    (validateCharacters(), validateLength()).mapN((_,_) => ApplicationName(value))
+    (validateCharacters(), validateLength()).mapN((_, _) => ApplicationName(value))
   }
 
 }
@@ -64,5 +61,5 @@ object ApplicationName {
 
 trait ApplicationNameValidationFailed
 
-case class ApplicationNameInvalidLength(minLength: Int, maxLength: Int) extends ApplicationNameValidationFailed
-case class ApplicationNameInvalidCharacters(disallowedChars: String)    extends ApplicationNameValidationFailed
+case object ApplicationNameInvalidLength     extends ApplicationNameValidationFailed
+case object ApplicationNameInvalidCharacters extends ApplicationNameValidationFailed

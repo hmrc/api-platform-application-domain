@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import cats.data.NonEmptyChain
+import cats.data.Validated.{Invalid, Valid}
+
 import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
-import cats.data.Validated.{Invalid, Valid}
-import cats.data.{NonEmptyChain, ValidatedNec}
 
 class ApplicationNameSpec extends BaseJsonFormattersSpec {
 
@@ -44,8 +45,8 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
       ApplicationName("M").validate() match {
         case Invalid(x: NonEmptyChain[ApplicationNameValidationFailed]) =>
           x.length shouldBe 1
-          x.head shouldBe ApplicationNameInvalidLength(2, 50)
-        case _ => fail("should be invalid")
+          x.head shouldBe ApplicationNameInvalidLength
+        case _                                                          => fail("should be invalid")
       }
     }
 
@@ -53,19 +54,27 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
       ApplicationName("My app-restricted, special app worth $100 in SILVER").validate() match {
         case Invalid(x) =>
           x.length shouldBe 1
-          x.head shouldBe ApplicationNameInvalidLength(2, 50)
-        case _ => fail("should be invalid")
+          x.head shouldBe ApplicationNameInvalidLength
+        case _          => fail("should be invalid")
       }
     }
 
     "invalidate application names with non-ASCII characters" in {
+      ApplicationName("£50").validate() match {
+        case Invalid(x) =>
+          x.length shouldBe 1
+          x.head shouldBe ApplicationNameInvalidCharacters
+        case _          => fail("should be invalid")
+      }
+    }
 
+    "invalidate application names with all validations" in {
       ApplicationName("ɐ").validate() match {
         case Invalid(x) =>
           x.length shouldBe 2
-          x.head shouldBe ApplicationNameInvalidCharacters("""<>/\"'`""")
-          x.toNonEmptyList.tail.head shouldBe ApplicationNameInvalidLength(2, 50)
-        case _ => fail("should be invalid")
+          x.head shouldBe ApplicationNameInvalidCharacters
+          x.toNonEmptyList.tail.head shouldBe ApplicationNameInvalidLength
+        case _          => fail("should be invalid")
       }
     }
 
@@ -74,8 +83,8 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
         ApplicationName(s"invalid $c").validate() match {
           case Invalid(x) =>
             x.length shouldBe 1
-            x.head shouldBe ApplicationNameInvalidCharacters("""<>/\"'`""")
-          case _ => fail("should be invalid")
+            x.head shouldBe ApplicationNameInvalidCharacters
+          case _          => fail("should be invalid")
         }
       })
     }
