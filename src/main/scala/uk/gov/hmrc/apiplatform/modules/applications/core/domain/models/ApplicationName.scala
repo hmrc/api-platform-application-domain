@@ -22,42 +22,88 @@ import cats.syntax.all._
 
 import play.api.libs.json.{Format, Json}
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName._
-
-case class ApplicationName(value: String) extends AnyVal {
-  override def toString(): String = value
-
-  def isValid: Boolean = validate().isValid
-
-  private def validateCharacters(): ValidationResult[String] = Validated.condNec(
-    !value.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
-    value,
-    ApplicationNameInvalidCharacters
-  )
-
-  private def validateLength(): ValidationResult[String] =
-    Validated.condNec(
-      value.length >= minimumLength && value.length <= maximumLength,
-      value,
-      ApplicationNameInvalidLength
-    )
-
-  def validate(): ValidationResult[ApplicationName] = {
-    (validateCharacters(), validateLength()).mapN((_, _) => ApplicationName(value))
-  }
-
+trait ApplicationName {
+  def value: String
+  def isValid: Boolean
+}
+case class ValidatedApplicationName private (value: String) extends ApplicationName {
+  val isValid = true
 }
 
-object ApplicationName {
-
+object ValidatedApplicationName {
   type ValidationResult[A] = ValidatedNec[ApplicationNameValidationFailed, A]
 
-  val minimumLength        = 2
-  val maximumLength        = 50
-  val disallowedCharacters = """<>/\"'`"""
+  private val minimumLength        = 2
+  private val maximumLength        = 50
+  private val disallowedCharacters = """<>/\"'`"""
 
-  implicit val format: Format[ApplicationName] = Json.valueFormat[ApplicationName]
+  private def validateCharacters(applicationName: String): ValidationResult[String] = Validated.condNec(
+      !applicationName.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
+      applicationName,
+      ApplicationNameInvalidCharacters
+    )
+
+  private def validateLength(applicationName: String): ValidationResult[String] =
+      Validated.condNec(
+        applicationName.length >= minimumLength && applicationName.length <= maximumLength,
+        applicationName,
+        ApplicationNameInvalidLength
+      )
+
+  def validate(applicationName: String): ValidationResult[ValidatedApplicationName] = {
+    (validateCharacters(applicationName), validateLength(applicationName)).mapN((_, _) => new ValidatedApplicationName(applicationName))
+  }
 }
+
+case class InvalidApplicationName(value: String) extends ApplicationName {
+  val isValid = false
+}
+
+
+object ApplicationName {
+  def apply(raw: String): ApplicationName = {
+    ValidatedApplicationName.validate(raw).getOrElse(InvalidApplicationName(raw))
+  }
+}
+
+///////////////////
+
+// case class ApplicationName(value: String) extends AnyVal {
+//   override def toString(): String = value
+
+//   def isValid: Boolean = validate().isValid
+
+//   def validate(): ValidationResult[ApplicationName] = ApplicationName.validate(value)
+
+// }
+
+// object ApplicationName {
+
+//   type ValidationResult[A] = ValidatedNec[ApplicationNameValidationFailed, A]
+
+//   val minimumLength        = 2
+//   val maximumLength        = 50
+//   val disallowedCharacters = """<>/\"'`"""
+
+//   implicit val format: Format[ApplicationName] = Json.valueFormat[ApplicationName]
+
+//   def validate(applicationName: String): ValidationResult[ApplicationName] = {
+//     (validateCharacters(applicationName), validateLength(applicationName)).mapN((_, _) => ApplicationName(applicationName))
+//   }
+
+//   private def validateCharacters(applicationName: String): ValidationResult[String] = Validated.condNec(
+//     !applicationName.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
+//     applicationName,
+//     ApplicationNameInvalidCharacters
+//   )
+
+//   private def validateLength(applicationName: String): ValidationResult[String] =
+//     Validated.condNec(
+//       applicationName.length >= minimumLength && applicationName.length <= maximumLength,
+//       applicationName,
+//       ApplicationNameInvalidLength
+//     )
+// }
 
 trait ApplicationNameValidationFailed
 
