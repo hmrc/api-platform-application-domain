@@ -19,10 +19,10 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.Actors
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ValidatedApplicationName
 
 class ChangeSandboxApplicationNameSpec extends ApplicationCommandBaseSpec {
-  val newName = ApplicationName("Bobs App")
+  val newName = ValidatedApplicationName("Bobs App").get
 
   "ChangeSandboxApplicationName" should {
     val cmd = ApplicationCommands.ChangeSandboxApplicationName(Actors.AppCollaborator(anActorEmail), aTimestamp, newName)

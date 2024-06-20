@@ -79,11 +79,11 @@ object ApplicationCommands {
 //----
   case class ChangeIpAllowlist(actor: Actor, timestamp: Instant, required: Boolean, oldIpAllowlist: List[CidrBlock], newIpAllowlist: List[CidrBlock]) extends IpAllowListCommand
 
-  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: ApplicationName) extends NameDescriptionCommand
+  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: ValidatedApplicationName) extends NameDescriptionCommand
       with GatekeeperMixin
-  case class ChangeSandboxApplicationName(actor: Actors.AppCollaborator, timestamp: Instant, newName: ApplicationName)                 extends NameDescriptionCommand
-  case class ChangeSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant, description: String)               extends NameDescriptionCommand
-  case class ClearSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant)                                     extends NameDescriptionCommand
+  case class ChangeSandboxApplicationName(actor: Actors.AppCollaborator, timestamp: Instant, newName: ValidatedApplicationName)                 extends NameDescriptionCommand
+  case class ChangeSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant, description: String)                        extends NameDescriptionCommand
+  case class ClearSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant)                                              extends NameDescriptionCommand
 
   case class DeleteApplicationByGatekeeper(gatekeeperUser: String, requestedByEmailAddress: LaxEmailAddress, reasons: String, timestamp: Instant) extends DeleteCommand
       with GatekeeperMixin

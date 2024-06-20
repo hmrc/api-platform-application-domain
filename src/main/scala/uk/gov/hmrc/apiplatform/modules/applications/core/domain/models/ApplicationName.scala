@@ -22,12 +22,8 @@ import cats.syntax.all._
 
 import play.api.libs.json.{Format, Json}
 
-trait ApplicationName {
-  def value: String
-  def isValid: Boolean
-}
-case class ValidatedApplicationName private (value: String) extends ApplicationName {
-  val isValid = true
+case class ValidatedApplicationName private (value: String) extends AnyVal {
+  override def toString(): String = value
 }
 
 object ValidatedApplicationName {
@@ -38,72 +34,38 @@ object ValidatedApplicationName {
   private val disallowedCharacters = """<>/\"'`"""
 
   private def validateCharacters(applicationName: String): ValidationResult[String] = Validated.condNec(
-      !applicationName.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
-      applicationName,
-      ApplicationNameInvalidCharacters
-    )
+    !applicationName.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
+    applicationName,
+    ApplicationNameInvalidCharacters
+  )
 
   private def validateLength(applicationName: String): ValidationResult[String] =
-      Validated.condNec(
-        applicationName.length >= minimumLength && applicationName.length <= maximumLength,
-        applicationName,
-        ApplicationNameInvalidLength
-      )
+    Validated.condNec(
+      applicationName.length >= minimumLength && applicationName.length <= maximumLength,
+      applicationName,
+      ApplicationNameInvalidLength
+    )
+
+  def apply(raw: String): Option[ValidatedApplicationName] =
+    validate(raw) match {
+      case Valid(applicationName) => Some(applicationName)
+      case _                      => None
+    }
 
   def validate(applicationName: String): ValidationResult[ValidatedApplicationName] = {
     (validateCharacters(applicationName), validateLength(applicationName)).mapN((_, _) => new ValidatedApplicationName(applicationName))
   }
+
+  implicit val format: Format[ValidatedApplicationName] = Json.valueFormat[ValidatedApplicationName]
 }
 
-case class InvalidApplicationName(value: String) extends ApplicationName {
-  val isValid = false
+case class ApplicationName(value: String) extends AnyVal {
+  override def toString(): String = value
 }
-
 
 object ApplicationName {
-  def apply(raw: String): ApplicationName = {
-    ValidatedApplicationName.validate(raw).getOrElse(InvalidApplicationName(raw))
-  }
+  implicit val format: Format[ApplicationName] = Json.valueFormat[ApplicationName]
 }
-
-///////////////////
-
-// case class ApplicationName(value: String) extends AnyVal {
-//   override def toString(): String = value
-
-//   def isValid: Boolean = validate().isValid
-
-//   def validate(): ValidationResult[ApplicationName] = ApplicationName.validate(value)
-
-// }
-
-// object ApplicationName {
-
-//   type ValidationResult[A] = ValidatedNec[ApplicationNameValidationFailed, A]
-
-//   val minimumLength        = 2
-//   val maximumLength        = 50
-//   val disallowedCharacters = """<>/\"'`"""
-
-//   implicit val format: Format[ApplicationName] = Json.valueFormat[ApplicationName]
-
-//   def validate(applicationName: String): ValidationResult[ApplicationName] = {
-//     (validateCharacters(applicationName), validateLength(applicationName)).mapN((_, _) => ApplicationName(applicationName))
-//   }
-
-//   private def validateCharacters(applicationName: String): ValidationResult[String] = Validated.condNec(
-//     !applicationName.toCharArray.exists(c => c < 32 || c > 126 || disallowedCharacters.contains(c)),
-//     applicationName,
-//     ApplicationNameInvalidCharacters
-//   )
-
-//   private def validateLength(applicationName: String): ValidationResult[String] =
-//     Validated.condNec(
-//       applicationName.length >= minimumLength && applicationName.length <= maximumLength,
-//       applicationName,
-//       ApplicationNameInvalidLength
-//     )
-// }
 
 trait ApplicationNameValidationFailed
 

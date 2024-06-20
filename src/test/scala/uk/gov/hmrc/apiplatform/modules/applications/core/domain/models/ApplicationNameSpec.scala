@@ -25,6 +25,10 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 class ApplicationNameSpec extends BaseJsonFormattersSpec {
 
   "ApplicationName" should {
+    "toString" in {
+      ApplicationName("My App").toString() shouldBe "My App"
+    }
+
     "convert to json" in {
       Json.toJson[ApplicationName](ApplicationName("My App")) shouldBe JsString("My App")
     }
@@ -32,17 +36,29 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
     "read from json" in {
       testFromJson[ApplicationName](JsString("My App").toString)(ApplicationName("My App"))
     }
+  }
+
+  "ValidatedApplicationName" should {
+    "convert to json" in {
+      Json.toJson[ValidatedApplicationName](ValidatedApplicationName("My App").get) shouldBe JsString("My App")
+    }
+
+    "read from json" in {
+      testFromJson[ValidatedApplicationName](JsString("My App").toString)(ValidatedApplicationName("My App").get)
+    }
 
     "validate a good application name" in {
-      ApplicationName("My app").validate() shouldBe Valid(ApplicationName("My app"))
+      ValidatedApplicationName.validate("My app") shouldBe Valid(ValidatedApplicationName("My app").get)
     }
 
     "check validity of a good application name" in {
-      ApplicationName("My app-restricted, special app worth $100 in BRASS").isValid shouldBe true
+      ValidatedApplicationName.validate("My app-restricted, special app worth $100 in BRASS").isValid shouldBe true
+      ValidatedApplicationName("My app-restricted, special app worth $100 in BRASS").isDefined shouldBe true
     }
 
     "invalidate an application name with too few characters" in {
-      ApplicationName("M").validate() match {
+      ValidatedApplicationName("M").isDefined shouldBe false
+      ValidatedApplicationName.validate("M") match {
         case Invalid(x: NonEmptyChain[ApplicationNameValidationFailed]) =>
           x.length shouldBe 1
           x.head shouldBe ApplicationNameInvalidLength
@@ -51,7 +67,8 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
     }
 
     "invalidate an application name with too many characters" in {
-      ApplicationName("My app-restricted, special app worth $100 in SILVER").validate() match {
+      ValidatedApplicationName("My app-restricted, special app worth $100 in SILVER").isDefined shouldBe false
+      ValidatedApplicationName.validate("My app-restricted, special app worth $100 in SILVER") match {
         case Invalid(x) =>
           x.length shouldBe 1
           x.head shouldBe ApplicationNameInvalidLength
@@ -60,7 +77,8 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
     }
 
     "invalidate application names with non-ASCII characters" in {
-      ApplicationName("£50").validate() match {
+      ValidatedApplicationName("£50").isDefined shouldBe false
+      ValidatedApplicationName.validate("£50") match {
         case Invalid(x) =>
           x.length shouldBe 1
           x.head shouldBe ApplicationNameInvalidCharacters
@@ -69,7 +87,8 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
     }
 
     "invalidate application names with all validations" in {
-      ApplicationName("ɐ").validate() match {
+      ValidatedApplicationName("ɐ").isDefined shouldBe false
+      ValidatedApplicationName.validate("ɐ") match {
         case Invalid(x) =>
           x.length shouldBe 2
           x.head shouldBe ApplicationNameInvalidCharacters
@@ -80,7 +99,7 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
 
     "invalidate application names with disallowed special characters" in {
       List('<', '>', '/', '\\', '"', '\'', '`').foreach(c => {
-        ApplicationName(s"invalid $c").validate() match {
+        ValidatedApplicationName.validate(s"invalid $c") match {
           case Invalid(x) =>
             x.length shouldBe 1
             x.head shouldBe ApplicationNameInvalidCharacters

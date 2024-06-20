@@ -22,7 +22,7 @@ import org.apache.commons.validator.routines.EmailValidator
 
 import play.api.libs.json.{Json, OFormat}
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ValidatedApplicationName
 
 sealed trait TextValidation {
   def isValid(text: String): Boolean = this.validate(text).isRight
@@ -50,7 +50,7 @@ sealed trait TextValidation {
     }
 
     case TextValidation.ApplicationName => {
-      if (ApplicationName(text).isValid) {
+      if (ValidatedApplicationName.validate(text).isValid) {
         Right(text)
       } else {
         Left(s"$text is not a valid application name")
