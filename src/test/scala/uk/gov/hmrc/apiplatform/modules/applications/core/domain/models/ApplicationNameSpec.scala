@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import cats.data.NonEmptyChain
 import cats.data.Validated.{Invalid, Valid}
 
 import play.api.libs.json.{JsString, Json}
@@ -56,13 +55,26 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
       ValidatedApplicationName("My app-restricted, special app worth $100 in BRASS").isDefined shouldBe true
     }
 
+    "check unsafeApply with a good application name " in {
+      ValidatedApplicationName.unsafeApply("My app-restricted, special app worth $100 in BRASS") shouldBe ValidatedApplicationName(
+        "My app-restricted, special app worth $100 in BRASS"
+      ).get
+    }
+
+    "check unsafeApply with a bad application name " in {
+      val ex = intercept[RuntimeException] {
+        ValidatedApplicationName.unsafeApply("M")
+      }
+      ex.getMessage shouldBe "M is not a valid ApplicationName"
+    }
+
     "invalidate an application name with too few characters" in {
       ValidatedApplicationName("M").isDefined shouldBe false
       ValidatedApplicationName.validate("M") match {
-        case Invalid(x: NonEmptyChain[ApplicationNameValidationFailed]) =>
+        case Invalid(x) =>
           x.length shouldBe 1
           x.head shouldBe ApplicationNameInvalidLength
-        case _                                                          => fail("should be invalid")
+        case _          => fail("should be invalid")
       }
     }
 

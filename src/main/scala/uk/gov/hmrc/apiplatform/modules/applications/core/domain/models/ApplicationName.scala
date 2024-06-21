@@ -22,7 +22,7 @@ import cats.syntax.all._
 
 import play.api.libs.json.{Format, Json}
 
-case class ValidatedApplicationName private (value: String) extends AnyVal {
+case class ValidatedApplicationName(value: String) extends AnyVal {
   override def toString(): String = value
 }
 
@@ -51,6 +51,9 @@ object ValidatedApplicationName {
       case Valid(applicationName) => Some(applicationName)
       case _                      => None
     }
+
+  def unsafeApply(raw: String): ValidatedApplicationName =
+    validate(raw).getOrElse(throw new RuntimeException(s"$raw is not a valid ApplicationName"))
 
   def validate(applicationName: String): ValidationResult[ValidatedApplicationName] = {
     (validateCharacters(applicationName), validateLength(applicationName)).mapN((_, _) => new ValidatedApplicationName(applicationName))
