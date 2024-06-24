@@ -39,15 +39,15 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
 
   "ValidatedApplicationName" should {
     "convert to json" in {
-      Json.toJson[ValidatedApplicationName](ValidatedApplicationName("My App").get) shouldBe JsString("My App")
+      Json.toJson[ValidatedApplicationName](ValidatedApplicationName.unsafeApply("My App")) shouldBe JsString("My App")
     }
 
     "read from json" in {
-      testFromJson[ValidatedApplicationName](JsString("My App").toString)(ValidatedApplicationName("My App").get)
+      testFromJson[ValidatedApplicationName](JsString("My App").toString)(ValidatedApplicationName.unsafeApply("My App"))
     }
 
     "validate a good application name" in {
-      ValidatedApplicationName.validate("My app") shouldBe Valid(ValidatedApplicationName("My app").get)
+      ValidatedApplicationName.validate("My app") shouldBe Valid(ValidatedApplicationName.unsafeApply("My app"))
     }
 
     "check validity of a good application name" in {
@@ -56,9 +56,9 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
     }
 
     "check unsafeApply with a good application name " in {
-      ValidatedApplicationName.unsafeApply("My app-restricted, special app worth $100 in BRASS") shouldBe ValidatedApplicationName(
+      ValidatedApplicationName.unsafeApply("My app-restricted, special app worth $100 in BRASS") shouldBe ValidatedApplicationName.unsafeApply(
         "My app-restricted, special app worth $100 in BRASS"
-      ).get
+      )
     }
 
     "check unsafeApply with a bad application name " in {

@@ -33,7 +33,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
 
     val request =
       CreateApplicationRequestV1.create(
-        name = ValidatedApplicationName("an application").get,
+        name = ValidatedApplicationName.unsafeApply("an application"),
         access = Access.Standard(),
         description = None,
         environment = Environment.PRODUCTION,
@@ -70,7 +70,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       // This test is only checking the flow for validate, i.e. that anything other than Standard Access are created without extra validation
       // the name, collaborator values are all valid as well so should not throw an error
       CreateApplicationRequestV1.create(
-        name = ValidatedApplicationName("name").get,
+        name = ValidatedApplicationName.unsafeApply("name"),
         access = Access.Privileged(),
         description = None,
         environment = Environment.PRODUCTION,
@@ -82,7 +82,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
     "create returns error when no admins as collaborators (validate)" in {
       val error = intercept[IllegalArgumentException] {
         CreateApplicationRequestV1.create(
-          name = ValidatedApplicationName("someName").get,
+          name = ValidatedApplicationName.unsafeApply("someName"),
           access = Access.Standard(),
           description = None,
           environment = Environment.PRODUCTION,
@@ -97,7 +97,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
     "create returns error when collaborators have same email address (validate)" in {
       val error = intercept[IllegalArgumentException] {
         CreateApplicationRequestV1.create(
-          name = ValidatedApplicationName("someName").get,
+          name = ValidatedApplicationName.unsafeApply("someName"),
           access = Access.Standard(),
           description = None,
           environment = Environment.PRODUCTION,

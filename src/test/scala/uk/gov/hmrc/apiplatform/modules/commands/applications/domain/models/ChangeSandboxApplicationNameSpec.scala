@@ -22,7 +22,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.Actors
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ValidatedApplicationName
 
 class ChangeSandboxApplicationNameSpec extends ApplicationCommandBaseSpec {
-  val newName = ValidatedApplicationName("Bobs App").get
+  val newName = ValidatedApplicationName.unsafeApply("Bobs App")
 
   "ChangeSandboxApplicationName" should {
     val cmd = ApplicationCommands.ChangeSandboxApplicationName(Actors.AppCollaborator(anActorEmail), aTimestamp, newName)
