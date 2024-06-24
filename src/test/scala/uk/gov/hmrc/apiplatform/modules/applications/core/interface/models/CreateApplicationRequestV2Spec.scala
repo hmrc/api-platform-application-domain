@@ -23,6 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContext, ApiIden
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ValidatedApplicationName
 
 class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with CollaboratorsSyntax {
 
@@ -38,7 +39,7 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
 
     val request =
       CreateApplicationRequestV2.create(
-        name = "an application",
+        name = ValidatedApplicationName.unsafeApply("an application"),
         access = StandardAccessDataToCopy(),
         description = None,
         environment = Environment.PRODUCTION,

@@ -23,6 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.Stri
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ValidatedApplicationName
 
 class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with CollaboratorsSyntax {
 
@@ -32,7 +33,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
 
     val request =
       CreateApplicationRequestV1.create(
-        name = "an application",
+        name = ValidatedApplicationName.unsafeApply("an application"),
         access = Access.Standard(),
         description = None,
         environment = Environment.PRODUCTION,
@@ -69,7 +70,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       // This test is only checking the flow for validate, i.e. that anything other than Standard Access are created without extra validation
       // the name, collaborator values are all valid as well so should not throw an error
       CreateApplicationRequestV1.create(
-        name = "name",
+        name = ValidatedApplicationName.unsafeApply("name"),
         access = Access.Privileged(),
         description = None,
         environment = Environment.PRODUCTION,
@@ -78,25 +79,10 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       )
     }
 
-    "create returns error when name is empty (validate)" in {
-      val error = intercept[IllegalArgumentException] {
-        CreateApplicationRequestV1.create(
-          name = "",
-          access = Access.Standard(),
-          description = None,
-          environment = Environment.PRODUCTION,
-          collaborators = Set(admin),
-          subscriptions = None
-        )
-      }
-
-      error.getMessage() shouldBe "requirement failed: name is required"
-    }
-
     "create returns error when no admins as collaborators (validate)" in {
       val error = intercept[IllegalArgumentException] {
         CreateApplicationRequestV1.create(
-          name = "someName",
+          name = ValidatedApplicationName.unsafeApply("someName"),
           access = Access.Standard(),
           description = None,
           environment = Environment.PRODUCTION,
@@ -111,7 +97,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
     "create returns error when collaborators have same email address (validate)" in {
       val error = intercept[IllegalArgumentException] {
         CreateApplicationRequestV1.create(
-          name = "someName",
+          name = ValidatedApplicationName.unsafeApply("someName"),
           access = Access.Standard(),
           description = None,
           environment = Environment.PRODUCTION,

@@ -79,10 +79,11 @@ object ApplicationCommands {
 //----
   case class ChangeIpAllowlist(actor: Actor, timestamp: Instant, required: Boolean, oldIpAllowlist: List[CidrBlock], newIpAllowlist: List[CidrBlock]) extends IpAllowListCommand
 
-  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: String) extends NameDescriptionCommand with GatekeeperMixin
-  case class ChangeSandboxApplicationName(actor: Actors.AppCollaborator, timestamp: Instant, newName: String)                 extends NameDescriptionCommand
-  case class ChangeSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant, description: String)      extends NameDescriptionCommand
-  case class ClearSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant)                            extends NameDescriptionCommand
+  case class ChangeProductionApplicationName(gatekeeperUser: String, instigator: UserId, timestamp: Instant, newName: ValidatedApplicationName) extends NameDescriptionCommand
+      with GatekeeperMixin
+  case class ChangeSandboxApplicationName(actor: Actors.AppCollaborator, timestamp: Instant, newName: ValidatedApplicationName)                 extends NameDescriptionCommand
+  case class ChangeSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant, description: String)                        extends NameDescriptionCommand
+  case class ClearSandboxApplicationDescription(actor: Actors.AppCollaborator, timestamp: Instant)                                              extends NameDescriptionCommand
 
   case class DeleteApplicationByGatekeeper(gatekeeperUser: String, requestedByEmailAddress: LaxEmailAddress, reasons: String, timestamp: Instant) extends DeleteCommand
       with GatekeeperMixin
@@ -102,7 +103,7 @@ object ApplicationCommands {
   case class DeclineResponsibleIndividualDidNotVerify(code: String, timestamp: Instant)                                                           extends SubmissionCommand
   case class DeclineApplicationApprovalRequest(gatekeeperUser: String, reasons: String, timestamp: Instant)                                       extends SubmissionCommand with GatekeeperMixin
 
-  case class GrantApplicationApprovalRequest(gatekeeperUser: String, timestamp: Instant, warnings: Option[String], escalatedTo: Option[String])   extends SubmissionCommand
+  case class GrantApplicationApprovalRequest(gatekeeperUser: String, timestamp: Instant, warnings: Option[String], escalatedTo: Option[String]) extends SubmissionCommand
       with GatekeeperMixin
 
   case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: Option[String])                           extends SubmissionCommand with GatekeeperMixin

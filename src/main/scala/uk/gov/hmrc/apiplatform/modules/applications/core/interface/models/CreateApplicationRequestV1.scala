@@ -22,7 +22,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 case class CreateApplicationRequestV1 private (
-    name: String,
+    name: ValidatedApplicationName,
     access: Access,
     description: Option[String],
     environment: Environment,
@@ -49,7 +49,7 @@ case class CreateApplicationRequestV1 private (
 object CreateApplicationRequestV1 {
 
   def create(
-      name: String,
+      name: ValidatedApplicationName,
       access: Access,
       description: Option[String],
       environment: Environment,

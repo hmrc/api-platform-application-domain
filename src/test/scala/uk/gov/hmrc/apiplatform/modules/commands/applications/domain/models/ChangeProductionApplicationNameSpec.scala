@@ -19,8 +19,10 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ValidatedApplicationName
+
 class ChangeProductionApplicationNameSpec extends ApplicationCommandBaseSpec {
-  val newName      = "Bobs App"
+  val newName      = ValidatedApplicationName.unsafeApply("Bobs App")
   val anInstigator = UserId.random
 
   "ChangeProductionApplicationName" should {
