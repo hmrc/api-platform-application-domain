@@ -25,7 +25,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 ** This is only used for creating an app when uplifting a standard sandbox app to production
  */
 case class CreateApplicationRequestV2 private (
-    name: ValidatedApplicationName,
+    name: ApplicationName,
     access: StandardAccessDataToCopy,
     description: Option[String],
     environment: Environment,
@@ -46,7 +46,7 @@ case class CreateApplicationRequestV2 private (
 object CreateApplicationRequestV2 {
 
   def create(
-      name: ValidatedApplicationName,
+      name: ApplicationName,
       access: StandardAccessDataToCopy,
       description: Option[String],
       environment: Environment,

@@ -22,7 +22,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 trait CreateApplicationRequest {
-  def name: ValidatedApplicationName
+  def name: ApplicationName
   def description: Option[String]
   def collaborators: Set[Collaborator]
   def environment: Environment
