@@ -23,6 +23,7 @@ import uk.gov.hmrc.play.json.Union
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.InstantJsonFormatter
 
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.OverrideFlag
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
 
@@ -52,6 +53,8 @@ sealed abstract class NameDescriptionCommand extends ApplicationCommand
 sealed abstract class DeleteCommand          extends ApplicationCommand
 sealed abstract class PolicyCommand          extends ApplicationCommand
 sealed abstract class SubmissionCommand      extends ApplicationCommand
+sealed abstract class BlockCommand           extends ApplicationCommand
+sealed abstract class ScopesCommand          extends ApplicationCommand
 
 /*
    get list of available commands
@@ -119,6 +122,11 @@ object ApplicationCommands {
   case class ChangeSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant, privacyPolicyUrl: String)                  extends PolicyCommand
   case class RemoveSandboxApplicationPrivacyPolicyUrl(actor: Actors.AppCollaborator, timestamp: Instant)                                            extends PolicyCommand
 
+  case class BlockApplication(gatekeeperUser: String, timestamp: Instant)                                               extends BlockCommand with GatekeeperMixin
+  case class UnblockApplication(gatekeeperUser: String, timestamp: Instant)                                             extends BlockCommand with GatekeeperMixin
+  case class ChangeApplicationScopes(gatekeeperUser: String, scopes: Set[String], timestamp: Instant)                   extends ScopesCommand with GatekeeperMixin
+  case class ChangeApplicationAccessOverrides(gatekeeperUser: String, overrides: Set[OverrideFlag], timestamp: Instant) extends ScopesCommand with GatekeeperMixin
+
 }
 
 object ApplicationCommand {
@@ -177,6 +185,11 @@ object ApplicationCommand {
   implicit private val UpdateRedirectUrisFormatter: OFormat[UpdateRedirectUris] = Json.format[UpdateRedirectUris]
   implicit private val ChangeIpAllowlistFormatter: OFormat[ChangeIpAllowlist]   = Json.format[ChangeIpAllowlist]
 
+  implicit private val blockApplicationFormat: OFormat[BlockApplication]                                 = Json.format[BlockApplication]
+  implicit private val unblockApplicationFormat: OFormat[UnblockApplication]                             = Json.format[UnblockApplication]
+  implicit private val changeApplicationScopesFormat: OFormat[ChangeApplicationScopes]                   = Json.format[ChangeApplicationScopes]
+  implicit private val changeApplicationAccessOverridesFormat: OFormat[ChangeApplicationAccessOverrides] = Json.format[ChangeApplicationAccessOverrides]
+
   implicit val formatter: OFormat[ApplicationCommand] = Union.from[ApplicationCommand]("updateType")
     .and[AddCollaborator]("addCollaborator")
     .and[RemoveCollaborator]("removeCollaborator")
@@ -219,5 +232,9 @@ object ApplicationCommand {
     .and[ClearSandboxApplicationDescription]("clearSandboxApplicationDescription")
     .and[RemoveSandboxApplicationPrivacyPolicyUrl]("removeSandboxApplicationPrivacyPolicyUrl")
     .and[RemoveSandboxApplicationTermsAndConditionsUrl]("removeSandboxApplicationTermsAndConditionsUrl")
+    .and[BlockApplication]("blockApplication")
+    .and[UnblockApplication]("unblockApplication")
+    .and[ChangeApplicationScopes]("changeApplicationScopes")
+    .and[ChangeApplicationAccessOverrides]("changeApplicationAccessOverrides")
     .format
 }
