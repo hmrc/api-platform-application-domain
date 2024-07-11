@@ -74,8 +74,8 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
         ("OverrideFlag", "ExpectedString"),
         (OverrideFlag.PersistLogin, "PersistLogin"),
         (OverrideFlag.GrantWithoutConsent(Set("scope01")), "GrantWithoutConsent(scope01)"),
-        (OverrideFlag.SuppressIvForAgents(Set("scope01", "scope02")), "SuppressIvForAgents(scope01,scope02)"),
-        (OverrideFlag.SuppressIvForIndividuals(Set("scope01", "scope02", "scope03")), "SuppressIvForIndividuals(scope01,scope02,scope03)"),
+        (OverrideFlag.SuppressIvForAgents(Set("scope01", "scope02")), "SuppressIvForAgents(scope01, scope02)"),
+        (OverrideFlag.SuppressIvForIndividuals(Set("scope01", "scope02", "scope03")), "SuppressIvForIndividuals(scope01, scope02, scope03)"),
         (OverrideFlag.SuppressIvForOrganisations(Set.empty), "SuppressIvForOrganisations()"),
         (OverrideFlag.OriginOverride("origin01"), "OriginOverride(origin01)")
       )

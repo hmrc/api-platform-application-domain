@@ -39,10 +39,10 @@ object OverrideFlag {
   }
 
   def show(overrideFlag: OverrideFlag): String = overrideFlag match {
-    case SuppressIvForAgents(scopes)        => s"SuppressIvForAgents(${scopes.mkString(",")})"
-    case SuppressIvForOrganisations(scopes) => s"SuppressIvForOrganisations(${scopes.mkString(",")})"
-    case SuppressIvForIndividuals(scopes)   => s"SuppressIvForIndividuals(${scopes.mkString(",")})"
-    case GrantWithoutConsent(scopes)        => s"GrantWithoutConsent(${scopes.mkString(",")})"
+    case SuppressIvForAgents(scopes)        => s"SuppressIvForAgents(${scopes.mkString(", ")})"
+    case SuppressIvForOrganisations(scopes) => s"SuppressIvForOrganisations(${scopes.mkString(", ")})"
+    case SuppressIvForIndividuals(scopes)   => s"SuppressIvForIndividuals(${scopes.mkString(", ")})"
+    case GrantWithoutConsent(scopes)        => s"GrantWithoutConsent(${scopes.mkString(", ")})"
     case _: PersistLogin.type               => "PersistLogin"
     case OriginOverride(origin)             => s"OriginOverride($origin)"
   }
