@@ -69,7 +69,7 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
       }
     }
 
-    "toString" in {
+    "correctly use the toString method to convert to a string" in {
       val values = Table(
         ("OverrideFlag", "ExpectedString"),
         (OverrideFlag.PersistLogin, "PersistLogin"),
