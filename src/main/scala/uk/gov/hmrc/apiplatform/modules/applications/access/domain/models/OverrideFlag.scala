@@ -18,6 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 sealed trait OverrideFlag {
   lazy val overrideType: OverrideType = OverrideFlag.asOverrideType(this)
+  override def toString()             = OverrideFlag.show(this)
 }
 
 object OverrideFlag {
@@ -35,6 +36,15 @@ object OverrideFlag {
     case GrantWithoutConsent(_)        => OverrideType.GRANT_WITHOUT_TAXPAYER_CONSENT
     case _: PersistLogin.type          => OverrideType.PERSIST_LOGIN_AFTER_GRANT
     case OriginOverride(_)             => OverrideType.ORIGIN_OVERRIDE
+  }
+
+  def show(overrideFlag: OverrideFlag): String = overrideFlag match {
+    case SuppressIvForAgents(scopes)        => s"SuppressIvForAgents(${scopes.mkString(", ")})"
+    case SuppressIvForOrganisations(scopes) => s"SuppressIvForOrganisations(${scopes.mkString(", ")})"
+    case SuppressIvForIndividuals(scopes)   => s"SuppressIvForIndividuals(${scopes.mkString(", ")})"
+    case GrantWithoutConsent(scopes)        => s"GrantWithoutConsent(${scopes.mkString(", ")})"
+    case _: PersistLogin.type               => "PersistLogin"
+    case OriginOverride(origin)             => s"OriginOverride($origin)"
   }
 
   import play.api.libs.json._
