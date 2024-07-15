@@ -23,7 +23,7 @@ import uk.gov.hmrc.play.json.Union
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.InstantJsonFormatter
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.OverrideFlag
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.{OverrideFlag, SellResellOrDistribute}
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
 
@@ -110,6 +110,7 @@ object ApplicationCommands {
       with GatekeeperMixin
 
   case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: Option[String])                           extends SubmissionCommand with GatekeeperMixin
+  case class ChangeApplicationSellResellOrDistribute(actor: Actors.AppCollaborator, timestamp: Instant, sellResellOrDistribute: SellResellOrDistribute)  extends SubmissionCommand
   case class SubmitApplicationApprovalRequest(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress) extends SubmissionCommand
   case class SubmitTermsOfUseApproval(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress)         extends SubmissionCommand
   case class ResendRequesterEmailVerification(gatekeeperUser: String, timestamp: Instant)                                                                extends SubmissionCommand with GatekeeperMixin
@@ -174,11 +175,12 @@ object ApplicationCommand {
   implicit private val deleteProductionCredentialsApplicationFormatter: OFormat[DeleteProductionCredentialsApplication]          = Json.format[DeleteProductionCredentialsApplication]
   implicit private val grantApplicationApprovalRequestFormatter: OFormat[GrantApplicationApprovalRequest]                        = Json.format[GrantApplicationApprovalRequest]
 
-  implicit private val grantTermsOfUseApprovalFormat: OFormat[GrantTermsOfUseApproval]                   = Json.format[GrantTermsOfUseApproval]
-  implicit private val submitApplicationApprovalRequestFormat: OFormat[SubmitApplicationApprovalRequest] = Json.format[SubmitApplicationApprovalRequest]
-  implicit private val submitTermsOfUseApprovalFormat: OFormat[SubmitTermsOfUseApproval]                 = Json.format[SubmitTermsOfUseApproval]
-  implicit private val resendRequesterEmailVerificationFormat: OFormat[ResendRequesterEmailVerification] = Json.format[ResendRequesterEmailVerification]
-  implicit private val sendTermsOfUseInvitationFormat: OFormat[SendTermsOfUseInvitation]                 = Json.format[SendTermsOfUseInvitation]
+  implicit private val grantTermsOfUseApprovalFormat: OFormat[GrantTermsOfUseApproval]                                 = Json.format[GrantTermsOfUseApproval]
+  implicit private val changeApplicationSellResellOrDistributeFormat: OFormat[ChangeApplicationSellResellOrDistribute] = Json.format[ChangeApplicationSellResellOrDistribute]
+  implicit private val submitApplicationApprovalRequestFormat: OFormat[SubmitApplicationApprovalRequest]               = Json.format[SubmitApplicationApprovalRequest]
+  implicit private val submitTermsOfUseApprovalFormat: OFormat[SubmitTermsOfUseApproval]                               = Json.format[SubmitTermsOfUseApproval]
+  implicit private val resendRequesterEmailVerificationFormat: OFormat[ResendRequesterEmailVerification]               = Json.format[ResendRequesterEmailVerification]
+  implicit private val sendTermsOfUseInvitationFormat: OFormat[SendTermsOfUseInvitation]                               = Json.format[SendTermsOfUseInvitation]
 
   implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]         = Json.format[SubscribeToApi]
   implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi] = Json.format[UnsubscribeFromApi]
@@ -216,6 +218,7 @@ object ApplicationCommand {
     .and[DeleteProductionCredentialsApplication]("deleteProductionCredentialsApplication")
     .and[GrantApplicationApprovalRequest]("grantApplicationApprovalRequest")
     .and[GrantTermsOfUseApproval]("grantTermsOfUseApproval")
+    .and[ChangeApplicationSellResellOrDistribute]("changeApplicationSellResellOrDistribute")
     .and[SubmitApplicationApprovalRequest]("submitApplicationApprovalRequest")
     .and[SubmitTermsOfUseApproval]("submitTermsOfUseApproval")
     .and[ResendRequesterEmailVerification]("resendRequesterEmailVerification")
