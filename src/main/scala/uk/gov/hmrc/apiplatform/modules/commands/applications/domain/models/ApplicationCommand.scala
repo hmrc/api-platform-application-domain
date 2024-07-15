@@ -176,7 +176,7 @@ object ApplicationCommand {
   implicit private val grantApplicationApprovalRequestFormatter: OFormat[GrantApplicationApprovalRequest]                        = Json.format[GrantApplicationApprovalRequest]
 
   implicit private val grantTermsOfUseApprovalFormat: OFormat[GrantTermsOfUseApproval]                                 = Json.format[GrantTermsOfUseApproval]
-  implicit private val ChangeApplicationSellResellOrDistributeFormat: OFormat[ChangeApplicationSellResellOrDistribute] = Json.format[ChangeApplicationSellResellOrDistribute]
+  implicit private val changeApplicationSellResellOrDistributeFormat: OFormat[ChangeApplicationSellResellOrDistribute] = Json.format[ChangeApplicationSellResellOrDistribute]
   implicit private val submitApplicationApprovalRequestFormat: OFormat[SubmitApplicationApprovalRequest]               = Json.format[SubmitApplicationApprovalRequest]
   implicit private val submitTermsOfUseApprovalFormat: OFormat[SubmitTermsOfUseApproval]                               = Json.format[SubmitTermsOfUseApproval]
   implicit private val resendRequesterEmailVerificationFormat: OFormat[ResendRequesterEmailVerification]               = Json.format[ResendRequesterEmailVerification]
