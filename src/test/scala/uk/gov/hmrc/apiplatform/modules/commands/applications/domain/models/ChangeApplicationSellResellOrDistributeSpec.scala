@@ -19,25 +19,30 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.Actors
 
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistribute
+
 class ChangeApplicationSellResellOrDistributeSpec extends ApplicationCommandBaseSpec {
 
+  val sellResellOrDistribute = SellResellOrDistribute("Yes")
+
   "ChangeApplicationSellResellOrDistribute" should {
-    val cmd = ApplicationCommands.ChangeApplicationSellResellOrDistribute(Actors.AppCollaborator(anActorEmail), aTimestamp)
+    val cmd = ApplicationCommands.ChangeApplicationSellResellOrDistribute(Actors.AppCollaborator(anActorEmail), aTimestamp, sellResellOrDistribute)
 
     "write to json (as a command)" in {
 
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
-        "actor"      -> Json.obj(
+        "actor"                  -> Json.obj(
           "email" -> anActorEmail.text
         ),
-        "timestamp"  -> s"$nowAsText",
-        "updateType" -> "changeApplicationSellResellOrDistribute"
+        "timestamp"              -> s"$nowAsText",
+        "sellResellOrDistribute" -> "Yes",
+        "updateType"             -> "changeApplicationSellResellOrDistribute"
       )
     }
 
     "read from json" in {
       val jsonText =
-        s"""{"actor":{"email":"${anActorEmail.text}"},"timestamp":"$nowAsText","updateType":"changeApplicationSellResellOrDistribute"}"""
+        s"""{"actor":{"email":"${anActorEmail.text}"},"timestamp":"$nowAsText","sellResellOrDistribute":"Yes","updateType":"changeApplicationSellResellOrDistribute"}"""
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }

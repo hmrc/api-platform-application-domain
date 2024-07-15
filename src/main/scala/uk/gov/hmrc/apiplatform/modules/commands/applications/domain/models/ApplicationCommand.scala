@@ -23,7 +23,7 @@ import uk.gov.hmrc.play.json.Union
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.InstantJsonFormatter
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.OverrideFlag
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.{OverrideFlag, SellResellOrDistribute}
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
 
@@ -110,7 +110,7 @@ object ApplicationCommands {
       with GatekeeperMixin
 
   case class GrantTermsOfUseApproval(gatekeeperUser: String, timestamp: Instant, reasons: String, escalatedTo: Option[String])                           extends SubmissionCommand with GatekeeperMixin
-  case class ChangeApplicationSellResellOrDistribute(actor: Actors.AppCollaborator, timestamp: Instant)                                                  extends SubmissionCommand
+  case class ChangeApplicationSellResellOrDistribute(actor: Actors.AppCollaborator, timestamp: Instant, sellResellOrDistribute: SellResellOrDistribute)  extends SubmissionCommand
   case class SubmitApplicationApprovalRequest(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress) extends SubmissionCommand
   case class SubmitTermsOfUseApproval(actor: Actors.AppCollaborator, timestamp: Instant, requesterName: String, requesterEmail: LaxEmailAddress)         extends SubmissionCommand
   case class ResendRequesterEmailVerification(gatekeeperUser: String, timestamp: Instant)                                                                extends SubmissionCommand with GatekeeperMixin
