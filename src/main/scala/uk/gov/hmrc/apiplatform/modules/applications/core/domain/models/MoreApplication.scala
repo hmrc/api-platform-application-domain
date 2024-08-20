@@ -16,9 +16,12 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-case class MoreApplication(allowAutoDelete: Boolean)
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.ActorType
+
+case class MoreApplication(allowAutoDelete: Boolean, lastActionActor: ActorType = ActorType.UNKNOWN)
 
 object MoreApplication {
   import play.api.libs.json.{Json, OFormat}
+//  implicit val actorTypeFormat: OFormat[ActorType] = Json.format[ActorType]
   implicit val format: OFormat[MoreApplication] = Json.format[MoreApplication]
 }
