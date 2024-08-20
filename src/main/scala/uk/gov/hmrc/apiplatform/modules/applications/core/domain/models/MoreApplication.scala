@@ -22,6 +22,5 @@ case class MoreApplication(allowAutoDelete: Boolean, lastActionActor: ActorType 
 
 object MoreApplication {
   import play.api.libs.json.{Json, OFormat}
-//  implicit val actorTypeFormat: OFormat[ActorType] = Json.format[ActorType]
   implicit val format: OFormat[MoreApplication] = Json.format[MoreApplication]
 }
