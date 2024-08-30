@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import java.time.Instant
+
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.ActorType
 
-case class MoreApplication(allowAutoDelete: Boolean, lastActionActor: ActorType = ActorType.UNKNOWN)
+case class MoreApplication(allowAutoDelete: Boolean, lastActionActor: ActorType = ActorType.UNKNOWN, firstApiCallMadeOn: Option[Instant] = None)
 
 object MoreApplication {
   import play.api.libs.json.{Json, OFormat}
