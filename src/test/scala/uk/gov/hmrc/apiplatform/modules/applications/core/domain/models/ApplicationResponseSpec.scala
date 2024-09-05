@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import java.time.Instant
-
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApplicationId, ClientId, Environment}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
@@ -39,11 +37,6 @@ class ApplicationResponseSpec extends BaseJsonFormattersSpec {
 
     "read from json with Grant Length as Int" in {
       testFromJson[ApplicationResponse](jsonTextWithGrantLengthInt)(example)
-    }
-
-    "read from json with firstApiCallMadeOn present" in {
-      val expectedApplicationResponseFromJson = example.copy(moreApplication = example.moreApplication.copy(firstApiCallMadeOn = Some(Instant.parse("2024-08-27T15:00:58.816Z"))))
-      testFromJson[ApplicationResponse](jsonTextWithFirstApiCallMadeOn)(expectedApplicationResponseFromJson)
     }
 
     "return the admins" in {
@@ -93,8 +86,5 @@ object ApplicationResponseSpec extends FixedClock {
 
   val jsonTextWithGrantLengthInt =
     s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.jsonTextForAdmin}],"createdOn":"$nowAsText","grantLength":547,"access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false,"lastActionActor":"UNKNOWN"}}"""
-
-  val jsonTextWithFirstApiCallMadeOn =
-    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.jsonTextForAdmin}],"createdOn":"$nowAsText","grantLength":547,"access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false,"lastActionActor":"UNKNOWN","firstApiCallMadeOn":"2024-08-27T15:00:58.816Z"}}"""
 
 }
