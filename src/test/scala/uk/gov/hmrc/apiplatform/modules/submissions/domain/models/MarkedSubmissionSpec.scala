@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
 
+import org.scalatestplus.mockito.MockitoSugar
+
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
-class MarkedSubmissionSpec extends HmrcSpec {
+class MarkedSubmissionSpec extends HmrcSpec with MockitoSugar {
 
   private def buildMarkedSubmissionWithMarks(marks: Mark*): MarkedSubmission = {
     val submission      = mock[Submission]
