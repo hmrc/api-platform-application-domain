@@ -16,11 +16,32 @@
 
 package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
 
+import org.scalatest.prop.TableDrivenPropertyChecks
+
+import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
-class TextValidationSpec extends HmrcSpec {
+class TextValidationSpec extends HmrcSpec with TableDrivenPropertyChecks {
 
   "TextValidation" should {
+
+    val table = Table(
+      ("Validation", "Expected Json"),
+      (TextValidation.Url, Json.parse("""{"validationType":"url"}""")),
+      (TextValidation.MatchRegex("abc"), Json.parse("""{"validationType":"regex","regex":"abc"}""")),
+      (TextValidation.ApplicationName, Json.parse("""{"validationType":"applicationName"}""")),
+      (TextValidation.Email, Json.parse("""{"validationType":"email"}"""))
+    )
+
+    "convert json to and from all types" in {
+      forAll(table) {
+        case (validation, json) =>
+          val jsvalue = Json.toJson[TextValidation](validation)
+          jsvalue shouldBe json
+          Json.fromJson[TextValidation](jsvalue).get shouldBe validation
+      }
+    }
+
     "find a good email valid" in {
       TextValidation.Email.isValid("bob@exmaple.com") shouldBe true
     }

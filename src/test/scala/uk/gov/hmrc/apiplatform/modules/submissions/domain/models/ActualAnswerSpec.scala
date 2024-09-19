@@ -16,58 +16,33 @@
 
 package uk.gov.hmrc.apiplatform.modules.submissions.domain.services
 
+import org.scalatest.prop.TableDrivenPropertyChecks
+
 import play.api.libs.json._
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
 import uk.gov.hmrc.apiplatform.modules.submissions.domain.models._
 
-class ActualAnswerSpec extends HmrcSpec {
+class ActualAnswerSpec extends HmrcSpec with TableDrivenPropertyChecks {
 
   import ActualAnswer._
 
+  val table = Table(
+    ("ActualAnswer", "Expected Json"),
+    (ActualAnswer.SingleChoiceAnswer("abc"), Json.parse("""{"answerType":"singleChoice","value":"abc"}""")),
+    (ActualAnswer.MultipleChoiceAnswer(Set("Bobby", "Freddy")), Json.parse("""{"answerType":"multipleChoice","values":["Bobby","Freddy"]}""")),
+    (ActualAnswer.AcknowledgedAnswer, Json.parse("""{"answerType":"acknowledged"}""")),
+    (ActualAnswer.NoAnswer, Json.parse("""{"answerType":"noAnswer"}"""))
+  )
+
   "Can format" should {
-    "work for text answers" in {
-      val answer: ActualAnswer = TextAnswer("Bobby")
-      val text                 = Json.prettyPrint(Json.toJson(answer))
-      text shouldBe """{
-                      |  "value" : "Bobby",
-                      |  "answerType" : "text"
-                      |}""".stripMargin
-
-      val obj = Json.parse(text).as[ActualAnswer]
-      answer shouldBe obj
-    }
-
-    "work for single choice answers" in {
-      val answer: ActualAnswer = SingleChoiceAnswer("Bobby")
-      val text                 = Json.prettyPrint(Json.toJson(answer))
-      text shouldBe """{
-                      |  "value" : "Bobby",
-                      |  "answerType" : "singleChoice"
-                      |}""".stripMargin
-    }
-
-    "work for multiple choice answers" in {
-      val answer: ActualAnswer = MultipleChoiceAnswer(Set("Bobby", "Freddy"))
-      val text                 = Json.prettyPrint(Json.toJson(answer))
-      text shouldBe """{
-                      |  "values" : [ "Bobby", "Freddy" ],
-                      |  "answerType" : "multipleChoice"
-                      |}""".stripMargin
-    }
-
-    "work for AcknowledgedAnswer" in {
-      val answer: ActualAnswer = AcknowledgedAnswer
-      Json.prettyPrint(Json.toJson(answer)) shouldBe """{
-                                                       |  "answerType" : "acknowledged"
-                                                       |}""".stripMargin
-    }
-
-    "work for NoAnswers" in {
-      val answer: ActualAnswer = NoAnswer
-      Json.prettyPrint(Json.toJson(answer)) shouldBe """{
-                                                       |  "answerType" : "noAnswer"
-                                                       |}""".stripMargin
+    "convert to and from all types" in {
+      forAll(table) {
+        case (answer, json) =>
+          val jsvalue = Json.toJson[ActualAnswer](answer)
+          jsvalue shouldBe json
+          Json.fromJson[ActualAnswer](jsvalue).get shouldBe answer
+      }
     }
   }
 }

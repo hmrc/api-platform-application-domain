@@ -60,12 +60,11 @@ object AskWhen {
 
   implicit val jsonFormatAskWhenContext: OFormat[AskWhenContext] = Json.format[AskWhenContext]
   implicit val jsonFormatAskWhenAnswer: OFormat[AskWhenAnswer]   = Json.format[AskWhenAnswer]
-  implicit val jsonFormatAskAlways: OFormat[AlwaysAsk.type]      = Json.format[AlwaysAsk.type]
 
   implicit val jsonFormatCondition: Format[AskWhen] = Union.from[AskWhen]("askWhen")
     .and[AskWhenContext]("askWhenContext")
     .and[AskWhenAnswer]("askWhenAnswer")
-    .and[AlwaysAsk.type]("alwaysAsk")
+    .andType("alwaysAsk", () => AlwaysAsk)
     .format
 }
 
