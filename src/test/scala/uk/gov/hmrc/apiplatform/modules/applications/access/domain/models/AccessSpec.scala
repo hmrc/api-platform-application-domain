@@ -22,6 +22,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
+  import AccessSpec._
 
   "Access" should {
     "correctly identify the AccessType" in {
@@ -36,10 +37,6 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
         case (access, accessType) => access.accessType shouldBe accessType
       }
     }
-
-    val emptyStandard    = """{ "redirectUris":[],"overrides":[],"accessType":"STANDARD" }"""
-    val emptyPriviledged = """{"scopes":[],"accessType":"PRIVILEGED"}"""
-    val emptyRopc        = """{"scopes":[],"accessType":"ROPC"}"""
 
     val values = Table(
       ("Access", "Expected Json"),
@@ -60,4 +57,10 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
       }
     }
   }
+}
+
+object AccessSpec {
+  val emptyStandard    = """{ "redirectUris":[],"overrides":[],"accessType":"STANDARD" }"""
+  val emptyPriviledged = """{"scopes":[],"accessType":"PRIVILEGED"}"""
+  val emptyRopc        = """{"scopes":[],"accessType":"ROPC"}"""
 }

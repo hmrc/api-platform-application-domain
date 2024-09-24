@@ -23,7 +23,7 @@ import play.api.libs.json.{Reads, _}
 
 /** This class is retained for as long as there are GrantLengthAsInt floating around */
 
-trait GrantLength {
+sealed trait GrantLength {
   val period: Period
 
   override def toString() = GrantLength.show(this)

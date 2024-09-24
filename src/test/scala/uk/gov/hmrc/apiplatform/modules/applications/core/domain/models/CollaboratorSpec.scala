@@ -25,96 +25,83 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 class CollaboratorSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
   import CollaboratorSpec._
 
-  "Collborator" when {
-    "creating" should {
+  "Collaborator" when {
+    "as an administrator" should {
+      import Admin._
 
-      "create an administrator" in {
-        exampleAdmin.isAdministrator shouldBe true
-        exampleAdmin.isDeveloper shouldBe false
-        exampleAdmin shouldBe Collaborators.Administrator(userId, email)
-      }
-      "create a developer" in {
-        exampleDeveloper.isAdministrator shouldBe false
-        exampleDeveloper.isDeveloper shouldBe true
-        exampleDeveloper shouldBe Collaborators.Developer(userId, email)
-      }
-      "creating an admin via a role" in {
+      "create an admin via a role" in {
         val result = Collaborator.apply(email, Collaborator.Roles.ADMINISTRATOR, userId)
         result.isAdministrator shouldBe true
+        result.isDeveloper shouldBe false
         result shouldBe Collaborators.Administrator(userId, email)
       }
-      "creating a dev via a role" in {
-        val result = Collaborator.apply(email, Collaborator.Roles.DEVELOPER, userId)
-        result.isAdministrator shouldBe false
-        result shouldBe Collaborators.Developer(userId, email)
-      }
-    }
-
-    "given an administrator" should {
-      val anEmail             = LaxEmailAddress("bob@smith.com")
-      val admin: Collaborator = Collaborators.Administrator(userId, anEmail)
 
       "describe it's role" in {
-        admin.describeRole shouldBe "ADMINISTRATOR"
+        example.describeRole shouldBe "ADMINISTRATOR"
       }
 
       "provide the role" in {
-        admin.role shouldBe Collaborator.Roles.ADMINISTRATOR
+        example.role shouldBe Collaborator.Roles.ADMINISTRATOR
       }
 
       "be an admin" in {
-        admin.isAdministrator shouldBe true
+        example.isAdministrator shouldBe true
       }
 
       "but not a developer" in {
-        admin.isDeveloper shouldBe false
+        example.isDeveloper shouldBe false
       }
 
       "produce json" in {
-        testToJson[Collaborator](admin)(
+        testToJson[Collaborator](example)(
           ("role"         -> "ADMINISTRATOR"),
           ("userId"       -> userId.toString()),
-          ("emailAddress" -> "bob@smith.com")
+          ("emailAddress" -> email.toString())
         )
       }
 
       "read json" in {
-        testFromJson[Collaborator](s"""{"role":"ADMINISTRATOR","userId":"$userId","emailAddress":"bob@smith.com"}""")(admin)
+        testFromJson[Collaborator](s"""{"role":"ADMINISTRATOR","userId":"$userId","emailAddress":"$email"}""")(example)
       }
-
     }
 
-    "given an developer" should {
-      val anEmail                 = LaxEmailAddress("bob@smith.com")
-      val developer: Collaborator = Collaborators.Developer(userId, anEmail)
+    "as a general collaborator" should {
+      import Dev._
+
+      "create a developer via a role" in {
+        val result = Collaborator.apply(email, Collaborator.Roles.DEVELOPER, userId)
+        result.isAdministrator shouldBe false
+        result.isDeveloper shouldBe true
+        result shouldBe Collaborators.Developer(userId, email)
+      }
 
       "describe it's role" in {
-        developer.describeRole shouldBe "DEVELOPER"
+        example.describeRole shouldBe "DEVELOPER"
       }
 
       "provide the role" in {
-        developer.role shouldBe Collaborator.Roles.DEVELOPER
+        example.role shouldBe Collaborator.Roles.DEVELOPER
       }
 
       "a developer" in {
-        developer.isDeveloper shouldBe !developer.isAdministrator
-        developer.isDeveloper shouldBe true
+        example.isDeveloper shouldBe !example.isAdministrator
+        example.isDeveloper shouldBe true
       }
 
       "but not an admin" in {
-        developer.isAdministrator shouldBe false
+        example.isAdministrator shouldBe false
       }
 
       "produce json" in {
-        testToJson[Collaborator](developer)(
+        testToJson[Collaborator](example)(
           ("role"         -> "DEVELOPER"),
-          ("userId"       -> userId.toString),
-          ("emailAddress" -> "bob@smith.com")
+          ("userId"       -> userId.toString()),
+          ("emailAddress" -> email.toString())
         )
       }
 
       "read json" in {
-        testFromJson[Collaborator](s"""{"role":"DEVELOPER","userId":"${userId.toString}","emailAddress":"bob@smith.com"}""")(developer)
+        testFromJson[Collaborator](s"""{"role":"DEVELOPER","userId":"$userId","emailAddress":"$email"}""")(example)
       }
     }
 
@@ -166,10 +153,18 @@ class CollaboratorSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
 }
 
 object CollaboratorSpec {
-  val email  = LaxEmailAddress("bob@smith.com")
-  val userId = UserId.random
 
-  val exampleAdmin     = Collaborators.Administrator(userId, email)
-  val jsonTextForAdmin = s"""{"userId":"$userId","emailAddress":"bob@smith.com","role":"ADMINISTRATOR"}"""
-  val exampleDeveloper = Collaborators.Developer(userId, email)
+  object Admin {
+    val email    = LaxEmailAddress("bob@smith.com")
+    val userId   = UserId.random
+    val example  = Collaborators.Administrator(userId, email)
+    val jsonText = s"""{"userId":"$userId","emailAddress":"$email","role":"ADMINISTRATOR"}"""
+  }
+
+  object Dev {
+    val email    = LaxEmailAddress("fred@flintstone.com")
+    val userId   = UserId.random
+    val example  = Collaborators.Developer(userId, email)
+    val jsonText = s"""{"userId":"$userId","emailAddress":"$email","role":"DEVELOPER"}"""
+  }
 }

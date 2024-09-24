@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,38 +21,27 @@ import java.time.Instant
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
-case class ApplicationResponse(
+private[models] case class OldExtendedApplicationResponse(
     id: ApplicationId,
     clientId: ClientId,
     gatewayId: String,
-    name: ApplicationName,
+    name: String,
     deployedTo: Environment,
     description: Option[String],
     collaborators: Set[Collaborator],
     createdOn: Instant,
     lastAccess: Option[Instant],
-    grantLength: GrantLength,
     lastAccessTokenUsage: Option[Instant],
-    termsAndConditionsUrl: Option[String],
-    privacyPolicyUrl: Option[String],
-    access: Access,
+    grantLength: GrantLength,
+    access: Access = Access.Standard(),
     state: ApplicationState,
     rateLimitTier: RateLimitTier,
     checkInformation: Option[CheckInformation],
     blocked: Boolean,
-    trusted: Boolean,
-    ipAllowlist: IpAllowlist,
-    moreApplication: MoreApplication
-  ) {
-
-  lazy val admins: Set[Collaborator] = collaborators.filter(_.isAdministrator)
-
-  lazy val developers: Set[Collaborator] = collaborators.filter(_.isDeveloper)
-}
-
-object ApplicationResponse {
-  import play.api.libs.json.{Json, OFormat}
-
-  implicit val format: OFormat[ApplicationResponse] = Json.format[ApplicationResponse]
-}
+    serverToken: String,
+    subscriptions: List[ApiIdentifier],
+    ipAllowlist: IpAllowlist = IpAllowlist(),
+    allowAutoDelete: Boolean
+  )

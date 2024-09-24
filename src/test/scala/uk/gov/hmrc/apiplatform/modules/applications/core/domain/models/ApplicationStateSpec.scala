@@ -117,7 +117,8 @@ class ApplicationStateSpec extends BaseJsonFormattersSpec with FixedClock with T
 }
 
 object ApplicationStateSpec extends FixedClock {
-  val email    = LaxEmailAddress("fred@bedrock.com")
-  val example  = ApplicationState(State.PRODUCTION, Some(email.text), Some("Fred Flintstone"), None, instant)
+  val email   = LaxEmailAddress("fred@bedrock.com")
+  val example = ApplicationState(State.PRODUCTION, Some(email.text), Some("Fred Flintstone"), None, instant)
+
   val jsonText = s"""{"name":"PRODUCTION","requestedByEmailAddress":"${email.text}","requestedByName":"Fred Flintstone","updatedOn":"${FixedClock.nowAsText}"}"""
 }
