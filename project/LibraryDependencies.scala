@@ -3,7 +3,7 @@ import sbt._
 object LibraryDependencies {
   def apply() = compileDependencies ++ testDependencies
   
-  val commonDomainVersion = "0.16.0"
+  val commonDomainVersion = "0.17.0-SNAPSHOT"
 
   lazy val compileDependencies = Seq(
     "uk.gov.hmrc"             %% "api-platform-common-domain"     % commonDomainVersion,
@@ -18,5 +18,10 @@ object LibraryDependencies {
     "org.mockito"             %% "mockito-scala-scalatest"          % "1.17.29",
     "org.scalatest"           %% "scalatest"                        % "3.2.17",
     "uk.gov.hmrc"             %% "api-platform-test-common-domain"  % commonDomainVersion
-  ).map(_ % "test")
+  )
+
+  lazy val applicationDomain = compileDependencies ++ testDependencies.map(_ % "test")
+
+  lazy val root = compileDependencies ++ testDependencies
+  
 }
