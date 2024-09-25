@@ -32,6 +32,7 @@ trait HasEnvironment {
 trait HasAccess {
   self: { def access: Access } =>
 
+  // TODO
 }
 
 trait HasState {
