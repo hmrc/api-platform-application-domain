@@ -18,5 +18,10 @@ object LibraryDependencies {
     "org.mockito"             %% "mockito-scala-scalatest"          % "1.17.29",
     "org.scalatest"           %% "scalatest"                        % "3.2.17",
     "uk.gov.hmrc"             %% "api-platform-test-common-domain"  % commonDomainVersion
-  ).map(_ % "test")
+  )
+
+  lazy val applicationDomain = compileDependencies ++ testDependencies.map(_ % "test")
+
+  lazy val root = compileDependencies ++ testDependencies
+  
 }
