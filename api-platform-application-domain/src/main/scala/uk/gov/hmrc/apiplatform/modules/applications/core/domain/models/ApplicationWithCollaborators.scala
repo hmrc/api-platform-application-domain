@@ -34,8 +34,8 @@ case class ApplicationWithCollaborators(
   val id = coreApp.id
 
   private[core] lazy val deployedTo = coreApp.deployedTo
-  private[core] lazy val state      = coreApp.state
-  private[core] lazy val access     = coreApp.access
+  lazy val state                    = coreApp.state
+  lazy val access                   = coreApp.access
 }
 
 object ApplicationWithCollaborators {
@@ -47,7 +47,7 @@ object ApplicationWithCollaborators {
         id = old.id,
         clientId = old.clientId,
         gatewayId = old.gatewayId,
-        name = old.name.toString(),
+        name = old.name,
         deployedTo = old.deployedTo,
         description = old.description,
         createdOn = old.createdOn,

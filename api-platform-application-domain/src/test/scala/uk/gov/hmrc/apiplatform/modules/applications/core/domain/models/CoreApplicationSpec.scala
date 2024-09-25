@@ -45,7 +45,7 @@ object CoreApplicationSpec extends FixedClock {
     id,
     clientId,
     gatewayId = "",
-    name = "App",
+    name = ApplicationName("App"),
     deployedTo = Environment.PRODUCTION,
     description = None,
     createdOn = instant,

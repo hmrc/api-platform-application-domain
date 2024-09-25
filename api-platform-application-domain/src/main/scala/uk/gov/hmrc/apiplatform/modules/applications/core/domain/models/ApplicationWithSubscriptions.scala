@@ -39,7 +39,7 @@ object ApplicationWithSubscriptions {
         id = old.id,
         clientId = old.clientId,
         gatewayId = old.gatewayId,
-        name = old.name.toString(),
+        name = ApplicationName(old.name),
         deployedTo = old.deployedTo,
         description = old.description,
         createdOn = old.createdOn,

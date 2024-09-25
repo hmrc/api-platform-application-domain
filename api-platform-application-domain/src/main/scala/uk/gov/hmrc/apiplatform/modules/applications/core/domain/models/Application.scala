@@ -52,7 +52,7 @@ case class CoreApplication(
     id: ApplicationId,
     clientId: ClientId,
     gatewayId: String,
-    name: String,
+    name: ApplicationName,
     deployedTo: Environment,
     description: Option[String],
     createdOn: Instant,
