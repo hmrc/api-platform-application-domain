@@ -3,7 +3,7 @@ import sbt._
 object LibraryDependencies {
   def apply() = compileDependencies ++ testDependencies
   
-  val commonDomainVersion = "0.16.0"
+  val commonDomainVersion = "0.17.0-SNAPSHOT"
 
   lazy val compileDependencies = Seq(
     "uk.gov.hmrc"             %% "api-platform-common-domain"     % commonDomainVersion,
