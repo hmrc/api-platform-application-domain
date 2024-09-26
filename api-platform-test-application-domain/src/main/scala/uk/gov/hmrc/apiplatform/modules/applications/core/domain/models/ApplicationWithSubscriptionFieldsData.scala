@@ -16,17 +16,21 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import java.time.Instant
+object ApplicationWithSubscriptionFieldsData {
+  //   coreApp: CoreApplication,
+  //   collaborators: Set[Collaborator],
+  //   subscriptions: Set[ApiIdentifier],
+  //   fieldValues: ApiFieldMap[FieldValue]
+  // ) extends HasEnvironment with HasState with HasAccess with HasCollaborators {
+  // val id = coreApp.id
 
-import play.api.libs.json.OFormat
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{Actor, ApplicationId}
-
-case class StateHistory(applicationId: ApplicationId, state: State, actor: Actor, previousState: Option[State] = None, notes: Option[String] = None, changedAt: Instant)
-
-object StateHistory {
-  import play.api.libs.json.Json
-
-  implicit val orderingOldestFirst: Ordering[StateHistory] = Ordering.by[StateHistory, Instant](_.changedAt)
-
-  implicit val format: OFormat[StateHistory] = Json.format[StateHistory]
+  // private[core] lazy val deployedTo = coreApp.deployedTo
+  // lazy val state      = coreApp.state
+  // lazy val access     = coreApp.access
 }
+
+// object ApplicationWithSubscriptionFields {
+//   import play.api.libs.json._
+
+//   implicit val format: Format[ApplicationWithSubscriptionFields] = Json.format[ApplicationWithSubscriptionFields]
+// }

@@ -19,3 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 object CheckInformationData {
   val default = CheckInformation()
 }
+
+trait CheckInformationFixture {
+  val defaultCheckInformation = CheckInformationData.default
+}

@@ -27,8 +27,8 @@ case class ApplicationWithSubscriptionFields(
   val id = coreApp.id
 
   private[core] lazy val deployedTo = coreApp.deployedTo
-  private[core] lazy val state      = coreApp.state
-  private[core] lazy val access     = coreApp.access
+  lazy val state                    = coreApp.state
+  lazy val access                   = coreApp.access
 }
 
 object ApplicationWithSubscriptionFields {

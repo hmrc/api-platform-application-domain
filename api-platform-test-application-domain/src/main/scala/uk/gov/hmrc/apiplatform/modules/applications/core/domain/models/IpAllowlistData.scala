@@ -17,6 +17,11 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 object IpAllowListData {
+  val one     = IpAllowlist(true, Set("1.1.1.1"))
   val default = IpAllowlist()
-  val requiredAllowList = IpAllowlist(true, Set("1.1.1.1"))
+}
+
+trait IpAllowListFixture {
+  val ipAllowlistOne     = IpAllowListData.one
+  val defaultIpAllowList = IpAllowListData.default
 }

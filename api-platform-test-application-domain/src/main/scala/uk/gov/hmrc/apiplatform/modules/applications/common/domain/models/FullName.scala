@@ -17,5 +17,11 @@
 package uk.gov.hmrc.apiplatform.modules.applications.common.domain.models
 
 object FullNameData {
-  val aName = FullName("Fred Flintstone")
+  val one = FullName("Fred Flintstone")
+  val two = FullName("Barney Rubble")
+}
+
+trait FullNameFixture {
+  val fullNameOne = FullNameData.one
+  val fullNameTwo = FullNameData.two
 }

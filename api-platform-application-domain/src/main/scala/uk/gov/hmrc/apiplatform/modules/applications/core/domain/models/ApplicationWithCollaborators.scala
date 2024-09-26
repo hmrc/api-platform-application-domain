@@ -66,6 +66,11 @@ object ApplicationWithCollaborators {
     )
   }
 
+  import monocle.Focus
+  val coreApplicationF = Focus[ApplicationWithCollaborators](_.coreApp)
+  val accessF          = coreApplicationF andThen CoreApplication.accessF
+  val stateF           = coreApplicationF andThen CoreApplication.stateF
+
   val reads: Reads[ApplicationWithCollaborators]            = Json.reads[ApplicationWithCollaborators].orElse(Json.reads[OldApplicationResponse].map(transformOldResponse))
   val writes: Writes[ApplicationWithCollaborators]          = Json.writes[ApplicationWithCollaborators]
   implicit val format: Format[ApplicationWithCollaborators] = Format(reads, writes)

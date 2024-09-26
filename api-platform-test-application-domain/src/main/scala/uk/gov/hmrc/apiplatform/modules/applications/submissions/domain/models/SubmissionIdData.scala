@@ -17,5 +17,15 @@
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
 object SubmissionIdData {
-  val submissionId1 = SubmissionId.random  
+  val one   = SubmissionId.random
+  val two   = SubmissionId.random
+  val three = SubmissionId.random
+  val four  = SubmissionId.random
+}
+
+trait SubmissionIdFixture {
+  val submissionIdOne   = SubmissionIdData.one
+  val submissionIdTwo   = SubmissionIdData.two
+  val submissionIdThree = SubmissionIdData.three
+  val submissionIdFour  = SubmissionIdData.four
 }

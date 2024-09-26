@@ -17,5 +17,11 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 object ClientSecretData {
-  val aClientSecret = ClientSecret.Id.random
+  val one = ClientSecret.Id.random
+  val two = ClientSecret.Id.random
+}
+
+trait ClientSecretData {
+  val ClientSecretIdOne = ClientSecretData.one
+  val ClientSecretIdTwo = ClientSecretData.two
 }

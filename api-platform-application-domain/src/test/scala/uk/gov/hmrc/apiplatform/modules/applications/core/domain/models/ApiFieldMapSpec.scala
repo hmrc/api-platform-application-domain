@@ -21,7 +21,9 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApiFieldMap
 
-class ApiFieldMapSpec extends HmrcSpec {
+class ApiFieldMapSpec
+    extends HmrcSpec
+    with ApiIdentifierFixture {
 
   "ApiFieldMap" should {
     "provide an default constructor" in {
@@ -31,16 +33,12 @@ class ApiFieldMapSpec extends HmrcSpec {
     }
 
     "extract an api from an ApiIdentifier" in {
-      import ApiIdentifierData._
-      import ApiContextData._
-      import ApiVersionNbrData._
-
       val fieldIntMap = Map(FieldName("a") -> 1, FieldName("b") -> 2)
-      val x           = Map(contextA -> Map(versionNbr1 -> fieldIntMap))
+      val x           = Map(apiContextOne -> Map(apiVersionNbrOne -> fieldIntMap))
 
-      ApiFieldMap.extractApi(identifierA)(x) shouldBe fieldIntMap
-      ApiFieldMap.extractApi(identifierB)(x) shouldBe Map.empty
-      ApiFieldMap.extractApi(identifierA_1_1)(x) shouldBe Map.empty
+      ApiFieldMap.extractApi(apiIdentifierOne)(x) shouldBe fieldIntMap
+      ApiFieldMap.extractApi(apiIdentifierTwo)(x) shouldBe Map.empty
+      ApiFieldMap.extractApi(apiIdentifierThree)(x) shouldBe Map.empty
     }
   }
 }

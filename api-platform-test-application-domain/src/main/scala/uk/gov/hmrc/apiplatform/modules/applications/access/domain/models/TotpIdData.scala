@@ -17,5 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 object TotpIdData {
-  val totpId = TotpId("abc")
+  val one = TotpId("abc")
+}
+
+trait TotpIdFixture {
+  val totpIdOne = TotpIdData.one
 }

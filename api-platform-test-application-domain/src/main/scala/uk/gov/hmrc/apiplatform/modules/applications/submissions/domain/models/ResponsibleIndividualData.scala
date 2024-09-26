@@ -16,9 +16,14 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullNameData
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressData
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressFixture
 
-object ResponsibleIndividualData {
-  val individual = ResponsibleIndividual(FullNameData.aName, LaxEmailAddressData.emailA)
+import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullNameFixture
+
+object ResponsibleIndividualData extends LaxEmailAddressFixture with FullNameFixture {
+  val one = ResponsibleIndividual(fullNameOne, emailOne)
+}
+
+trait ResponsibleIndividualFixture {
+  val responsibleIndividualOne = ResponsibleIndividualData.one
 }

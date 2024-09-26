@@ -16,9 +16,16 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullNameData
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressData
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressFixture
 
-object ContactDetailsData {
-  val contactDetails = ContactDetails(FullNameData.aName, LaxEmailAddressData.emailA, "1234567890")
+import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullNameFixture
+
+object ContactDetailsData extends FullNameFixture with LaxEmailAddressFixture {
+  val one = ContactDetails(fullNameOne, emailOne, "1234567890")
+  val two = ContactDetails(fullNameTwo, emailTwo, "0987654321")
+}
+
+object ContactDetailsFixture {
+  val contactDetailsOne = ContactDetailsData.one
+  val contactDetailsTwo = ContactDetailsData.two
 }

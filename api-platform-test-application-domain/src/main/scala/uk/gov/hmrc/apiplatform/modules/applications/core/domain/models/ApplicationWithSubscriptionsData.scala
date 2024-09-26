@@ -16,12 +16,4 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-object MoreApplicationData {
-  val autoDeleteAllowed   = MoreApplication(true)
-  val autoDeleteForbidden = MoreApplication(false)
-}
-
-trait MoreApplicationFixture {
-  val autoDeleteAllowed   = MoreApplicationData.autoDeleteAllowed
-  val autoDeleteForbidden = MoreApplicationData.autoDeleteForbidden
-}
+object ApplicationWithSubscriptionsData {}

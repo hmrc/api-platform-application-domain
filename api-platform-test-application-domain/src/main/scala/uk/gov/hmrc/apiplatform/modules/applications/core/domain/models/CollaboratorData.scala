@@ -16,13 +16,26 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressData
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserIdData
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddressData, UserIdData}
 
 object CollaboratorData {
-  val admin1 = Collaborators.Administrator(UserIdData.idA, LaxEmailAddressData.emailA)
-  val admin2 = Collaborators.Administrator(UserIdData.idB, LaxEmailAddressData.emailB)
-  val dev = Collaborators.Administrator(UserIdData.idC, LaxEmailAddressData.emailC)
 
-  val collaborators = Set(admin1, admin2, dev)
+  object Administrator {
+    val one = Collaborators.Administrator(UserIdData.one, LaxEmailAddressData.one)
+    val two = Collaborators.Administrator(UserIdData.two, LaxEmailAddressData.two)
+  }
+
+  object Developer {
+    val one = Collaborators.Administrator(UserIdData.three, LaxEmailAddressData.three)
+  }
+
+  val collaborators: Set[Collaborator] = Set(Administrator.one, Administrator.two, Developer.one)
+}
+
+trait CollaboratorFixture {
+  val adminOne     = CollaboratorData.Administrator.one
+  val adminTwo     = CollaboratorData.Administrator.two
+  val developerOne = CollaboratorData.Developer.one
+
+  val someCollaborators: Set[Collaborator] = CollaboratorData.collaborators
 }

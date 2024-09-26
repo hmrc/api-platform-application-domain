@@ -16,9 +16,18 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-object ImportantSubmissionDataData {
-  import ResponsibleIndividualData._
-  import TermsOfUseAcceptanceData._
-  
-  val default = ImportantSubmissionData(None, individual, Set(ServerLocation.InUK), TermsAndConditionsLocations.NoneProvided, PrivacyPolicyLocations.NoneProvided, List(touAcceptance))
+object ImportantSubmissionDataData extends ResponsibleIndividualFixture with TermsOfUseAcceptanceFixture {
+
+  val default = ImportantSubmissionData(
+    None,
+    responsibleIndividualOne,
+    Set(ServerLocation.InUK),
+    TermsAndConditionsLocations.NoneProvided,
+    PrivacyPolicyLocations.NoneProvided,
+    List(touAcceptanceOne)
+  )
+}
+
+trait ImportantSubmissionDataFixture {
+  val defaultImportantSubmissionData = ImportantSubmissionDataData.default
 }

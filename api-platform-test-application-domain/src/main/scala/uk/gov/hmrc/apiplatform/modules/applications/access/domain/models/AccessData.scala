@@ -16,13 +16,23 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUriData
-
 object AccessData {
-  val stdAccess = Access.Standard()
 
-  val privilegedApp = Access.Privileged()
+  object Standard {
+    val default = Access.Standard()
+  }
 
-  val ropcApp = Access.Ropc()
+  object Privileged {
+    val default = Access.Privileged()
+  }
 
+  object Ropc {
+    val default = Access.Ropc()
+  }
+}
+
+trait AccessFixture {
+  val stdAccess        = AccessData.Standard.default
+  val privilegedAccess = AccessData.Privileged.default
+  val ropcAccess       = AccessData.Ropc.default
 }

@@ -16,8 +16,14 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-
 object FieldNameData {
-  val fieldName1 = FieldName("field1")
-  val fieldName2 = FieldName("field2")
+  val one   = FieldName("field1")
+  val two   = FieldName("field2")
+  val three = FieldName("field3")
+}
+
+trait FieldNameFixture {
+  val fieldNameOne   = FieldNameData.one
+  val fieldNameTwo   = FieldNameData.two
+  val fieldNameThree = FieldNameData.three
 }

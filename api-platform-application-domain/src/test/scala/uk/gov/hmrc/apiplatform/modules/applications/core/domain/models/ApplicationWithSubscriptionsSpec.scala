@@ -56,7 +56,7 @@ class ApplicationWithSubscriptionsSpec extends BaseJsonFormattersSpec {
   }
 }
 
-object ApplicationWithSubscriptionsSpec extends FixedClock {
+object ApplicationWithSubscriptionsSpec extends ApiIdentifierFixture with FixedClock {
 
   object NoSubs {
 
@@ -70,18 +70,15 @@ object ApplicationWithSubscriptionsSpec extends FixedClock {
       s"""{"coreApp":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[]}"""
   }
 
-  object TwoSubs {
+  object TwoSubs extends ApiContextFixture with ApiVersionNbrFixture {
 
     val example = ApplicationWithSubscriptions(
       coreApp = CoreApplicationSpec.example,
       collaborators = Set(CollaboratorSpec.Admin.example),
-      subscriptions = Set(ApiIdentifierData.identifierA, ApiIdentifierData.identifierB)
+      subscriptions = Set(apiIdentifierOne, apiIdentifierTwo)
     )
 
-    import ApiContextData._
-    import ApiVersionNbrData._
-
     val jsonText =
-      s"""{"coreApp":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"$contextA","version":"$versionNbr1"},{"context":"$contextB","version":"$versionNbr1"}]}"""
+      s"""{"coreApp":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"$apiContextOne","version":"$apiVersionNbrOne"},{"context":"$apiContextOne","version":"$apiVersionNbrOnePointOne"}]}"""
   }
 }

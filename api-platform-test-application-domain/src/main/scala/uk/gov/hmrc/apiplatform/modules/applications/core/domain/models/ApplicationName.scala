@@ -17,5 +17,13 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 object ApplicationNameData {
-  val appName = ApplicationName("123")
+  val one   = ApplicationName("123")
+  val two   = ApplicationName("234")
+  val three = ApplicationName("345")
+}
+
+trait ApplicationNameFixture {
+  val appNameOne   = ApplicationNameData.one
+  val appNameTwo   = ApplicationNameData.two
+  val appNameThree = ApplicationNameData.three
 }

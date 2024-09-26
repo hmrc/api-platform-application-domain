@@ -16,31 +16,93 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
+
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
-object CoreApplicationData extends FixedClock {
+object CoreApplicationData
+    extends ApplicationIdFixture
+    with ApplicationStateFixture
+    with ApplicationNameFixture
+    with ClientIdFixture
+    with IpAllowListFixture
+    with AccessFixture
+    with FixedClock {
 
-  val stdProdApp = CoreApplication(
-    id = ApplicationIdData.applicationIdOne,
-    clientId = ClientIdData.clientIdOne,
-    gatewayId = "abc123",
-    name = ApplicationNameData.appName,
-    deployedTo = Environment.PRODUCTION,
-    description = None,
-    createdOn = instant,
-    lastAccess = Some(instant),
-    grantLength = GrantLength.EIGHTEEN_MONTHS,
-    lastAccessTokenUsage = Some(instant),
-    access = AccessData.stdAccess,
-    state = ApplicationStateData.???,
-    rateLimitTier = RateLimitTier.BRONZE,
-    checkInformation = None,
-    blocked = false,
-    ipAllowlist = IpAllowListData.default,
-    allowAutoDelete = false
-  )
+  object Standard {
 
+    val one = CoreApplication(
+      id = applicationIdOne,
+      clientId = clientIdOne,
+      gatewayId = "abc123",
+      name = appNameOne,
+      deployedTo = Environment.PRODUCTION,
+      description = None,
+      createdOn = instant,
+      lastAccess = Some(instant),
+      grantLength = GrantLength.EIGHTEEN_MONTHS,
+      lastAccessTokenUsage = Some(instant),
+      access = stdAccess,
+      state = appStateProduction,
+      rateLimitTier = RateLimitTier.BRONZE,
+      checkInformation = None,
+      blocked = false,
+      ipAllowlist = defaultIpAllowList,
+      allowAutoDelete = false
+    )
+  }
 
+  object Privileged {
+
+    val one = CoreApplication(
+      id = applicationIdTwo,
+      clientId = clientIdTwo,
+      gatewayId = "def567",
+      name = appNameTwo,
+      deployedTo = Environment.PRODUCTION,
+      description = None,
+      createdOn = instant,
+      lastAccess = Some(instant),
+      grantLength = GrantLength.EIGHTEEN_MONTHS,
+      lastAccessTokenUsage = Some(instant),
+      access = privilegedAccess,
+      state = appStateProduction,
+      rateLimitTier = RateLimitTier.BRONZE,
+      checkInformation = None,
+      blocked = false,
+      ipAllowlist = defaultIpAllowList,
+      allowAutoDelete = false
+    )
+  }
+
+  object Ropc {
+
+    val one = CoreApplication(
+      id = applicationIdThree,
+      clientId = clientIdThree,
+      gatewayId = "def890",
+      name = appNameThree,
+      deployedTo = Environment.PRODUCTION,
+      description = None,
+      createdOn = instant,
+      lastAccess = Some(instant),
+      grantLength = GrantLength.EIGHTEEN_MONTHS,
+      lastAccessTokenUsage = Some(instant),
+      access = ropcAccess,
+      state = appStateProduction,
+      rateLimitTier = RateLimitTier.BRONZE,
+      checkInformation = None,
+      blocked = false,
+      ipAllowlist = defaultIpAllowList,
+      allowAutoDelete = false
+    )
+  }
+}
+
+trait CoreApplicationFixture {
+  val coreAppStdOne  = CoreApplicationData.Standard.one
+  val coreAppPrivOne = CoreApplicationData.Privileged.one
+  val coreAppRopcOne = CoreApplicationData.Ropc.one
 }

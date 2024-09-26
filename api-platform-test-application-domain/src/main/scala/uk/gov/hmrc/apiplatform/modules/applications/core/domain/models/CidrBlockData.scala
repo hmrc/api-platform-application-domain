@@ -17,5 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 object CidrBlockData {
-  val aCidrBlock = CidrBlock("0.0.0.0")
+  val one = CidrBlock("0.0.0.0")
+}
+
+trait CidrBlockData {
+  val cidrBlockOne = CidrBlockData.one
 }

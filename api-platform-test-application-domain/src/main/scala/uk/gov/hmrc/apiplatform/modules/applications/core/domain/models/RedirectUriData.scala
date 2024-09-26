@@ -17,6 +17,11 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 object RedirectUriData {
-  val redirectUri1 = RedirectUri("/abc.com/fred")
-  val redirectUri2 = RedirectUri("/abc.com/bob")
+  val one = RedirectUri("/abc.com/fred")
+  val two = RedirectUri("/abc.com/bob")
+}
+
+trait RedirectUriFixture {
+  val redirectUriOne = RedirectUriData.one
+  val redirectUriTwo = RedirectUriData.two
 }

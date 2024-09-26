@@ -62,4 +62,11 @@ object ApplicationWithSubscriptions {
   val reads: Reads[ApplicationWithSubscriptions]            = Json.reads[ApplicationWithSubscriptions].orElse(Json.reads[OldExtendedApplicationResponse].map(transformOldResponse))
   val writes: Writes[ApplicationWithSubscriptions]          = Json.writes[ApplicationWithSubscriptions]
   implicit val format: Format[ApplicationWithSubscriptions] = Format(reads, writes)
+
+  import monocle.Focus
+  val coreApplicationF = Focus[ApplicationWithSubscriptions](_.coreApp)
+  val collaboratorsF   = Focus[ApplicationWithSubscriptions](_.collaborators)
+  val subscriptionsF   = Focus[ApplicationWithSubscriptions](_.subscriptions)
+  val accessF          = coreApplicationF andThen CoreApplication.accessF
+  val stateF           = coreApplicationF andThen CoreApplication.stateF
 }

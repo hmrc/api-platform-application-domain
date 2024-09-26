@@ -20,5 +20,9 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressData
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 object TermsOfUseAgreementData extends FixedClock {
-  val agreement = TermsOfUseAgreement(LaxEmailAddressData.emailA, instant, "1.1a")
+  val one = TermsOfUseAgreement(LaxEmailAddressData.one, instant, "1.1a")
+}
+
+trait TermsOfUseAgreementFixture {
+  val touAgreementOne = TermsOfUseAgreementData.one
 }

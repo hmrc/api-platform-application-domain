@@ -71,4 +71,9 @@ case class CoreApplication(
 object CoreApplication {
   import play.api.libs.json._
   implicit val format: Format[CoreApplication] = Json.format[CoreApplication]
+
+  import monocle.Focus
+  val accessF = Focus[CoreApplication](_.access)
+  val stateF  = Focus[CoreApplication](_.state)
+
 }

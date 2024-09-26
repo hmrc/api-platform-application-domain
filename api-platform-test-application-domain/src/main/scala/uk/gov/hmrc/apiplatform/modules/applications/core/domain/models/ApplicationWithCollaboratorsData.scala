@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-object MoreApplicationData {
-  val autoDeleteAllowed   = MoreApplication(true)
-  val autoDeleteForbidden = MoreApplication(false)
+object ApplicationWithCollaboratorsData extends CoreApplicationFixture with CollaboratorFixture {
+
+  val one = ApplicationWithCollaborators(
+    coreAppStdOne,
+    someCollaborators
+  )
 }
 
-trait MoreApplicationFixture {
-  val autoDeleteAllowed   = MoreApplicationData.autoDeleteAllowed
-  val autoDeleteForbidden = MoreApplicationData.autoDeleteForbidden
+trait ApplicationWithCollaboratorsFixture extends CoreApplicationFixture with CollaboratorFixture {
+  val appWithCollaboratorsOne = ApplicationWithCollaboratorsData.one
 }

@@ -16,15 +16,26 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-// case class ApplicationState(
-//     name: State = State.TESTING,
-//     requestedByEmailAddress: Option[String] = None,
-//     requestedByName: Option[String] = None,
-//     verificationCode: Option[String] = None,
-//     updatedOn: Instant
-//   ) {
+import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.State._
 
-object ApplicationStateData {
-  val state1 = ApplicationState()
+object ApplicationStateData extends FixedClock {
+  val testing                      = ApplicationState(name = TESTING, updatedOn = instant)
+  val pendingGatekeeperApproval    = ApplicationState(name = PENDING_GATEKEEPER_APPROVAL, updatedOn = instant)
+  val pendingRequesterVerification = ApplicationState(name = PENDING_REQUESTER_VERIFICATION, updatedOn = instant)
+  val pendingRIVerification        = ApplicationState(name = PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION, updatedOn = instant)
+  val preProduction                = ApplicationState(name = PRE_PRODUCTION, updatedOn = instant)
+  val production                   = ApplicationState(name = PRODUCTION, updatedOn = instant)
+  val deleted                      = ApplicationState(name = DELETED, updatedOn = instant)
+}
+
+trait ApplicationStateFixture {
+  val appStateTesting                      = ApplicationStateData.testing
+  val appStatePendingGatekeeperApproval    = ApplicationStateData.pendingGatekeeperApproval
+  val appStatePendingRequesterVerification = ApplicationStateData.pendingRequesterVerification
+  val appStatePendingRIVerification        = ApplicationStateData.pendingRIVerification
+  val appStatePreProduction                = ApplicationStateData.preProduction
+  val appStateProduction                   = ApplicationStateData.production
+  val appStateDeleted                      = ApplicationStateData.deleted
 }
