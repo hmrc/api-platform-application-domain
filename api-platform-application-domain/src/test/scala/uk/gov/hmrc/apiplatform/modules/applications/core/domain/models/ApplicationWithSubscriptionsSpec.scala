@@ -39,7 +39,7 @@ class ApplicationWithSubscriptionsSpec extends BaseJsonFormattersSpec {
     "read from old json" in {
       import NoSubs._
       val oldJson =
-        s"""{"id":"${example.coreApp.id}","clientId":"${example.coreApp.clientId}","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.Admin.jsonText}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"serverToken":"123","trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"allowAutoDelete":false,"subscriptions":[]}"""
+        s"""{"id":"${example.details.id}","clientId":"${example.details.clientId}","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.Admin.jsonText}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"serverToken":"123","trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"allowAutoDelete":false,"subscriptions":[]}"""
 
       testFromJson[ApplicationWithSubscriptions](oldJson)(example)
     }
@@ -61,24 +61,24 @@ object ApplicationWithSubscriptionsSpec extends ApiIdentifierFixture with FixedC
   object NoSubs {
 
     val example = ApplicationWithSubscriptions(
-      coreApp = CoreApplicationSpec.example,
+      details = CoreApplicationSpec.example,
       collaborators = Set(CollaboratorSpec.Admin.example),
       subscriptions = Set()
     )
 
     val jsonText =
-      s"""{"coreApp":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[]}"""
+      s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[]}"""
   }
 
   object TwoSubs extends ApiContextFixture with ApiVersionNbrFixture {
 
     val example = ApplicationWithSubscriptions(
-      coreApp = CoreApplicationSpec.example,
+      details = CoreApplicationSpec.example,
       collaborators = Set(CollaboratorSpec.Admin.example),
       subscriptions = Set(apiIdentifierOne, apiIdentifierTwo)
     )
 
     val jsonText =
-      s"""{"coreApp":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"$apiContextOne","version":"$apiVersionNbrOne"},{"context":"$apiContextOne","version":"$apiVersionNbrOnePointOne"}]}"""
+      s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"$apiContextOne","version":"$apiVersionNbrOne"},{"context":"$apiContextOne","version":"$apiVersionNbrOnePointOne"}]}"""
   }
 }

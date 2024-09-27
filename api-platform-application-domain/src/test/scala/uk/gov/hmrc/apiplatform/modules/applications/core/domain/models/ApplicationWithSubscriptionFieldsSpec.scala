@@ -39,12 +39,12 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec {
 object ApplicationWithSubscriptionFieldsSpec extends ApiIdentifierFixture with FixedClock {
 
   val example = ApplicationWithSubscriptionFields(
-    coreApp = CoreApplicationSpec.example,
+    details = CoreApplicationSpec.example,
     collaborators = Set(CollaboratorSpec.Admin.example),
     subscriptions = Set(apiIdentifierOne),
     fieldValues = Map(apiIdentifierOne.context -> Map(apiIdentifierOne.versionNbr -> Map(FieldName("one") -> FieldValue("a"))))
   )
 
   val jsonText =
-    s"""{"coreApp":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"${apiIdentifierOne.context}","version":"${apiIdentifierOne.versionNbr}"}],"fieldValues":{"test/contextA":{"1.0":{"one":"a"}}}}"""
+    s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"${apiIdentifierOne.context}","version":"${apiIdentifierOne.versionNbr}"}],"fieldValues":{"test/contextA":{"1.0":{"one":"a"}}}}"""
 }

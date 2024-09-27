@@ -36,7 +36,7 @@ class ApplicationWithCollaboratorsSpec extends BaseJsonFormattersSpec {
 
     "read from old json" in {
       val oldJson =
-        s"""{"id":"${example.coreApp.id}","clientId":"${example.coreApp.clientId}","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.Admin.jsonText}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false,"lastActionActor":"UNKNOWN"}}"""
+        s"""{"id":"${example.details.id}","clientId":"${example.details.clientId}","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.Admin.jsonText}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false,"lastActionActor":"UNKNOWN"}}"""
 
       testFromJson[ApplicationWithCollaborators](oldJson)(example)
     }
@@ -57,10 +57,10 @@ class ApplicationWithCollaboratorsSpec extends BaseJsonFormattersSpec {
 object ApplicationWithCollaboratorsSpec extends FixedClock {
 
   val example = ApplicationWithCollaborators(
-    coreApp = CoreApplicationSpec.example,
+    details = CoreApplicationSpec.example,
     collaborators = Set(CollaboratorSpec.Admin.example)
   )
 
   val jsonText =
-    s"""{"coreApp":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}]}"""
+    s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}]}"""
 }

@@ -18,6 +18,8 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
+
 trait HasCollaborators {
   self: { def collaborators: Set[Collaborator] } =>
 
@@ -28,14 +30,29 @@ trait HasCollaborators {
 }
 
 case class ApplicationWithCollaborators(
-    coreApp: CoreApplication,
+    details: CoreApplication,
     collaborators: Set[Collaborator]
   ) extends HasEnvironment with HasState with HasAccess with HasCollaborators {
-  val id = coreApp.id
+  lazy val id       = details.id
+  lazy val name     = details.name
+  lazy val clientId = details.clientId
 
-  private[core] lazy val deployedTo = coreApp.deployedTo
-  lazy val state                    = coreApp.state
-  lazy val access                   = coreApp.access
+  private[core] lazy val deployedTo = details.deployedTo
+  lazy val state                    = details.state
+  lazy val access                   = details.access
+
+  // Assist with nesting
+  import monocle.syntax.all._
+  def modify(fn: CoreApplication => CoreApplication)                                      = this.focus(_.details).modify(fn)
+  def withState(newState: ApplicationState): ApplicationWithCollaborators                 = this.focus(_.details.state).replace(newState)
+  def modifyState(fn: ApplicationState => ApplicationState): ApplicationWithCollaborators = this.focus(_.details.state).modify(fn)
+  def withAccess(newAccess: Access): ApplicationWithCollaborators                         = this.focus(_.details.access).replace(newAccess)
+  def modifyAccess(fn: Access => Access): ApplicationWithCollaborators                    = this.focus(_.details.access).modify(fn)
+
+  def modifyStdAccess(fn: Access.Standard => Access.Standard): ApplicationWithCollaborators = this.access match {
+    case std: Access.Standard => withAccess(fn(std))
+    case _                    => this
+  }
 }
 
 object ApplicationWithCollaborators {
@@ -43,7 +60,7 @@ object ApplicationWithCollaborators {
 
   private val transformOldResponse: OldApplicationResponse => ApplicationWithCollaborators = (old) => {
     ApplicationWithCollaborators(
-      coreApp = CoreApplication(
+      details = CoreApplication(
         id = old.id,
         clientId = old.clientId,
         gatewayId = old.gatewayId,
@@ -65,11 +82,6 @@ object ApplicationWithCollaborators {
       collaborators = old.collaborators
     )
   }
-
-  import monocle.Focus
-  val coreApplicationF = Focus[ApplicationWithCollaborators](_.coreApp)
-  val accessF          = coreApplicationF andThen CoreApplication.accessF
-  val stateF           = coreApplicationF andThen CoreApplication.stateF
 
   val reads: Reads[ApplicationWithCollaborators]            = Json.reads[ApplicationWithCollaborators].orElse(Json.reads[OldApplicationResponse].map(transformOldResponse))
   val writes: Writes[ApplicationWithCollaborators]          = Json.writes[ApplicationWithCollaborators]

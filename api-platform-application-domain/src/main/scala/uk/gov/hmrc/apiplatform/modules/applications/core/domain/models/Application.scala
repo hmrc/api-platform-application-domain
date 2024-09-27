@@ -31,7 +31,6 @@ trait HasEnvironment {
 
 trait HasAccess {
   self: { def access: Access } =>
-
   // TODO
 }
 
@@ -66,14 +65,18 @@ case class CoreApplication(
     blocked: Boolean,
     ipAllowlist: IpAllowlist,
     allowAutoDelete: Boolean
-  ) extends HasEnvironment with HasState with HasAccess
+  ) extends HasEnvironment with HasState with HasAccess {
+
+  def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
+
+  def modifyStdAccess(fn: Access.Standard => Access.Standard) = this.access match {
+    case std: Access.Standard => this.copy(access = fn(std))
+    case _                    => this
+  }
+
+}
 
 object CoreApplication {
   import play.api.libs.json._
   implicit val format: Format[CoreApplication] = Json.format[CoreApplication]
-
-  import monocle.Focus
-  val accessF = Focus[CoreApplication](_.access)
-  val stateF  = Focus[CoreApplication](_.state)
-
 }
