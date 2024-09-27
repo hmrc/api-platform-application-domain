@@ -7,6 +7,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import bloop.integrations.sbt.BloopDefaults
   
 Global / bloopAggregateSourceDependencies := true
+Global / bloopExportJarClassifiers := Some(Set("sources"))
 
 val appName = "api-platform-application-domain"
 
@@ -26,7 +27,7 @@ lazy val library = (project in file("."))
     publish / skip := true
   )
   .aggregate(
-    apiPlatformApplicationDomain, apiPlatformApplicationDomainFixtures
+    apiPlatformApplicationDomain, apiPlatformApplicationDomainFixtures, apiPlatformApplicationDomainTest
   )
 
 
@@ -35,33 +36,38 @@ lazy val apiPlatformApplicationDomain = Project("api-platform-application-domain
     libraryDependencies ++= LibraryDependencies.applicationDomain,
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
-
-    // Compile / unmanagedSourceDirectories += baseDirectory.value / ".." / "common" / "src" / "main" / "scala",
-    // Test / unmanagedSourceDirectories += baseDirectory.value / ".." / "common" / "src" / "test" / "scala",
-    
-    Test / unmanagedSourceDirectories += baseDirectory.value / ".." / "test-application" / "src" / "main" / "scala"
   )
   .disablePlugins(JUnitXmlReportPlugin)
 
 
 lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-application-domain-fixtures", file("api-platform-application-domain-fixtures"))
   .dependsOn(
-    apiPlatformApplicationDomain
+    apiPlatformApplicationDomain % "compile"
   )
   .settings(
     libraryDependencies ++= LibraryDependencies.root,
     ScoverageKeys.coverageEnabled := false,
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
+  )
+  .disablePlugins(JUnitXmlReportPlugin)
 
-    // Compile / unmanagedSourceDirectories += baseDirectory.value / ".." / "common" / "src" / "main" / "scala",
 
-    Compile / unmanagedSourceDirectories += baseDirectory.value / ".." / "test-application" / "src" / "main" / "scala"
+lazy val apiPlatformApplicationDomainTest = Project("api-platform-application-domain-test", file("api-platform-application-domain-test"))
+  .dependsOn(
+    apiPlatformApplicationDomain,
+    apiPlatformApplicationDomainFixtures
+  )
+  .settings(
+    publish / skip := true,
+    libraryDependencies ++= LibraryDependencies.root,
+    ScoverageSettings(),
+    Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
   .disablePlugins(JUnitXmlReportPlugin)
 
 
   commands ++= Seq(
     Command.command("run-all-tests") { state => "test" :: state },
-    Command.command("clean-and-test") { state => "clean" :: "compile" :: "run-all-tests" :: state },
+    Command.command("clean-and-test") { state => "clean" :: "run-all-tests" :: state },
     Command.command("pre-commit") { state => "clean" :: "scalafmtAll" :: "scalafixAll" ::"coverage" :: "run-all-tests" :: "coverageOff" :: "coverageAggregate" :: state }
   )
