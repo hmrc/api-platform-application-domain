@@ -26,7 +26,7 @@ lazy val library = (project in file("."))
     publish / skip := true
   )
   .aggregate(
-    apiPlatformApplicationDomain, apiPlatformTestApplicationDomain
+    apiPlatformApplicationDomain, apiPlatformApplicationDomainFixtures
   )
 
 
@@ -44,7 +44,7 @@ lazy val apiPlatformApplicationDomain = Project("api-platform-application-domain
   .disablePlugins(JUnitXmlReportPlugin)
 
 
-lazy val apiPlatformTestApplicationDomain = Project("api-platform-test-application-domain", file("api-platform-test-application-domain"))
+lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-application-domain-fixtures", file("api-platform-application-domain-fixtures"))
   .dependsOn(
     apiPlatformApplicationDomain
   )
