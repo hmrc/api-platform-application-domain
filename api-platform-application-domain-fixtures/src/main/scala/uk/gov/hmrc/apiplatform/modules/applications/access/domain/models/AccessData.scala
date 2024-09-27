@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUriFixtures
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.ImportantSubmissionDataFixtures
+
 object AccessData {
 
   object Standard {
@@ -31,7 +34,7 @@ object AccessData {
   }
 }
 
-trait AccessFixture {
+trait AccessFixtures extends RedirectUriFixtures with SellResellOrDistributeFixtures with ImportantSubmissionDataFixtures {
   val stdAccess        = AccessData.Standard.default
   val privilegedAccess = AccessData.Privileged.default
   val ropcAccess       = AccessData.Ropc.default

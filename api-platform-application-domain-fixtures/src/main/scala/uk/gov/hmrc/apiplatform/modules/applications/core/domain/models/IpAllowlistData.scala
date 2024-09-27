@@ -21,7 +21,7 @@ object IpAllowListData {
   val default = IpAllowlist()
 }
 
-trait IpAllowListFixture {
+trait IpAllowListFixtures {
   val ipAllowlistOne     = IpAllowListData.one
   val defaultIpAllowList = IpAllowListData.default
 }

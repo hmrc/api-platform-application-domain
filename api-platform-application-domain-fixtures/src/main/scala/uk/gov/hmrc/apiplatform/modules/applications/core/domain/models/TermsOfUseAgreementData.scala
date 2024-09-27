@@ -23,6 +23,6 @@ object TermsOfUseAgreementData extends FixedClock {
   val one = TermsOfUseAgreement(LaxEmailAddressData.one, instant, "1.1a")
 }
 
-trait TermsOfUseAgreementFixture {
+trait TermsOfUseAgreementFixtures {
   val touAgreementOne = TermsOfUseAgreementData.one
 }

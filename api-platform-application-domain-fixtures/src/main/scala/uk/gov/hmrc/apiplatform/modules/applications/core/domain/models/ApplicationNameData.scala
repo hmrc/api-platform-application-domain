@@ -22,7 +22,7 @@ object ApplicationNameData {
   val three = ApplicationName("345")
 }
 
-trait ApplicationNameFixture {
+trait ApplicationNameFixtures {
   val appNameOne   = ApplicationNameData.one
   val appNameTwo   = ApplicationNameData.two
   val appNameThree = ApplicationNameData.three

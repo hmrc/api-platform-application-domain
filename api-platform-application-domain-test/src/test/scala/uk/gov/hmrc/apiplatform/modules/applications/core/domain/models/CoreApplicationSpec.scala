@@ -23,7 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, Fix
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.{Access, AccessSpec}
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
-class CoreApplicationSpec extends BaseJsonFormattersSpec {
+class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFixtures {
   import CoreApplicationSpec._
 
   "CoreApplication" should {
@@ -33,6 +33,23 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec {
 
     "read from json" in {
       testFromJson[CoreApplication](jsonText)(example)
+    }
+
+    "allow modify standard access in core app" in {
+      val newApp = standardCoreApp.modifyStdAccess(_.copy(sellResellOrDistribute = Some(sell)))
+
+      newApp.access match {
+        case std: Access.Standard => std.sellResellOrDistribute shouldBe Some(sell)
+        case _                    => fail()
+      }
+    }
+
+    "allow modify access in core app" in {
+      standardCoreApp.isPrivileged shouldBe false
+
+      val newApp = standardCoreApp.modifyAccess(_ => privilegedAccess)
+
+      newApp.isPrivileged shouldBe true
     }
   }
 }

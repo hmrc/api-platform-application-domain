@@ -21,7 +21,7 @@ object SellResellOrDistributeData {
   val distribute = SellResellOrDistribute("distribute")
 }
 
-trait SellResellOrDistributeFixture {
-  val sellResell = SellResellOrDistributeData.sellResell
+trait SellResellOrDistributeFixtures {
+  val sell       = SellResellOrDistributeData.sellResell
   val distribute = SellResellOrDistributeData.distribute
 }

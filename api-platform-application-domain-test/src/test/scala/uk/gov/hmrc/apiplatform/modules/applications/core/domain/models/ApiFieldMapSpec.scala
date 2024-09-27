@@ -23,7 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApiFieldM
 
 class ApiFieldMapSpec
     extends HmrcSpec
-    with ApiIdentifierFixture {
+    with ApiIdentifierFixtures {
 
   "ApiFieldMap" should {
     "provide an default constructor" in {

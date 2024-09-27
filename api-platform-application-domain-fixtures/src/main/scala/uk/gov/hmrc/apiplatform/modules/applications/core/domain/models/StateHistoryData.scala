@@ -16,17 +16,24 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ActorFixture, ApplicationIdFixture}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ActorFixtures, ApplicationIdFixtures}
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
-object StateHistoryData extends FixedClock with ApplicationIdFixture with ActorFixture {
-  val aStateHistoryTesting = StateHistory(applicationIdOne, State.TESTING, collaboratorActorOne, None, None, instant)
-  val aStateHistoryPreProd = StateHistory(applicationIdOne, State.PRE_PRODUCTION, collaboratorActorOne, None, None, instant)
-  val aStateHistoryProd    = StateHistory(applicationIdOne, State.PRODUCTION, collaboratorActorOne, None, None, instant)
+object StateHistoryData extends FixedClock with ApplicationIdFixtures with ActorFixtures {
+  val aStateHistoryTesting             = StateHistory(applicationIdOne, State.TESTING, collaboratorActorOne, None, None, instant)
+  val aStateHistoryPreProd             = StateHistory(applicationIdOne, State.PRE_PRODUCTION, collaboratorActorOne, None, None, instant)
+  val aStateHistoryProd                = StateHistory(applicationIdOne, State.PRODUCTION, collaboratorActorOne, None, None, instant)
+  val aStateHistoryDeleted             = StateHistory(applicationIdOne, State.DELETED, collaboratorActorOne, None, None, instant)
+  val aStateHistoryPendingGK           = StateHistory(applicationIdOne, State.PENDING_GATEKEEPER_APPROVAL, collaboratorActorOne, None, None, instant)
+  val aStateHistoryPendingVerification = StateHistory(applicationIdOne, State.PENDING_REQUESTER_VERIFICATION, collaboratorActorOne, None, None, instant)
+  val aStateHistoryPendingRI           = StateHistory(applicationIdOne, State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION, collaboratorActorOne, None, None, instant)
 }
 
-trait StateHistoryFixture {
-  val aStateHistoryTesting = StateHistoryData.aStateHistoryTesting
-  val aStateHistoryPreProd = StateHistoryData.aStateHistoryPreProd
-  val aStateHistoryProd    = StateHistoryData.aStateHistoryProd
+trait StateHistoryFixtures {
+  val aStateHistoryTesting             = StateHistoryData.aStateHistoryTesting
+  val aStateHistoryPreProd             = StateHistoryData.aStateHistoryPreProd
+  val aStateHistoryProd                = StateHistoryData.aStateHistoryProd
+  val aStateHistoryPendingGK           = StateHistoryData.aStateHistoryPendingGK
+  val aStateHistoryPendingVerification = StateHistoryData.aStateHistoryPendingVerification
+  val aStateHistoryPendingRI           = StateHistoryData.aStateHistoryPendingRI
 }

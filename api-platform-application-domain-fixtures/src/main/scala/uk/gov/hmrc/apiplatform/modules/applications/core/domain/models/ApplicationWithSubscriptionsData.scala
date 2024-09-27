@@ -16,4 +16,6 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-object ApplicationWithSubscriptionsData {}
+object ApplicationWithSubscriptionsData {
+  // TODO
+}

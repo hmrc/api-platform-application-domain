@@ -23,7 +23,7 @@ object SubmissionIdData {
   val four  = SubmissionId.random
 }
 
-trait SubmissionIdFixture {
+trait SubmissionIdFixtures {
   val submissionIdOne   = SubmissionIdData.one
   val submissionIdTwo   = SubmissionIdData.two
   val submissionIdThree = SubmissionIdData.three

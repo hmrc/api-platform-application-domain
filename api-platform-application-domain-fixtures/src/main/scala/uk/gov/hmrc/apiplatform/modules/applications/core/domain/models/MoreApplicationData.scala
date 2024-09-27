@@ -21,7 +21,7 @@ object MoreApplicationData {
   val autoDeleteForbidden = MoreApplication(false)
 }
 
-trait MoreApplicationFixture {
+trait MoreApplicationFixtures {
   val autoDeleteAllowed   = MoreApplicationData.autoDeleteAllowed
   val autoDeleteForbidden = MoreApplicationData.autoDeleteForbidden
 }

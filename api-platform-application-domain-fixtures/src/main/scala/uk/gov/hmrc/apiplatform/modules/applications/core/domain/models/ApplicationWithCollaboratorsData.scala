@@ -16,14 +16,26 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-object ApplicationWithCollaboratorsData extends CoreApplicationFixture with CollaboratorFixture {
+object ApplicationWithCollaboratorsData extends CoreApplicationFixtures with CollaboratorFixtures {
 
-  val one = ApplicationWithCollaborators(
-    coreAppStdOne,
+  val standardApp = ApplicationWithCollaborators(
+    standardCoreApp,
+    someCollaborators
+  )
+
+  val privilegedApp = ApplicationWithCollaborators(
+    privilegedCoreApp,
+    someCollaborators
+  )
+
+  val ropcApp = ApplicationWithCollaborators(
+    ropcCoreApp,
     someCollaborators
   )
 }
 
-trait ApplicationWithCollaboratorsFixture extends CoreApplicationFixture with CollaboratorFixture {
-  val appWithCollaboratorsOne = ApplicationWithCollaboratorsData.one
+trait ApplicationWithCollaboratorsFixtures extends CoreApplicationFixtures with CollaboratorFixtures {
+  val standardApp   = ApplicationWithCollaboratorsData.standardApp
+  val privilegedApp = ApplicationWithCollaboratorsData.privilegedApp
+  val ropcApp       = ApplicationWithCollaboratorsData.ropcApp
 }

@@ -18,10 +18,10 @@ package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
-object TermsOfUseAcceptanceData extends FixedClock with ResponsibleIndividualFixture with SubmissionIdFixture {
+object TermsOfUseAcceptanceData extends FixedClock with ResponsibleIndividualFixtures with SubmissionIdFixtures {
   val one = TermsOfUseAcceptance(responsibleIndividualOne, instant, submissionIdOne)
 }
 
-trait TermsOfUseAcceptanceFixture {
+trait TermsOfUseAcceptanceFixtures extends ResponsibleIndividualFixtures with SubmissionIdFixtures {
   val touAcceptanceOne = TermsOfUseAcceptanceData.one
 }

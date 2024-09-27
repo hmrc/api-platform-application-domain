@@ -21,7 +21,7 @@ object FullNameData {
   val two = FullName("Barney Rubble")
 }
 
-trait FullNameFixture {
+trait FullNameFixtures {
   val fullNameOne = FullNameData.one
   val fullNameTwo = FullNameData.two
 }

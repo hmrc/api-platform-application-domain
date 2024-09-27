@@ -56,7 +56,7 @@ class ApplicationWithSubscriptionsSpec extends BaseJsonFormattersSpec {
   }
 }
 
-object ApplicationWithSubscriptionsSpec extends ApiIdentifierFixture with FixedClock {
+object ApplicationWithSubscriptionsSpec extends ApiIdentifierFixtures with FixedClock {
 
   object NoSubs {
 
@@ -70,7 +70,7 @@ object ApplicationWithSubscriptionsSpec extends ApiIdentifierFixture with FixedC
       s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[]}"""
   }
 
-  object TwoSubs extends ApiContextFixture with ApiVersionNbrFixture {
+  object TwoSubs extends ApiContextFixtures with ApiVersionNbrFixtures {
 
     val example = ApplicationWithSubscriptions(
       details = CoreApplicationSpec.example,

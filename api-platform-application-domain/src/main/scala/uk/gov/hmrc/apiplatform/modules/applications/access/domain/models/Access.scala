@@ -23,6 +23,21 @@ import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.Im
 
 sealed trait Access {
   lazy val accessType: AccessType = Access.accessType(this)
+
+  lazy val isStandard = this match {
+    case _: Access.Standard => true
+    case _                  => false
+  }
+
+  lazy val isPriviledged = this match {
+    case _: Access.Privileged => true
+    case _                    => false
+  }
+
+  lazy val isROPC = this match {
+    case _: Access.Ropc => true
+    case _              => false
+  }
 }
 
 object Access {

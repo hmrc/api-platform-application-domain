@@ -21,7 +21,7 @@ object RedirectUriData {
   val two = RedirectUri("/abc.com/bob")
 }
 
-trait RedirectUriFixture {
+trait RedirectUriFixtures {
   val redirectUriOne = RedirectUriData.one
   val redirectUriTwo = RedirectUriData.two
 }

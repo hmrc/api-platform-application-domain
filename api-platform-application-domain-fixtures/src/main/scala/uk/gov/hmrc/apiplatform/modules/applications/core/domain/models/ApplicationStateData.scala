@@ -30,7 +30,7 @@ object ApplicationStateData extends FixedClock {
   val deleted                      = ApplicationState(name = DELETED, updatedOn = instant)
 }
 
-trait ApplicationStateFixture {
+trait ApplicationStateFixtures {
   val appStateTesting                      = ApplicationStateData.testing
   val appStatePendingGatekeeperApproval    = ApplicationStateData.pendingGatekeeperApproval
   val appStatePendingRequesterVerification = ApplicationStateData.pendingRequesterVerification

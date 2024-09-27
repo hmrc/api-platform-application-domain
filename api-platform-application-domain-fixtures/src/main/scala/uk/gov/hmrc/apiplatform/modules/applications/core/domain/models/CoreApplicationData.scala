@@ -23,12 +23,12 @@ import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 object CoreApplicationData
-    extends ApplicationIdFixture
-    with ApplicationStateFixture
-    with ApplicationNameFixture
-    with ClientIdFixture
-    with IpAllowListFixture
-    with AccessFixture
+    extends ApplicationIdFixtures
+    with ApplicationStateFixtures
+    with ApplicationNameFixtures
+    with ClientIdFixtures
+    with IpAllowListFixtures
+    with AccessFixtures
     with FixedClock {
 
   object Standard {
@@ -101,8 +101,16 @@ object CoreApplicationData
   }
 }
 
-trait CoreApplicationFixture {
-  val coreAppStdOne  = CoreApplicationData.Standard.one
-  val coreAppPrivOne = CoreApplicationData.Privileged.one
-  val coreAppRopcOne = CoreApplicationData.Ropc.one
+trait CoreApplicationFixtures
+    extends ApplicationIdFixtures
+    with ClientIdFixtures
+    with ApplicationNameFixtures
+    with AccessFixtures
+    with ApplicationStateFixtures
+    with CheckInformationFixtures
+    with IpAllowListFixtures {
+
+  val standardCoreApp   = CoreApplicationData.Standard.one
+  val privilegedCoreApp = CoreApplicationData.Privileged.one
+  val ropcCoreApp       = CoreApplicationData.Ropc.one
 }

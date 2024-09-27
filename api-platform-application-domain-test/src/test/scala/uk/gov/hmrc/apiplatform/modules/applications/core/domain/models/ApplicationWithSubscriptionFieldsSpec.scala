@@ -36,7 +36,7 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec {
   }
 }
 
-object ApplicationWithSubscriptionFieldsSpec extends ApiIdentifierFixture with FixedClock {
+object ApplicationWithSubscriptionFieldsSpec extends ApiIdentifierFixtures with FixedClock {
 
   val example = ApplicationWithSubscriptionFields(
     details = CoreApplicationSpec.example,

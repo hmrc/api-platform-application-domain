@@ -31,7 +31,10 @@ trait HasEnvironment {
 
 trait HasAccess {
   self: { def access: Access } =>
-  // TODO
+
+  lazy val isStandard   = access.isStandard
+  lazy val isPrivileged = access.isPriviledged
+  lazy val isROPC       = access.isROPC
 }
 
 trait HasState {

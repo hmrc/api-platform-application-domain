@@ -43,16 +43,17 @@ case class ApplicationWithCollaborators(
 
   // Assist with nesting
   import monocle.syntax.all._
+
   def modify(fn: CoreApplication => CoreApplication)                                      = this.focus(_.details).modify(fn)
   def withState(newState: ApplicationState): ApplicationWithCollaborators                 = this.focus(_.details.state).replace(newState)
   def modifyState(fn: ApplicationState => ApplicationState): ApplicationWithCollaborators = this.focus(_.details.state).modify(fn)
-  def withAccess(newAccess: Access): ApplicationWithCollaborators                         = this.focus(_.details.access).replace(newAccess)
-  def modifyAccess(fn: Access => Access): ApplicationWithCollaborators                    = this.focus(_.details.access).modify(fn)
 
   def modifyStdAccess(fn: Access.Standard => Access.Standard): ApplicationWithCollaborators = this.access match {
     case std: Access.Standard => withAccess(fn(std))
     case _                    => this
   }
+  def withAccess(newAccess: Access): ApplicationWithCollaborators                           = this.focus(_.details.access).replace(newAccess)
+  def modifyAccess(fn: Access => Access): ApplicationWithCollaborators                      = this.focus(_.details.access).modify(fn)
 }
 
 object ApplicationWithCollaborators {

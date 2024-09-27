@@ -17,20 +17,5 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 object ApplicationWithSubscriptionFieldsData {
-  //   coreApp: CoreApplication,
-  //   collaborators: Set[Collaborator],
-  //   subscriptions: Set[ApiIdentifier],
-  //   fieldValues: ApiFieldMap[FieldValue]
-  // ) extends HasEnvironment with HasState with HasAccess with HasCollaborators {
-  // val id = coreApp.id
-
-  // private[core] lazy val deployedTo = coreApp.deployedTo
-  // lazy val state      = coreApp.state
-  // lazy val access     = coreApp.access
+  // TODO
 }
-
-// object ApplicationWithSubscriptionFields {
-//   import play.api.libs.json._
-
-//   implicit val format: Format[ApplicationWithSubscriptionFields] = Json.format[ApplicationWithSubscriptionFields]
-// }

@@ -20,6 +20,6 @@ object CheckInformationData {
   val default = CheckInformation()
 }
 
-trait CheckInformationFixture {
+trait CheckInformationFixtures {
   val defaultCheckInformation = CheckInformationData.default
 }

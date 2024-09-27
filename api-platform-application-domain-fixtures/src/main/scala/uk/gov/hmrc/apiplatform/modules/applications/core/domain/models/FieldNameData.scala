@@ -22,7 +22,7 @@ object FieldNameData {
   val three = FieldName("field3")
 }
 
-trait FieldNameFixture {
+trait FieldNameFixtures {
   val fieldNameOne   = FieldNameData.one
   val fieldNameTwo   = FieldNameData.two
   val fieldNameThree = FieldNameData.three

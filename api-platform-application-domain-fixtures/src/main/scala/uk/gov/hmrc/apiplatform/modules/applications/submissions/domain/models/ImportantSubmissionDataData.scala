@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-object ImportantSubmissionDataData extends ResponsibleIndividualFixture with TermsOfUseAcceptanceFixture {
+object ImportantSubmissionDataData extends ResponsibleIndividualFixtures with TermsOfUseAcceptanceFixtures {
 
   val default = ImportantSubmissionData(
     None,
@@ -28,6 +28,6 @@ object ImportantSubmissionDataData extends ResponsibleIndividualFixture with Ter
   )
 }
 
-trait ImportantSubmissionDataFixture {
+trait ImportantSubmissionDataFixtures extends ResponsibleIndividualFixtures with TermsOfUseAcceptanceFixtures {
   val defaultImportantSubmissionData = ImportantSubmissionDataData.default
 }

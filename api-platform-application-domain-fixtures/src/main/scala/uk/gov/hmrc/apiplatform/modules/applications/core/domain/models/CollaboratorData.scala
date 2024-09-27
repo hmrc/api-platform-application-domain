@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddressData, UserIdData}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddressData, LaxEmailAddressFixtures, UserIdData, UserIdFixtures}
 
 object CollaboratorData {
 
@@ -32,7 +32,7 @@ object CollaboratorData {
   val collaborators: Set[Collaborator] = Set(Administrator.one, Administrator.two, Developer.one)
 }
 
-trait CollaboratorFixture {
+trait CollaboratorFixtures extends UserIdFixtures with LaxEmailAddressFixtures {
   val adminOne     = CollaboratorData.Administrator.one
   val adminTwo     = CollaboratorData.Administrator.two
   val developerOne = CollaboratorData.Developer.one

@@ -20,6 +20,6 @@ object TotpIdData {
   val one = TotpId("abc")
 }
 
-trait TotpIdFixture {
+trait TotpIdFixtures {
   val totpIdOne = TotpIdData.one
 }
