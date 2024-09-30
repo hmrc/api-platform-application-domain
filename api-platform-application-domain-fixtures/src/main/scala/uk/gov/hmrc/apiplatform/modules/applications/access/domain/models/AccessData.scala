@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUriFixtures
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.ImportantSubmissionDataFixtures
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{ImportantSubmissionData, ImportantSubmissionDataFixtures, PrivacyPolicyLocation, TermsAndConditionsLocation}
 
 object AccessData {
 
@@ -38,4 +38,21 @@ trait AccessFixtures extends RedirectUriFixtures with SellResellOrDistributeFixt
   val stdAccess        = AccessData.Standard.default
   val privilegedAccess = AccessData.Privileged.default
   val ropcAccess       = AccessData.Ropc.default
+
+  import monocle.syntax._
+  import monocle._
+
+  protected lazy val importantSubmissionDataLens =
+    Optional.apply[Access.Standard, ImportantSubmissionData]((a) => a.importantSubmissionData)((i) => (a) => a.copy(importantSubmissionData = Some(i)))
+
+  implicit class AccessDataFixturesSyntax(in: Access.Standard) {
+    import monocle.syntax.all._
+
+    private lazy val optic: AppliedOptional[Access.Standard, ImportantSubmissionData] = AppliedPOptional.apply(in, importantSubmissionDataLens)
+
+    def withDesktopSoftware: Access.Standard                                             = in.focus(_.importantSubmissionData).replace(Some(desktopImportantSubmissionData))
+      .focus(_.sellResellOrDistribute).replace(Some(resellYes))
+    def withTermsAndConditionsLocation(tnc: TermsAndConditionsLocation): Access.Standard = optic.andThen(termsAndConditionsLocationLens).replace(tnc)
+    def withPrivacyPolicyLocation(ppol: PrivacyPolicyLocation): Access.Standard          = optic.andThen(privacyPolicyLocationLens).replace(ppol)
+  }
 }

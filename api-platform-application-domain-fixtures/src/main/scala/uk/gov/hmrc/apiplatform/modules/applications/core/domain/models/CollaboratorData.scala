@@ -33,9 +33,8 @@ object CollaboratorData {
 }
 
 trait CollaboratorFixtures extends UserIdFixtures with LaxEmailAddressFixtures {
-  val adminOne     = CollaboratorData.Administrator.one
-  val adminTwo     = CollaboratorData.Administrator.two
-  val developerOne = CollaboratorData.Developer.one
-
+  val adminOne                             = CollaboratorData.Administrator.one
+  val adminTwo                             = CollaboratorData.Administrator.two
+  val developerOne                         = CollaboratorData.Developer.one
   val someCollaborators: Set[Collaborator] = CollaboratorData.collaborators
 }

@@ -36,10 +36,10 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
     }
 
     "allow modify standard access in core app" in {
-      val newApp = standardCoreApp.modifyStdAccess(_.copy(sellResellOrDistribute = Some(sell)))
+      val newApp = standardCoreApp.modifyStdAccess(_.copy(sellResellOrDistribute = Some(resellYes)))
 
       newApp.access match {
-        case std: Access.Standard => std.sellResellOrDistribute shouldBe Some(sell)
+        case std: Access.Standard => std.sellResellOrDistribute shouldBe Some(resellYes)
         case _                    => fail()
       }
     }

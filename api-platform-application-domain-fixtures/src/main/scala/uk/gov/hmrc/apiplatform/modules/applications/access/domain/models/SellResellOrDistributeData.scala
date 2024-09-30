@@ -17,11 +17,11 @@
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 object SellResellOrDistributeData {
-  val sellResell = SellResellOrDistribute("sell")
-  val distribute = SellResellOrDistribute("distribute")
+  val yes = SellResellOrDistribute("Yes")
+  val no  = SellResellOrDistribute("No")
 }
 
 trait SellResellOrDistributeFixtures {
-  val sell       = SellResellOrDistributeData.sellResell
-  val distribute = SellResellOrDistributeData.distribute
+  val resellYes = SellResellOrDistributeData.yes
+  val resellNo  = SellResellOrDistributeData.no
 }

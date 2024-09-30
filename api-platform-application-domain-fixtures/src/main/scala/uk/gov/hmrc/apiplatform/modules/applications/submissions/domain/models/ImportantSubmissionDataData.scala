@@ -26,8 +26,28 @@ object ImportantSubmissionDataData extends ResponsibleIndividualFixtures with Te
     PrivacyPolicyLocations.NoneProvided,
     List(touAcceptanceOne)
   )
+
+  val desktop = ImportantSubmissionData(
+    None,
+    responsibleIndividualOne,
+    Set(ServerLocation.InUK),
+    TermsAndConditionsLocations.InDesktopSoftware,
+    PrivacyPolicyLocations.InDesktopSoftware,
+    List(touAcceptanceOne)
+  )
+
 }
 
 trait ImportantSubmissionDataFixtures extends ResponsibleIndividualFixtures with TermsOfUseAcceptanceFixtures {
   val defaultImportantSubmissionData = ImportantSubmissionDataData.default
+  val desktopImportantSubmissionData = ImportantSubmissionDataData.desktop
+
+  import monocle._
+  protected val termsAndConditionsLocationLens = Focus[ImportantSubmissionData](_.termsAndConditionsLocation)
+  protected val privacyPolicyLocationLens      = Focus[ImportantSubmissionData](_.privacyPolicyLocation)
+
+  implicit class ImportantSubmissionDataFixturesSyntax(in: ImportantSubmissionData) {
+    def withTncsLocation(tnc: TermsAndConditionsLocation) = termsAndConditionsLocationLens.replace(tnc)(in)
+    def withPPolicyLocation(ppol: PrivacyPolicyLocation)  = privacyPolicyLocationLens.replace(ppol)(in)
+  }
 }

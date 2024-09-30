@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApplicationId
+
 object ApplicationWithCollaboratorsData extends CoreApplicationFixtures with CollaboratorFixtures {
 
   val standardApp = ApplicationWithCollaborators(
@@ -38,4 +40,11 @@ trait ApplicationWithCollaboratorsFixtures extends CoreApplicationFixtures with 
   val standardApp   = ApplicationWithCollaboratorsData.standardApp
   val privilegedApp = ApplicationWithCollaboratorsData.privilegedApp
   val ropcApp       = ApplicationWithCollaboratorsData.ropcApp
+
+  implicit class ApplicationWithCollaboratorsFixtureSyntax(app: ApplicationWithCollaborators) {
+    import monocle.syntax.all._
+    def withId(anId: ApplicationId): ApplicationWithCollaborators               = app.focus(_.details.id).replace(anId)
+    def withName(aName: ApplicationName): ApplicationWithCollaborators          = app.focus(_.details.name).replace(aName)
+    def withCollaborators(collabs: Collaborator*): ApplicationWithCollaborators = app.focus(_.collaborators).replace(collabs.toSet)
+  }
 }
