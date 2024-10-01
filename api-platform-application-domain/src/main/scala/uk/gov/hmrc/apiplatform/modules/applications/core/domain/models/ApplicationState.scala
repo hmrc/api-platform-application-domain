@@ -42,6 +42,7 @@ case class ApplicationState(
   lazy val isPendingResponsibleIndividualVerification                       = name == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION
   lazy val isPendingGatekeeperApproval                                      = name == State.PENDING_GATEKEEPER_APPROVAL
   lazy val isPendingRequesterVerification                                   = name == State.PENDING_REQUESTER_VERIFICATION
+  lazy val isInPreProduction                                                = name == State.PRE_PRODUCTION
   lazy val isInPreProductionOrProduction                                    = name == State.PRE_PRODUCTION || name == State.PRODUCTION
   lazy val isInPendingGatekeeperApprovalOrResponsibleIndividualVerification = name == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION || name == State.PENDING_GATEKEEPER_APPROVAL
   lazy val isInProduction                                                   = name == State.PRODUCTION

@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.{Access, AccessSpec}
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.{Access, AccessSpec, OverrideFlag}
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFixtures {
@@ -35,21 +35,32 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
       testFromJson[CoreApplication](jsonText)(example)
     }
 
-    "allow modify standard access in core app" in {
-      val newApp = standardCoreApp.modifyStdAccess(_.copy(sellResellOrDistribute = Some(resellYes)))
-
-      newApp.access match {
-        case std: Access.Standard => std.sellResellOrDistribute shouldBe Some(resellYes)
-        case _                    => fail()
+    val modifyPrivAccess: (Access) => Access                  = a =>
+      a match {
+        case p: Access.Privileged => p.copy(scopes = p.scopes + "NewScope")
+        case other                => other
       }
+    val modifyStdAccess: (Access.Standard) => Access.Standard = a => a.copy(overrides = Set(OverrideFlag.PersistLogin))
+
+    "modify access" in {
+      val app    = example.copy(access = privilegedAccess)
+      val newApp = app.modifyAccess(modifyPrivAccess)
+
+      newApp.access.asInstanceOf[Access.Privileged].scopes shouldBe privilegedAccess.scopes + "NewScope"
     }
 
-    "allow modify access in core app" in {
-      standardCoreApp.isPrivileged shouldBe false
+    "modify standard access does nothing for privileged access" in {
+      val app    = example.copy(access = privilegedAccess)
+      val newApp = app.modifyStdAccess(modifyStdAccess)
 
-      val newApp = standardCoreApp.modifyAccess(_ => privilegedAccess)
+      newApp shouldBe app
+    }
 
-      newApp.isPrivileged shouldBe true
+    "modify standard access changes app with standard access" in {
+      val app    = example.copy(access = standardAccess)
+      val newApp = app.modifyStdAccess(modifyStdAccess)
+
+      newApp.access.asInstanceOf[Access.Standard].overrides shouldBe Set(OverrideFlag.PersistLogin)
     }
   }
 }

@@ -44,7 +44,7 @@ object CoreApplicationData
       lastAccess = Some(instant),
       grantLength = GrantLength.EIGHTEEN_MONTHS,
       lastAccessTokenUsage = Some(instant),
-      access = stdAccess,
+      access = standardAccess,
       state = appStateProduction,
       rateLimitTier = RateLimitTier.BRONZE,
       checkInformation = None,

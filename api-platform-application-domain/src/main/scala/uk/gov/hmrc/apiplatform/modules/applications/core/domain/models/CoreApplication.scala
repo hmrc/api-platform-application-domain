@@ -44,6 +44,7 @@ trait HasState {
   lazy val isPendingResponsibleIndividualVerification                       = state.isPendingResponsibleIndividualVerification
   lazy val isPendingGatekeeperApproval                                      = state.isPendingGatekeeperApproval
   lazy val isPendingRequesterVerification                                   = state.isPendingRequesterVerification
+  lazy val isInPreProduction                                                = state.isInPreProduction
   lazy val isInPreProductionOrProduction                                    = state.isInPreProductionOrProduction
   lazy val isInPendingGatekeeperApprovalOrResponsibleIndividualVerification = state.isInPendingGatekeeperApprovalOrResponsibleIndividualVerification
   lazy val isInProduction                                                   = state.isInProduction

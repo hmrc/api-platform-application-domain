@@ -20,9 +20,10 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
-class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec {
+class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec with ApplicationWithCollaboratorsFixtures {
   import ApplicationWithSubscriptionFieldsSpec._
 
   "ApplicationWithSubscriptionFields" should {
@@ -32,6 +33,61 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec {
 
     "read from json" in {
       testFromJson[ApplicationWithSubscriptionFields](jsonText)(example)
+    }
+
+    val modifyPrivAccess: (Access) => Access                  = a =>
+      a match {
+        case p: Access.Privileged => p.copy(scopes = p.scopes + "NewScope")
+        case other                => other
+      }
+    val modifyStdAccess: (Access.Standard) => Access.Standard = a => a.copy(overrides = Set(OverrideFlag.PersistLogin))
+    val changeDescription: CoreApplication => CoreApplication = a => a.copy(description = Some("a new description"))
+
+    "support modify to change the core" in {
+      val newApp = example.modify(changeDescription)
+
+      newApp.details.description shouldBe Some("a new description")
+    }
+
+    "support withAccess to replace it" in {
+      val newApp = example.withAccess(privilegedAccess)
+
+      newApp.details.access.isPriviledged shouldBe true
+    }
+
+    "support modifyAccess" in {
+      val app    = example.withAccess(privilegedAccess)
+      val newApp = app.modifyAccess(modifyPrivAccess)
+
+      newApp.access.asInstanceOf[Access.Privileged].scopes shouldBe privilegedAccess.scopes + "NewScope"
+    }
+
+    "support modifyStdAccess to do nothing for privileged access" in {
+      val app    = example.withAccess(privilegedAccess)
+      val newApp = app.modifyStdAccess(modifyStdAccess)
+
+      newApp shouldBe app
+    }
+
+    "support modifyStdAccess to make changes to app with standard access" in {
+      val app    = example.withAccess(standardAccess)
+      val newApp = app.modifyStdAccess(modifyStdAccess)
+
+      newApp.access.asInstanceOf[Access.Standard].overrides shouldBe Set(OverrideFlag.PersistLogin)
+    }
+
+    "support withState to replace it" in {
+      val newApp = example.withState(ApplicationStateData.preProduction)
+
+      newApp.details.state.isInPreProductionOrProduction shouldBe true
+    }
+
+    val modifyState: ApplicationState => ApplicationState = a => a.copy(requestedByName = Some("Bob"))
+
+    "support modifyState to change it" in {
+      val newApp = example.modifyState(modifyState)
+
+      newApp.details.state.requestedByName shouldBe Some("Bob")
     }
   }
 }

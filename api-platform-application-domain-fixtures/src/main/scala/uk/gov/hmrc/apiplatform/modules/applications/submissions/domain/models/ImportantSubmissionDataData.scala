@@ -35,7 +35,6 @@ object ImportantSubmissionDataData extends ResponsibleIndividualFixtures with Te
     PrivacyPolicyLocations.InDesktopSoftware,
     List(touAcceptanceOne)
   )
-
 }
 
 trait ImportantSubmissionDataFixtures extends ResponsibleIndividualFixtures with TermsOfUseAcceptanceFixtures {
@@ -45,9 +44,4 @@ trait ImportantSubmissionDataFixtures extends ResponsibleIndividualFixtures with
   import monocle._
   protected val termsAndConditionsLocationLens = Focus[ImportantSubmissionData](_.termsAndConditionsLocation)
   protected val privacyPolicyLocationLens      = Focus[ImportantSubmissionData](_.privacyPolicyLocation)
-
-  implicit class ImportantSubmissionDataFixturesSyntax(in: ImportantSubmissionData) {
-    def withTncsLocation(tnc: TermsAndConditionsLocation) = termsAndConditionsLocationLens.replace(tnc)(in)
-    def withPPolicyLocation(ppol: PrivacyPolicyLocation)  = privacyPolicyLocationLens.replace(ppol)(in)
-  }
 }
