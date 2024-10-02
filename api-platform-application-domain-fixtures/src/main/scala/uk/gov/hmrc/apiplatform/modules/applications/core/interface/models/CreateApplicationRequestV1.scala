@@ -32,9 +32,9 @@ case class CreateApplicationRequestV1 private (
 
   validate(this)
 
-  lazy val accessType = access.accessType
+  val accessType = access.accessType
 
-  lazy val anySubscriptions: Set[ApiIdentifier] = subscriptions.getOrElse(Set.empty)
+  val anySubscriptions: Set[ApiIdentifier] = subscriptions.getOrElse(Set.empty)
 
   private def validate(in: CreateApplicationRequestV1): Unit = {
     super.validate(in)

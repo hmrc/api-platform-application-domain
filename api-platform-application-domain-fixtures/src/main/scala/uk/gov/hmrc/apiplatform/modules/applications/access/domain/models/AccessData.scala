@@ -47,13 +47,13 @@ trait AccessFixtures extends RedirectUriFixtures with SellResellOrDistributeFixt
   import monocle.syntax._
   import monocle._
 
-  protected lazy val importantSubmissionDataLens =
+  protected val importantSubmissionDataLens =
     Optional.apply[Access.Standard, ImportantSubmissionData]((a) => a.importantSubmissionData)((i) => (a) => a.copy(importantSubmissionData = Some(i)))
 
   implicit class AccessDataFixturesSyntax(in: Access.Standard) {
     import monocle.syntax.all._
 
-    private lazy val optic: AppliedOptional[Access.Standard, ImportantSubmissionData] = AppliedPOptional.apply(in, importantSubmissionDataLens)
+    private val optic: AppliedOptional[Access.Standard, ImportantSubmissionData] = AppliedPOptional.apply(in, importantSubmissionDataLens)
 
     def withDesktopSoftware: Access.Standard =
       in

@@ -16,12 +16,25 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import scala.util.Random
+
 import play.api.libs.json._
 
-case class FieldName(value: String) extends AnyVal
+case class FieldName(value: String) extends AnyVal {
+  def isEmpty = value.isEmpty
+}
 
 object FieldName {
   implicit val format: Format[FieldName]                = Json.valueFormat[FieldName]
   implicit val keyReadsFieldName: KeyReads[FieldName]   = key => JsSuccess(FieldName(key))
   implicit val keyWritesFieldName: KeyWrites[FieldName] = _.value
+
+  implicit val ordering: Ordering[FieldName] = new Ordering[FieldName] {
+    override def compare(x: FieldName, y: FieldName): Int = x.value.compareTo(y.value)
+  }
+
+  def empty: FieldName = FieldName("")
+
+  def random = FieldName(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
+
 }

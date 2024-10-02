@@ -78,7 +78,8 @@ object ApplicationWithCollaborators {
         checkInformation = old.checkInformation,
         blocked = old.blocked,
         ipAllowlist = old.ipAllowlist,
-        allowAutoDelete = old.moreApplication.allowAutoDelete
+        allowAutoDelete = old.moreApplication.allowAutoDelete,
+        lastActionActor = old.moreApplication.lastActionActor
       ),
       collaborators = old.collaborators
     )

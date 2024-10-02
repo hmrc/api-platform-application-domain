@@ -37,9 +37,9 @@ case class CreateApplicationRequestV2 private (
 
   validate(this)
 
-  lazy val accessType = AccessType.STANDARD
+  val accessType = AccessType.STANDARD
 
-  lazy val anySubscriptions: Set[ApiIdentifier] = upliftRequest.subscriptions
+  val anySubscriptions: Set[ApiIdentifier] = upliftRequest.subscriptions
 
 }
 

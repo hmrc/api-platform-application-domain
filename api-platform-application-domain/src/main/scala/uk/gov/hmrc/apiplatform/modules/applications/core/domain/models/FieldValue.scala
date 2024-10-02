@@ -16,10 +16,18 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import scala.util.Random
+
 import play.api.libs.json.{Format, Json}
 
-case class FieldValue(value: String) extends AnyVal
+case class FieldValue(value: String) extends AnyVal {
+  def isEmpty = value.isEmpty
+} 
 
 object FieldValue {
   implicit val format: Format[FieldValue] = Json.valueFormat[FieldValue]
+
+  def empty: FieldValue = FieldValue("")
+
+  def random = FieldValue(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
 }

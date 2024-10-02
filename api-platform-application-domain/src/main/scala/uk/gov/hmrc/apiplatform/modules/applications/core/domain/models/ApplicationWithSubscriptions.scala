@@ -69,7 +69,8 @@ object ApplicationWithSubscriptions {
         checkInformation = old.checkInformation,
         blocked = old.blocked,
         ipAllowlist = old.ipAllowlist,
-        allowAutoDelete = old.allowAutoDelete
+        allowAutoDelete = old.allowAutoDelete,
+        lastActionActor = ActorType.UNKNOWN
       ),
       collaborators = old.collaborators,
       subscriptions = old.subscriptions.toSet

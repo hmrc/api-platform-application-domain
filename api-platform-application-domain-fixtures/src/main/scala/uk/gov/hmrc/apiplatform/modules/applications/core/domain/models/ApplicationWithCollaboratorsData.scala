@@ -18,21 +18,21 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApplicationId
 
-object ApplicationWithCollaboratorsData extends CoreApplicationFixtures with CollaboratorFixtures {
+object ApplicationWithCollaboratorsData {
 
   val standardApp = ApplicationWithCollaborators(
-    standardCoreApp,
-    someCollaborators
+    CoreApplicationData.Standard.one,
+    CollaboratorData.collaborators
   )
 
   val privilegedApp = ApplicationWithCollaborators(
-    privilegedCoreApp,
-    someCollaborators
+    CoreApplicationData.Privileged.one,
+    CollaboratorData.collaborators
   )
 
   val ropcApp = ApplicationWithCollaborators(
-    ropcCoreApp,
-    someCollaborators
+    CoreApplicationData.Ropc.one,
+    CollaboratorData.collaborators
   )
 }
 

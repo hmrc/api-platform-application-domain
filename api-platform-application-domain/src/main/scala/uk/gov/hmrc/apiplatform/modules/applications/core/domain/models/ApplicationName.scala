@@ -62,11 +62,15 @@ object ValidatedApplicationName {
   implicit val format: Format[ValidatedApplicationName] = Json.valueFormat[ValidatedApplicationName]
 }
 
-case class ApplicationName(value: String) extends AnyVal {
+case class ApplicationName private(value: String) extends AnyVal {
   override def toString(): String = value
+
+  def equalsIgnoreCase(other: ApplicationName): Boolean = this.value.equalsIgnoreCase(other.value)
 }
 
 object ApplicationName {
+  def apply(value: String): ApplicationName = new ApplicationName(value.trim())
+
   implicit val format: Format[ApplicationName] = Json.valueFormat[ApplicationName]
 }
 
