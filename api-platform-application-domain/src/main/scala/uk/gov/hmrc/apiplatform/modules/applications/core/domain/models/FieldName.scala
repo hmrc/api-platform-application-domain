@@ -20,20 +20,21 @@ import scala.util.Random
 
 import play.api.libs.json._
 
-case class FieldName(value: String) extends AnyVal {
-  def isEmpty = value.isEmpty
-}
+case class FieldName private (value: String) extends AnyVal
 
 object FieldName {
-  implicit val format: Format[FieldName]                = Json.valueFormat[FieldName]
-  implicit val keyReadsFieldName: KeyReads[FieldName]   = key => JsSuccess(FieldName(key))
+  def apply(value: String): Option[FieldName] = Some(value.trim()).filterNot(_.isEmpty()).map(new FieldName(_))
+  def unsafeApply(value: String): FieldName   = apply(value).getOrElse(throw new RuntimeException("FieldName cannot be blank"))
+
+  implicit val reads: Reads[FieldName]    = Reads.StringReads.flatMapResult(FieldName.apply(_).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f)))
+  implicit val writers: Writes[FieldName] = Writes.StringWrites.contramap(_.value)
+
+  implicit val keyReadsFieldName: KeyReads[FieldName]   = key => FieldName(key).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f))
   implicit val keyWritesFieldName: KeyWrites[FieldName] = _.value
 
   implicit val ordering: Ordering[FieldName] = new Ordering[FieldName] {
     override def compare(x: FieldName, y: FieldName): Int = x.value.compareTo(y.value)
   }
-
-  def empty: FieldName = FieldName("")
 
   def random = FieldName(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
 

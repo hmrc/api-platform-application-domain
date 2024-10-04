@@ -69,6 +69,19 @@ class ApplicationWithSubscriptionsSpec extends BaseJsonFormattersSpec with Appli
       newApp.details.description shouldBe Some("a new description")
     }
 
+    "uplift to with subscription fields" in {
+      TwoSubs.example.withFieldValues(ApplicationWithSubscriptionFieldsData.someFieldValues) shouldBe ApplicationWithSubscriptionFields(
+        TwoSubs.example.details,
+        TwoSubs.example.collaborators,
+        TwoSubs.example.subscriptions,
+        ApplicationWithSubscriptionFieldsData.someFieldValues
+      )
+    }
+
+    "downgrades to with collaborators" in {
+      TwoSubs.example.asAppWithCollaborators shouldBe ApplicationWithCollaborators(TwoSubs.example.details, TwoSubs.example.collaborators)
+    }
+
     "support withAccess to replace it" in {
       val newApp = NoSubs.example.withAccess(privilegedAccess)
 

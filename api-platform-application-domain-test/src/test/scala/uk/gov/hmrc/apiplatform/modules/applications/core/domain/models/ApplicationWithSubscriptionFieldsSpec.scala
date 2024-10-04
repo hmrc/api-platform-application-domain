@@ -50,6 +50,10 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec with 
     val modifyStdAccess: (Access.Standard) => Access.Standard = a => a.copy(overrides = Set(OverrideFlag.PersistLogin))
     val changeDescription: CoreApplication => CoreApplication = a => a.copy(description = Some("a new description"))
 
+    "downgrades to with collaborators" in {
+      example.asAppWithCollaborators shouldBe ApplicationWithCollaborators(example.details, example.collaborators)
+    }
+
     "support modify to change the core" in {
       val newApp = example.modify(changeDescription)
 
@@ -105,9 +109,9 @@ object ApplicationWithSubscriptionFieldsSpec extends ApiIdentifierFixtures with 
     details = CoreApplicationSpec.example,
     collaborators = Set(CollaboratorSpec.Admin.example),
     subscriptions = Set(apiIdentifierOne),
-    fieldValues = Map(apiIdentifierOne.context -> Map(apiIdentifierOne.versionNbr -> Map(FieldName("one") -> FieldValue("a"))))
+    fieldValues = Map(apiIdentifierOne.context -> Map(apiIdentifierOne.versionNbr -> Map(FieldNameData.one -> FieldValue("a"))))
   )
 
   val jsonText =
-    s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"${apiIdentifierOne.context}","version":"${apiIdentifierOne.versionNbr}"}],"fieldValues":{"test/contextA":{"1.0":{"one":"a"}}}}"""
+    s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"${apiIdentifierOne.context}","version":"${apiIdentifierOne.versionNbr}"}],"fieldValues":{"test/contextA":{"1.0":{"field1":"a"}}}}"""
 }

@@ -28,6 +28,11 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
       ApplicationName("My App").toString() shouldBe "My App"
     }
 
+    "equals ignoring case" in {
+      ApplicationName("abc").equalsIgnoreCase(ApplicationName("ABc")) shouldBe true
+      ApplicationName("abc").equalsIgnoreCase(ApplicationName("xyz")) shouldBe false
+    }
+
     "convert to json" in {
       Json.toJson[ApplicationName](ApplicationName("My App")) shouldBe JsString("My App")
     }

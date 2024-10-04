@@ -53,13 +53,13 @@ object CoreApplicationData extends FixedClock {
       name = ApplicationNameData.two
     )
 
-
     val three = one.copy(
       id = ApplicationIdData.three,
       clientId = ClientIdData.three,
       name = ApplicationNameData.three
     )
   }
+
   object Privileged {
 
     val one = CoreApplication(

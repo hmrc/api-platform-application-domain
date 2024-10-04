@@ -33,7 +33,7 @@ class ApiFieldMapSpec
     }
 
     "extract an api from an ApiIdentifier" in {
-      val fieldIntMap = Map(FieldName("a") -> 1, FieldName("b") -> 2)
+      val fieldIntMap = Map(FieldNameData.one -> 1, FieldNameData.two -> 2)
       val x           = Map(apiContextOne -> Map(apiVersionNbrOne -> fieldIntMap))
 
       ApiFieldMap.extractApi(apiIdentifierOne)(x) shouldBe fieldIntMap

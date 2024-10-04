@@ -20,6 +20,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationWithSubscriptionsData.someSubscriptions
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 class ApplicationWithCollaboratorsSpec extends BaseJsonFormattersSpec with ApplicationWithCollaboratorsFixtures {
@@ -33,6 +34,10 @@ class ApplicationWithCollaboratorsSpec extends BaseJsonFormattersSpec with Appli
 
     "read from json" in {
       testFromJson[ApplicationWithCollaborators](jsonText)(example)
+    }
+
+    "uplifts to with subscriptions" in {
+      example.withSubscriptions(someSubscriptions) shouldBe ApplicationWithSubscriptions(example.details, example.collaborators, someSubscriptions)
     }
 
     "read from old json" in {

@@ -46,10 +46,10 @@ object AccessData {
 }
 
 trait AccessFixtures extends RedirectUriFixtures with SellResellOrDistributeFixtures with ImportantSubmissionDataFixtures {
-  val standardAccess     = AccessData.Standard.default
-  val standardAccessOne  = AccessData.Standard.one
-  val privilegedAccess   = AccessData.Privileged.default
-  val ropcAccess         = AccessData.Ropc.default
+  val standardAccess    = AccessData.Standard.default
+  val standardAccessOne = AccessData.Standard.one
+  val privilegedAccess  = AccessData.Privileged.default
+  val ropcAccess        = AccessData.Ropc.default
 
   import monocle.syntax._
   import monocle._

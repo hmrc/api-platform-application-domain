@@ -17,9 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 object FieldNameData {
-  val one   = FieldName("field1")
-  val two   = FieldName("field2")
-  val three = FieldName("field3")
+  val one   = FieldName.unsafeApply("field1")
+  val two   = FieldName.unsafeApply("field2")
+  val three = FieldName.unsafeApply("field3")
 }
 
 trait FieldNameFixtures {

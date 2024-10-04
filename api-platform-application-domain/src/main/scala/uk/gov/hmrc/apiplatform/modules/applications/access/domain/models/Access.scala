@@ -57,8 +57,10 @@ object Access {
       importantSubmissionData: Option[ImportantSubmissionData] = None
     ) extends Access {
 
-    def privacyPolicyLocation: Option[PrivacyPolicyLocation] = importantSubmissionData.map(_.privacyPolicyLocation).orElse( privacyPolicyUrl.map(PrivacyPolicyLocations.Url(_)))
-    def termsAndConditionsLocation: Option[TermsAndConditionsLocation] = importantSubmissionData.map(_.termsAndConditionsLocation).orElse( termsAndConditionsUrl.map(TermsAndConditionsLocations.Url(_)))
+    def privacyPolicyLocation: Option[PrivacyPolicyLocation] = importantSubmissionData.map(_.privacyPolicyLocation).orElse(privacyPolicyUrl.map(PrivacyPolicyLocations.Url(_)))
+
+    def termsAndConditionsLocation: Option[TermsAndConditionsLocation] =
+      importantSubmissionData.map(_.termsAndConditionsLocation).orElse(termsAndConditionsUrl.map(TermsAndConditionsLocations.Url(_)))
   }
 
   case class Privileged(

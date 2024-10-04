@@ -18,26 +18,33 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
-class FieldNameAndValueSpec extends HmrcSpec {
-  val map      = Map(FieldNameData.one -> FieldValue("1"), FieldNameData.two -> FieldValue("2"))
-  val jsonText = """{ "field1": "1", "field2": "2" }"""
+class FieldValueSpec extends HmrcSpec {
+  val jsonText = """"value1""""
 
   "JsonFormatter" should {
-    import play.api.libs.json._
-
-    "Read raw map" in {
-      Json.fromJson[Map[FieldName, FieldValue]](Json.parse(jsonText)) shouldBe JsSuccess(map)
+    "Read raw json" in {
+      import play.api.libs.json._
+      Json.fromJson[FieldValue](Json.parse(jsonText)) shouldBe JsSuccess(FieldValue("value1"))
     }
 
-    "Write raw map" in {
-      Json.toJson[Map[FieldName, FieldValue]](map) shouldBe Json.parse(jsonText)
+    "Write raw json" in {
+      import play.api.libs.json._
+      Json.toJson[FieldValue](FieldValueData.one) shouldBe Json.parse(jsonText)
     }
 
-    "fail on bad map" in {
-      val jsonText = """{ "field1": "1", "": "2" }"""
+    "generate random values" in {
+      FieldValue.random should not be FieldValue.random
+    }
+  }
 
-      Json.fromJson[Map[FieldName, FieldValue]](Json.parse(jsonText)).asOpt shouldBe None
+  "FieldValue" should {
+    "create an empty value" in {
+      FieldValue.empty.value shouldBe ""
+    }
 
+    "test as empty value" in {
+      FieldValue.empty.isEmpty shouldBe true
+      FieldValueData.one.isEmpty shouldBe false
     }
   }
 }

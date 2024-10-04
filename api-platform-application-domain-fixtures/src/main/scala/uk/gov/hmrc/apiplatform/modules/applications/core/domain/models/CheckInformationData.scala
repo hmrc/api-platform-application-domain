@@ -16,36 +16,37 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressData
+import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
+
 import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.FullNameData
 
 object CheckInformationData extends FixedClock {
   val default = CheckInformation()
 
-  val one =     CheckInformation(
-      contactDetails = Some(
-        ContactDetails(
-          fullname = FullNameData.one,
-          email = LaxEmailAddressData.one,
-          telephoneNumber = "020 1122 3344"
-        )
-      ),
-      confirmedName = true,
-      providedPrivacyPolicyURL = true,
-      providedTermsAndConditionsURL = true,
-      applicationDetails = Some(""),
-      termsOfUseAgreements = List(
-        TermsOfUseAgreement(
-          emailAddress = LaxEmailAddressData.two,
-          timeStamp = instant,
-          version = "1.0"
-        )
+  val one = CheckInformation(
+    contactDetails = Some(
+      ContactDetails(
+        fullname = FullNameData.one,
+        email = LaxEmailAddressData.one,
+        telephoneNumber = "020 1122 3344"
+      )
+    ),
+    confirmedName = true,
+    providedPrivacyPolicyURL = true,
+    providedTermsAndConditionsURL = true,
+    applicationDetails = Some(""),
+    termsOfUseAgreements = List(
+      TermsOfUseAgreement(
+        emailAddress = LaxEmailAddressData.two,
+        timeStamp = instant,
+        version = "1.0"
       )
     )
+  )
 }
 
 trait CheckInformationFixtures {
   val defaultCheckInformation = CheckInformationData.default
-  val checkInformationOne = CheckInformationData.one
+  val checkInformationOne     = CheckInformationData.one
 }

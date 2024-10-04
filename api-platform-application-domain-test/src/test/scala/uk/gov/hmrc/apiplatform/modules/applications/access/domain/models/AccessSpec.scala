@@ -20,11 +20,14 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.PrivacyPolicyLocation
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.PrivacyPolicyLocations
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.ImportantSubmissionDataData
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.TermsAndConditionsLocations
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.TermsAndConditionsLocation
+
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{
+  ImportantSubmissionDataData,
+  PrivacyPolicyLocation,
+  PrivacyPolicyLocations,
+  TermsAndConditionsLocation,
+  TermsAndConditionsLocations
+}
 
 class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
   import AccessSpec._
@@ -78,11 +81,12 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
       }
 
       forAll(values) {
-        case (false, _, direct, expected) => 
+        case (false, _, direct, expected)  =>
           val access = AccessData.Standard.default.copy(privacyPolicyUrl = direct, importantSubmissionData = None)
           test(access, expected)
-        case (true, ppl, direct, expected) => 
-          val access = AccessData.Standard.default.copy(privacyPolicyUrl = direct, importantSubmissionData = Some(ImportantSubmissionDataData.default.copy(privacyPolicyLocation = ppl)))
+        case (true, ppl, direct, expected) =>
+          val access =
+            AccessData.Standard.default.copy(privacyPolicyUrl = direct, importantSubmissionData = Some(ImportantSubmissionDataData.default.copy(privacyPolicyLocation = ppl)))
           test(access, expected)
       }
     }
@@ -103,11 +107,14 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
       }
 
       forAll(values) {
-        case (false, _, direct, expected) => 
+        case (false, _, direct, expected)  =>
           val access = AccessData.Standard.default.copy(termsAndConditionsUrl = direct, importantSubmissionData = None)
           test(access, expected)
-        case (true, tnc, direct, expected) => 
-          val access = AccessData.Standard.default.copy(termsAndConditionsUrl = direct, importantSubmissionData = Some(ImportantSubmissionDataData.default.copy(termsAndConditionsLocation = tnc)))
+        case (true, tnc, direct, expected) =>
+          val access = AccessData.Standard.default.copy(
+            termsAndConditionsUrl = direct,
+            importantSubmissionData = Some(ImportantSubmissionDataData.default.copy(termsAndConditionsLocation = tnc))
+          )
           test(access, expected)
       }
     }

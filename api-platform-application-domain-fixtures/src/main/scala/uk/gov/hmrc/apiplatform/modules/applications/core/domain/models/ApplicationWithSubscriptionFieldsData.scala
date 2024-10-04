@@ -16,6 +16,16 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 object ApplicationWithSubscriptionFieldsData {
-  // TODO
+  val someFieldValues: ApiFieldMap[FieldValue] = Map(ApiContextData.one -> Map(ApiVersionNbrData.one -> Map(FieldNameData.one -> FieldValueData.one)))
+
+  val one = ApplicationWithSubscriptionFields(CoreApplicationData.Standard.one, CollaboratorData.collaborators, ApplicationWithSubscriptionsData.someSubscriptions, someFieldValues)
+}
+
+trait ApplicationWithSubscriptionFieldsData extends ApplicationWithSubscriptionsFixtures {
+  val someFieldValues = ApplicationWithSubscriptionsData.someSubscriptions
+
+  val appWithSubsFieldsOne = ApplicationWithSubscriptionFieldsData.one
 }
