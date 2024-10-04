@@ -22,7 +22,7 @@ import play.api.libs.json.{Format, Json}
 
 case class FieldValue(value: String) extends AnyVal {
   def isEmpty = value.isEmpty
-} 
+}
 
 object FieldValue {
   implicit val format: Format[FieldValue] = Json.valueFormat[FieldValue]

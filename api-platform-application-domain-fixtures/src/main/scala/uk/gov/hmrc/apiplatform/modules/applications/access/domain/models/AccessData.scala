@@ -28,6 +28,12 @@ object AccessData {
 
   object Standard {
     val default = Access.Standard()
+
+    val one = default.copy(
+      redirectUris = List(RedirectUriData.one),
+      termsAndConditionsUrl = Some("http://localhost:22222/terms"),
+      privacyPolicyUrl = Some("http://localhost:22222/privacy")
+    )
   }
 
   object Privileged {
@@ -40,9 +46,10 @@ object AccessData {
 }
 
 trait AccessFixtures extends RedirectUriFixtures with SellResellOrDistributeFixtures with ImportantSubmissionDataFixtures {
-  val standardAccess   = AccessData.Standard.default
-  val privilegedAccess = AccessData.Privileged.default
-  val ropcAccess       = AccessData.Ropc.default
+  val standardAccess     = AccessData.Standard.default
+  val standardAccessOne  = AccessData.Standard.one
+  val privilegedAccess   = AccessData.Privileged.default
+  val ropcAccess         = AccessData.Ropc.default
 
   import monocle.syntax._
   import monocle._

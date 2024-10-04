@@ -42,6 +42,116 @@ class ApplicationWithCollaboratorsSpec extends BaseJsonFormattersSpec with Appli
       testFromJson[ApplicationWithCollaborators](oldJson)(example)
     }
 
+    "read as GK" in {
+      val applicationResponseForEmail =
+        s"""
+           |  [{
+           |    "id": "$applicationIdOne",
+           |    "clientId": "clientid1",
+           |    "gatewayId": "gatewayId1",
+           |    "name": "Automated Test Application",
+           |    "description": "application for test",
+           |    "deployedTo": "PRODUCTION",
+           |   "collaborators": [
+           |    {
+           |      "emailAddress": "$emailOne",
+           |      "userId": "$userIdOne",
+           |     "role": "ADMINISTRATOR"
+           |    },
+           |    {
+           |      "emailAddress": "$emailTwo",
+           |      "userId": "$userIdTwo",
+           |     "role": "DEVELOPER"
+           |    }
+           |    ],
+           |    "createdOn": 1458832690624,
+           |    "lastAccess": 1458832690624,
+           |    "access": {
+           |      "redirectUris": [],
+           |      "overrides": [],
+           |      "accessType": "STANDARD"
+           |    },
+           |    "rateLimitTier": "BRONZE",
+           |    "blocked": false,
+           |    "trusted": false,
+           |    "state": {
+           |      "name": "PRODUCTION",
+           |      "requestedByEmailAddress": "$emailOne",
+           |      "verificationCode": "pRoPW05BMTQ_HqzTTR0Ent10py9gvstX34_a3dxx4V8",
+           |      "updatedOn": 1459868573962
+           |    },
+           |    "ipAllowlist" : {
+           |        "required" : false,
+           |        "allowlist" : []
+           |    },
+           |    "grantLength": 547,
+           |    "redirectUris": [],
+           |    "moreApplication": {
+           |        "allowAutoDelete": true,
+           |        "lastActionActor": "UNKNOWN"
+           |      }
+           |  }]
+    """.stripMargin
+
+      val js  = Json.parse(applicationResponseForEmail)
+      val res = js.validate[List[ApplicationWithCollaborators]]
+      println(res.asEither.left)
+      res.asOpt.value
+    }
+
+    "read as if from APM" in {
+      val applicationForDeveloperResponse: String =
+        """[
+          |  {
+          |    "id": "b42c4a8f-3df3-451f-92ea-114ff039110e",
+          |    "clientId": "qDxLu6_zZVGurMX7NA7g2Wd5T5Ia",
+          |    "gatewayId": "12345",
+          |    "name": "application for test",
+          |    "deployedTo": "PRODUCTION",
+          |    "collaborators": [
+          |      {
+          |        "userId": "8e6657be-3b86-42b7-bcdf-855bee3bf941",
+          |        "emailAddress": "a@b.com",
+          |        "role": "ADMINISTRATOR"
+          |      }
+          |    ],
+          |    "createdOn": 1678792287460,
+          |    "lastAccess": 1678792287460,
+          |    "grantLength": 547,
+          |    "redirectUris": [
+          |      "http://red1",
+          |      "http://red2"
+          |    ],
+          |    "access": {
+          |      "redirectUris": [
+          |        "http://isobel.name",
+          |        "http://meghan.biz"
+          |      ],
+          |      "overrides": [],
+          |      "accessType": "STANDARD"
+          |    },
+          |    "state": {
+          |      "name": "PRODUCTION",
+          |      "updatedOn": 1678793142888
+          |    },
+          |    "rateLimitTier": "BRONZE",
+          |    "blocked": false,
+          |    "trusted": false,
+          |    "serverToken": "2faa09169cf8f464ce13b80a14718b15",
+          |    "subscriptions": [],
+          |    "ipAllowlist": {
+          |      "required": false,
+          |      "allowlist": []
+          |    }
+          |  }
+          |]""".stripMargin
+
+      val js  = Json.parse(applicationForDeveloperResponse)
+      val res = js.validate[List[ApplicationWithCollaborators]]
+      println(res.asEither.left)
+      res.asOpt.value
+    }
+
     "return the admins" in {
       val app = example.copy(collaborators = Set(Admin.example, Dev.example))
       app.admins shouldBe Set(Admin.example)

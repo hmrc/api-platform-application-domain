@@ -46,10 +46,27 @@ case class ApplicationWithSubscriptionFields(
     case std: Access.Standard => withAccess(fn(std))
     case _                    => this
   }
+
+  def asAppWithCollaborators: ApplicationWithCollaborators =
+    ApplicationWithCollaborators(
+      this.details,
+      this.collaborators
+    )
 }
 
 object ApplicationWithSubscriptionFields {
   import play.api.libs.json._
 
-  implicit val format: Format[ApplicationWithSubscriptionFields] = Json.format[ApplicationWithSubscriptionFields]
+  private val transformOldResponse: OldApplicationWithSubsFields => ApplicationWithSubscriptionFields = (old) => {
+    ApplicationWithSubscriptionFields(
+      details = old.application.details,
+      collaborators = old.application.collaborators,
+      subscriptions = old.subscriptions,
+      fieldValues = old.subscriptionFieldValues
+    )
+  }
+
+  val reads: Reads[ApplicationWithSubscriptionFields]            = Json.reads[ApplicationWithSubscriptionFields].orElse(Json.reads[OldApplicationWithSubsFields].map(transformOldResponse))
+  val writes: Writes[ApplicationWithSubscriptionFields]          = Json.writes[ApplicationWithSubscriptionFields]
+  implicit val format: Format[ApplicationWithSubscriptionFields] = Format(reads, writes)
 }

@@ -16,6 +16,13 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApiIdentifierData
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApiIdentifierFixtures
+
 object ApplicationWithSubscriptionsData {
-  // TODO
+  val someSubscriptions = Set(ApiIdentifierData.one, ApiIdentifierData.two)
+}
+
+trait ApplicationWithSubscriptionsFixtures extends ApplicationWithCollaboratorsFixtures with ApiIdentifierFixtures {
+  val someSubscriptions = ApplicationWithSubscriptionsData.someSubscriptions
 }

@@ -21,6 +21,7 @@ import java.time.Instant
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
+
 trait HasEnvironment {
   self: { def deployedTo: Environment } =>
 

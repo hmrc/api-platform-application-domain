@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ActorType, ApiIdentifier, UserId}
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
 
@@ -54,6 +54,13 @@ case class ApplicationWithCollaborators(
   }
   def withAccess(newAccess: Access): ApplicationWithCollaborators                           = this.focus(_.details.access).replace(newAccess)
   def modifyAccess(fn: Access => Access): ApplicationWithCollaborators                      = this.focus(_.details.access).modify(fn)
+
+  def withSubscriptions(subscriptions: Set[ApiIdentifier]): ApplicationWithSubscriptions =
+    ApplicationWithSubscriptions(
+      this.details,
+      this.collaborators,
+      subscriptions
+    )
 }
 
 object ApplicationWithCollaborators {
@@ -78,8 +85,8 @@ object ApplicationWithCollaborators {
         checkInformation = old.checkInformation,
         blocked = old.blocked,
         ipAllowlist = old.ipAllowlist,
-        allowAutoDelete = old.moreApplication.allowAutoDelete,
-        lastActionActor = old.moreApplication.lastActionActor
+        allowAutoDelete = old.moreApplication.fold(false)(_.allowAutoDelete),
+        lastActionActor = old.moreApplication.fold[ActorType](ActorType.UNKNOWN)(_.lastActionActor)
       ),
       collaborators = old.collaborators
     )

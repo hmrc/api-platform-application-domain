@@ -25,6 +25,16 @@ object ApplicationWithCollaboratorsData {
     CollaboratorData.collaborators
   )
 
+  val standardApp2 = ApplicationWithCollaborators(
+    CoreApplicationData.Standard.two,
+    CollaboratorData.collaborators
+  )
+
+  val standardApp3 = ApplicationWithCollaborators(
+    CoreApplicationData.Standard.three,
+    CollaboratorData.collaborators
+  )
+
   val privilegedApp = ApplicationWithCollaborators(
     CoreApplicationData.Privileged.one,
     CollaboratorData.collaborators
@@ -38,6 +48,8 @@ object ApplicationWithCollaboratorsData {
 
 trait ApplicationWithCollaboratorsFixtures extends CoreApplicationFixtures with CollaboratorFixtures {
   val standardApp   = ApplicationWithCollaboratorsData.standardApp
+  val standardApp2  = ApplicationWithCollaboratorsData.standardApp2
+  val standardApp3  = ApplicationWithCollaboratorsData.standardApp3
   val privilegedApp = ApplicationWithCollaboratorsData.privilegedApp
   val ropcApp       = ApplicationWithCollaboratorsData.ropcApp
 

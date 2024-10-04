@@ -45,6 +45,21 @@ case class ApplicationWithSubscriptions(
     case std: Access.Standard => withAccess(fn(std))
     case _                    => this
   }
+
+  def asAppWithCollaborators: ApplicationWithCollaborators =
+    ApplicationWithCollaborators(
+      this.details,
+      this.collaborators
+    )
+
+  def withFieldValues(fieldValues: ApiFieldMap[FieldValue]): ApplicationWithSubscriptionFields =
+    ApplicationWithSubscriptionFields(
+      this.details,
+      this.collaborators,
+      this.subscriptions,
+      fieldValues
+    )
+
 }
 
 object ApplicationWithSubscriptions {

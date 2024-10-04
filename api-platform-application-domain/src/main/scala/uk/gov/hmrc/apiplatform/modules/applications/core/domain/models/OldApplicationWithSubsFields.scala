@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddressData, LaxEmailAddressFixtures}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApiIdentifier
 
-import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models.{FullNameData, FullNameFixtures}
-
-object ResponsibleIndividualData {
-  val one = ResponsibleIndividual(FullNameData.one, LaxEmailAddressData.one)
-}
-
-trait ResponsibleIndividualFixtures extends FullNameFixtures with LaxEmailAddressFixtures {
-  val responsibleIndividualOne = ResponsibleIndividualData.one
-}
+private[models] case class OldApplicationWithSubsFields(
+    application: ApplicationWithCollaborators,
+    subscriptions: Set[ApiIdentifier] = Set.empty,
+    subscriptionFieldValues: ApiFieldMap[FieldValue] = Map.empty
+  )

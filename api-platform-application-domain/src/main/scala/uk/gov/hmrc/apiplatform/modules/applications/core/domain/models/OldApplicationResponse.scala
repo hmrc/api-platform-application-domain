@@ -40,5 +40,5 @@ private[models] case class OldApplicationResponse(
     checkInformation: Option[CheckInformation],
     blocked: Boolean,
     ipAllowlist: IpAllowlist,
-    moreApplication: MoreApplication
+    moreApplication: Option[MoreApplication] // APM drops this
   )

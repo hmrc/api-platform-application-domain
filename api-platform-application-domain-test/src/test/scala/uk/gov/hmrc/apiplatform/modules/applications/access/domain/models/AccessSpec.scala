@@ -20,6 +20,11 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.PrivacyPolicyLocation
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.PrivacyPolicyLocations
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.ImportantSubmissionDataData
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.TermsAndConditionsLocations
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.TermsAndConditionsLocation
 
 class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
   import AccessSpec._
@@ -56,11 +61,61 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
         (access, expectedJson) => Json.parse(expectedJson).as[Access] shouldBe access
       }
     }
+
+    "correctly find the privacy policy" in {
+      val values = Table(
+        ("submission data exists", "submission value", "direct url", "expectation"),
+        (false, PrivacyPolicyLocations.InDesktopSoftware, None, None),
+        (false, PrivacyPolicyLocations.InDesktopSoftware, Some("x"), Some(PrivacyPolicyLocations.Url("x"))),
+        (true, PrivacyPolicyLocations.NoneProvided, None, Some(PrivacyPolicyLocations.NoneProvided)),
+        (true, PrivacyPolicyLocations.InDesktopSoftware, None, Some(PrivacyPolicyLocations.InDesktopSoftware)),
+        (true, PrivacyPolicyLocations.InDesktopSoftware, Some("x"), Some(PrivacyPolicyLocations.InDesktopSoftware)),
+        (true, PrivacyPolicyLocations.Url("a"), Some("x"), Some(PrivacyPolicyLocations.Url("a")))
+      )
+
+      def test(access: Access.Standard, expected: Option[PrivacyPolicyLocation]) = {
+        access.privacyPolicyLocation shouldBe expected
+      }
+
+      forAll(values) {
+        case (false, _, direct, expected) => 
+          val access = AccessData.Standard.default.copy(privacyPolicyUrl = direct, importantSubmissionData = None)
+          test(access, expected)
+        case (true, ppl, direct, expected) => 
+          val access = AccessData.Standard.default.copy(privacyPolicyUrl = direct, importantSubmissionData = Some(ImportantSubmissionDataData.default.copy(privacyPolicyLocation = ppl)))
+          test(access, expected)
+      }
+    }
+
+    "correctly find the terms and conditions" in {
+      val values = Table(
+        ("submission data exists", "submission value", "direct url", "expectation"),
+        (false, TermsAndConditionsLocations.InDesktopSoftware, None, None),
+        (false, TermsAndConditionsLocations.InDesktopSoftware, Some("x"), Some(TermsAndConditionsLocations.Url("x"))),
+        (true, TermsAndConditionsLocations.NoneProvided, None, Some(TermsAndConditionsLocations.NoneProvided)),
+        (true, TermsAndConditionsLocations.InDesktopSoftware, None, Some(TermsAndConditionsLocations.InDesktopSoftware)),
+        (true, TermsAndConditionsLocations.InDesktopSoftware, Some("x"), Some(TermsAndConditionsLocations.InDesktopSoftware)),
+        (true, TermsAndConditionsLocations.Url("a"), Some("x"), Some(TermsAndConditionsLocations.Url("a")))
+      )
+
+      def test(access: Access.Standard, expected: Option[TermsAndConditionsLocation]) = {
+        access.termsAndConditionsLocation shouldBe expected
+      }
+
+      forAll(values) {
+        case (false, _, direct, expected) => 
+          val access = AccessData.Standard.default.copy(termsAndConditionsUrl = direct, importantSubmissionData = None)
+          test(access, expected)
+        case (true, tnc, direct, expected) => 
+          val access = AccessData.Standard.default.copy(termsAndConditionsUrl = direct, importantSubmissionData = Some(ImportantSubmissionDataData.default.copy(termsAndConditionsLocation = tnc)))
+          test(access, expected)
+      }
+    }
   }
 }
 
 object AccessSpec {
-  val emptyStandard    = """{ "redirectUris":[],"overrides":[],"accessType":"STANDARD" }"""
+  val emptyStandard    = """{"redirectUris":[],"overrides":[],"accessType":"STANDARD"}"""
   val emptyPriviledged = """{"scopes":[],"accessType":"PRIVILEGED"}"""
   val emptyRopc        = """{"scopes":[],"accessType":"ROPC"}"""
 }

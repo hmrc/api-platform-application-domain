@@ -46,8 +46,20 @@ object CoreApplicationData extends FixedClock {
       allowAutoDelete = false,
       lastActionActor = ActorType.UNKNOWN
     )
-  }
 
+    val two = one.copy(
+      id = ApplicationIdData.two,
+      clientId = ClientIdData.two,
+      name = ApplicationNameData.two
+    )
+
+
+    val three = one.copy(
+      id = ApplicationIdData.three,
+      clientId = ClientIdData.three,
+      name = ApplicationNameData.three
+    )
+  }
   object Privileged {
 
     val one = CoreApplication(
@@ -107,6 +119,8 @@ trait CoreApplicationFixtures
     with IpAllowListFixtures {
 
   val standardCoreApp   = CoreApplicationData.Standard.one
+  val standardCoreApp2  = CoreApplicationData.Standard.two
+  val standardCoreApp3  = CoreApplicationData.Standard.three
   val privilegedCoreApp = CoreApplicationData.Privileged.one
   val ropcCoreApp       = CoreApplicationData.Ropc.one
 }

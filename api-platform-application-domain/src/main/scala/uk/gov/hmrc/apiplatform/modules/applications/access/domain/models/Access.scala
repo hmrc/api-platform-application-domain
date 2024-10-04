@@ -19,7 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 import play.api.libs.json._
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.ImportantSubmissionData
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models._
 
 sealed trait Access {
   lazy val accessType: AccessType = Access.accessType(this)
@@ -55,7 +55,11 @@ object Access {
       overrides: Set[OverrideFlag] = Set.empty,
       sellResellOrDistribute: Option[SellResellOrDistribute] = None,
       importantSubmissionData: Option[ImportantSubmissionData] = None
-    ) extends Access
+    ) extends Access {
+
+    def privacyPolicyLocation: Option[PrivacyPolicyLocation] = importantSubmissionData.map(_.privacyPolicyLocation).orElse( privacyPolicyUrl.map(PrivacyPolicyLocations.Url(_)))
+    def termsAndConditionsLocation: Option[TermsAndConditionsLocation] = importantSubmissionData.map(_.termsAndConditionsLocation).orElse( termsAndConditionsUrl.map(TermsAndConditionsLocations.Url(_)))
+  }
 
   case class Privileged(
       totpIds: Option[TotpId] = None,

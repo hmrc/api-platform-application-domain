@@ -17,6 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+
 import uk.gov.hmrc.apiplatform.modules.applications.common.domain.models._
 
 object ContactDetailsData {
