@@ -26,7 +26,7 @@ object CollaboratorData {
   }
 
   object Developer {
-    val one = Collaborators.Administrator(UserIdData.three, LaxEmailAddressData.three)
+    val one = Collaborators.Developer(UserIdData.three, LaxEmailAddressData.three)
   }
 
   val collaborators: Set[Collaborator] = Set(Administrator.one, Administrator.two, Developer.one)
