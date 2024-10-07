@@ -26,7 +26,7 @@ class FieldNameSpec extends HmrcSpec {
   "JsonFormatter" should {
     "Read raw json" in {
       import play.api.libs.json._
-      Json.fromJson[FieldName](Json.parse(jsonText)) shouldBe JsSuccess(FieldName.unsafeApply("field1"))
+      Json.fromJson[FieldName](Json.parse(jsonText)) shouldBe JsSuccess(FieldName("field1"))
     }
 
     "Read bad raw json" in {
@@ -46,16 +46,16 @@ class FieldNameSpec extends HmrcSpec {
     }
 
     "not allow empty name" in {
-      FieldName("") shouldBe None
+      FieldName.safeApply("") shouldBe None
       intercept[RuntimeException](
-        FieldName.unsafeApply("")
+        FieldName("")
       )
     }
 
     "order" in {
       val values = List("a", "b", "c", "d", "e", "f")
 
-      val fns = values.map(FieldName.unsafeApply(_))
+      val fns = values.map(FieldName(_))
       val rnd = Random.shuffle(fns)
 
       rnd should not be fns

@@ -23,19 +23,19 @@ import play.api.libs.json._
 case class FieldName private (value: String) extends AnyVal
 
 object FieldName {
-  def apply(value: String): Option[FieldName] = Some(value.trim()).filterNot(_.isEmpty()).map(new FieldName(_))
-  def unsafeApply(value: String): FieldName   = apply(value).getOrElse(throw new RuntimeException("FieldName cannot be blank"))
+  def apply(value: String): FieldName             = safeApply(value).getOrElse(throw new RuntimeException("FieldName cannot be blank"))
+  def safeApply(value: String): Option[FieldName] = Some(value.trim()).filterNot(_.isEmpty()).map(new FieldName(_))
 
-  implicit val reads: Reads[FieldName]    = Reads.StringReads.flatMapResult(FieldName.apply(_).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f)))
+  implicit val reads: Reads[FieldName]    = Reads.StringReads.flatMapResult(FieldName.safeApply(_).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f)))
   implicit val writers: Writes[FieldName] = Writes.StringWrites.contramap(_.value)
 
-  implicit val keyReadsFieldName: KeyReads[FieldName]   = key => FieldName(key).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f))
+  implicit val keyReadsFieldName: KeyReads[FieldName]   = key => FieldName.safeApply(key).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f))
   implicit val keyWritesFieldName: KeyWrites[FieldName] = _.value
 
   implicit val ordering: Ordering[FieldName] = new Ordering[FieldName] {
     override def compare(x: FieldName, y: FieldName): Int = x.value.compareTo(y.value)
   }
 
-  def random = FieldName.unsafeApply(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
+  def random = FieldName(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
 
 }
