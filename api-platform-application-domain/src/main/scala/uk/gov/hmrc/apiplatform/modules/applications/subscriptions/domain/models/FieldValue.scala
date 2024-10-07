@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
-object FieldNameData {
-  val one   = FieldName("field1")
-  val two   = FieldName("field2")
-  val three = FieldName("field3")
+import scala.util.Random
+
+import play.api.libs.json.{Format, Json}
+
+case class FieldValue(value: String) extends AnyVal {
+  def isEmpty = value.isEmpty
 }
 
-trait FieldNameFixtures {
-  val fieldNameOne   = FieldNameData.one
-  val fieldNameTwo   = FieldNameData.two
-  val fieldNameThree = FieldNameData.three
+object FieldValue {
+  implicit val format: Format[FieldValue] = Json.valueFormat[FieldValue]
+
+  def empty: FieldValue = FieldValue("")
+
+  def random = FieldValue(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
 }

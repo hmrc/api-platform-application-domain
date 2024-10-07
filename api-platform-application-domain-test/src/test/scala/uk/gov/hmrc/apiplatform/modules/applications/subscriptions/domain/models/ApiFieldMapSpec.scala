@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
-
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApiFieldMap
 
 class ApiFieldMapSpec
     extends HmrcSpec
@@ -33,7 +31,10 @@ class ApiFieldMapSpec
     }
 
     "extract an api from an ApiIdentifier" in {
-      val fieldIntMap = Map(FieldNameData.one -> 1, FieldNameData.two -> 2)
+      val fieldIntMap = Map(
+        uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldNameData.one -> 1,
+        uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldNameData.two -> 2
+      )
       val x           = Map(apiContextOne -> Map(apiVersionNbrOne -> fieldIntMap))
 
       ApiFieldMap.extractApi(apiIdentifierOne)(x) shouldBe fieldIntMap

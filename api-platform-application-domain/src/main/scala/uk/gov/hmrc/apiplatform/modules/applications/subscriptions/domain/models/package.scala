@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain
 
-object FieldValueData {
-  val one   = FieldValue("value1")
-  val two   = FieldValue("value2")
-  val three = FieldValue("value3")
-}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
-trait FieldValueFixtures {
-  val fieldValueOne   = FieldValueData.one
-  val fieldValueTwo   = FieldValueData.two
-  val fieldValueThree = FieldValueData.three
+package object models {
+  type ApiFieldMap[V] = Map[ApiContext, Map[ApiVersionNbr, Map[FieldName, V]]]
+
+  object ApiFieldMap {
+    def empty[V]: ApiFieldMap[V] = Map.empty
+
+    def extractApi[V](apiIdentifier: ApiIdentifier)(map: ApiFieldMap[V]): Map[FieldName, V] =
+      map
+        .getOrElse(apiIdentifier.context, Map.empty)
+        .getOrElse(apiIdentifier.versionNbr, Map.empty)
+  }
 }

@@ -19,6 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
+import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models._
 
 case class ApplicationWithSubscriptionFields(
     details: CoreApplication,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
@@ -33,17 +33,17 @@ class FieldValueSpec extends HmrcSpec {
     }
 
     "generate random values" in {
-      FieldValue.random should not be FieldValue.random
+      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.random should not be uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.random
     }
   }
 
   "FieldValue" should {
     "create an empty value" in {
-      FieldValue.empty.value shouldBe ""
+      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.empty.value shouldBe ""
     }
 
     "test as empty value" in {
-      FieldValue.empty.isEmpty shouldBe true
+      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.empty.isEmpty shouldBe true
       FieldValueData.one.isEmpty shouldBe false
     }
   }

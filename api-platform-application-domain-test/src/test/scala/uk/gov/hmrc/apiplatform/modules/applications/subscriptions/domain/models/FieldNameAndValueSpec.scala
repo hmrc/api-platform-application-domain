@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
 import scala.util.Random
 
@@ -37,5 +37,4 @@ object FieldName {
   }
 
   def random = FieldName(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
-
 }

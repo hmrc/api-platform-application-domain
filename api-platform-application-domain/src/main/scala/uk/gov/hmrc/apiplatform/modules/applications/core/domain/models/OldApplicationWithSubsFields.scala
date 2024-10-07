@@ -18,6 +18,8 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApiIdentifier
 
+import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models._
+
 private[models] case class OldApplicationWithSubsFields(
     application: ApplicationWithCollaborators,
     subscriptions: Set[ApiIdentifier] = Set.empty,

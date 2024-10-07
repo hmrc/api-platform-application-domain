@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
 import scala.util.Random
 
@@ -42,11 +42,11 @@ class FieldNameSpec extends HmrcSpec {
 
   "FieldName" should {
     "generate random values" in {
-      FieldName.random should not be FieldName.random
+      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldName.random should not be uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldName.random
     }
 
     "not allow empty name" in {
-      FieldName.safeApply("") shouldBe None
+      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldName.safeApply("") shouldBe None
       intercept[RuntimeException](
         FieldName("")
       )
