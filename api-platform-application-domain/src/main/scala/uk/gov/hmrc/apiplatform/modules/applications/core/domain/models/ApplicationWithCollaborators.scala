@@ -37,9 +37,9 @@ case class ApplicationWithCollaborators(
   lazy val name     = details.name
   lazy val clientId = details.clientId
 
-  private[core] lazy val deployedTo = details.deployedTo
-  lazy val state                    = details.state
-  lazy val access                   = details.access
+  lazy val deployedTo = details.deployedTo
+  lazy val state      = details.state
+  lazy val access     = details.access
 
   // Assist with nesting
   import monocle.syntax.all._

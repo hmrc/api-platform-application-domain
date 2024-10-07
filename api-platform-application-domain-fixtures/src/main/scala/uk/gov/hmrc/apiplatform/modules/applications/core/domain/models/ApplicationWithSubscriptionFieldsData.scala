@@ -30,4 +30,15 @@ trait ApplicationWithSubscriptionFieldsData extends ApplicationWithSubscriptions
   val someFieldValues = ApplicationWithSubscriptionsData.someSubscriptions
 
   val appWithSubsFieldsOne = ApplicationWithSubscriptionFieldsData.one
+
+  implicit class ApplicationWithSubscriptionFieldsFixtureSyntax(app: ApplicationWithSubscriptionFields) {
+    import monocle.syntax.all._
+    def withId(anId: ApplicationId): ApplicationWithSubscriptionFields                           = app.focus(_.details.id).replace(anId)
+    def withName(aName: ApplicationName): ApplicationWithSubscriptionFields                      = app.focus(_.details.name).replace(aName)
+    def withEnvironment(env: Environment): ApplicationWithSubscriptionFields                     = app.focus(_.details.deployedTo).replace(env)
+    def withCollaborators(collabs: Collaborator*): ApplicationWithSubscriptionFields             = app.focus(_.collaborators).replace(collabs.toSet)
+    def withSubscriptions(subs: ApiIdentifier*): ApplicationWithSubscriptionFields               = app.focus(_.subscriptions).replace(subs.toSet)
+    def withFieldValues(fieldValues: ApiFieldMap[FieldValue]): ApplicationWithSubscriptionFields = app.focus(_.fieldValues).replace(fieldValues)
+  }
+
 }

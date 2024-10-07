@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApplicationId
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 object ApplicationWithCollaboratorsData {
 
@@ -57,6 +57,7 @@ trait ApplicationWithCollaboratorsFixtures extends CoreApplicationFixtures with 
     import monocle.syntax.all._
     def withId(anId: ApplicationId): ApplicationWithCollaborators               = app.focus(_.details.id).replace(anId)
     def withName(aName: ApplicationName): ApplicationWithCollaborators          = app.focus(_.details.name).replace(aName)
+    def withEnvironment(env: Environment): ApplicationWithCollaborators         = app.focus(_.details.deployedTo).replace(env)
     def withCollaborators(collabs: Collaborator*): ApplicationWithCollaborators = app.focus(_.collaborators).replace(collabs.toSet)
   }
 }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiIdentifierData, ApiIdentifierFixtures}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 object ApplicationWithSubscriptionsData {
   val someSubscriptions = Set(ApiIdentifierData.one, ApiIdentifierData.two)
@@ -28,4 +28,13 @@ trait ApplicationWithSubscriptionsFixtures extends ApplicationWithCollaboratorsF
   val someSubscriptions = ApplicationWithSubscriptionsData.someSubscriptions
 
   val appWithSubsOne = ApplicationWithSubscriptionsData.one
+
+  implicit class ApplicationWithSubscriptionsFixtureSyntax(app: ApplicationWithSubscriptions) {
+    import monocle.syntax.all._
+    def withId(anId: ApplicationId): ApplicationWithSubscriptions               = app.focus(_.details.id).replace(anId)
+    def withName(aName: ApplicationName): ApplicationWithSubscriptions          = app.focus(_.details.name).replace(aName)
+    def withEnvironment(env: Environment): ApplicationWithSubscriptions         = app.focus(_.details.deployedTo).replace(env)
+    def withCollaborators(collabs: Collaborator*): ApplicationWithSubscriptions = app.focus(_.collaborators).replace(collabs.toSet)
+    def withSubscriptions(subs: ApiIdentifier*): ApplicationWithSubscriptions   = app.focus(_.subscriptions).replace(subs.toSet)
+  }
 }
