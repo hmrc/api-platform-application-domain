@@ -25,7 +25,7 @@ case class ApplicationWithSubscriptions(
     details: CoreApplication,
     collaborators: Set[Collaborator],
     subscriptions: Set[ApiIdentifier]
-  ) extends HasEnvironment with HasState with HasAccess with HasCollaborators {
+  ) extends HasEnvironment with HasState with AppLocking with HasAccess with HasCollaborators {
   lazy val id       = details.id
   lazy val name     = details.name
   lazy val clientId = details.clientId

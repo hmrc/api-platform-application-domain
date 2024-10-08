@@ -46,9 +46,17 @@ trait HasState {
   lazy val isPendingRequesterVerification                                   = state.isPendingRequesterVerification
   lazy val isInPreProduction                                                = state.isInPreProduction
   lazy val isInPreProductionOrProduction                                    = state.isInPreProductionOrProduction
+  lazy val isApproved                                                       = isInPreProductionOrProduction
   lazy val isInPendingGatekeeperApprovalOrResponsibleIndividualVerification = state.isInPendingGatekeeperApprovalOrResponsibleIndividualVerification
   lazy val isInProduction                                                   = state.isInProduction
   lazy val isDeleted                                                        = state.isDeleted
+}
+
+// AppLocking is related to whether an app is in a locked down state - typically requiring SDST to make actual changes
+trait AppLocking {
+  self: HasEnvironment with HasState =>
+
+  lazy val areSubscriptionsLocked: Boolean = isProduction && !isInTesting
 }
 
 case class CoreApplication(
@@ -70,7 +78,7 @@ case class CoreApplication(
     ipAllowlist: IpAllowlist,
     allowAutoDelete: Boolean,
     lastActionActor: ActorType
-  ) extends HasEnvironment with HasState with HasAccess {
+  ) extends HasEnvironment with HasState with AppLocking with HasAccess {
 
   def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
 
