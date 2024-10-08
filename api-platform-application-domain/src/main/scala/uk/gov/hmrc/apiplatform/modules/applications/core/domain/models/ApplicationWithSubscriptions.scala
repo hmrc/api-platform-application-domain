@@ -66,6 +66,8 @@ case class ApplicationWithSubscriptions(
 object ApplicationWithSubscriptions {
   import play.api.libs.json._
 
+  implicit val nameOrdering: Ordering[ApplicationWithSubscriptions] = Ordering.by[ApplicationWithSubscriptions, ApplicationName](_.details.name)
+
   private val transformOldResponse: OldExtendedApplicationResponse => ApplicationWithSubscriptions = (old) => {
     ApplicationWithSubscriptions(
       details = CoreApplication(

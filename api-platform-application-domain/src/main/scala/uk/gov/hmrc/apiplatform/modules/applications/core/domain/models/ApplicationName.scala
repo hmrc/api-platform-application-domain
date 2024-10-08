@@ -71,7 +71,10 @@ case class ApplicationName private (value: String) extends AnyVal {
 object ApplicationName {
   def apply(value: String): ApplicationName = new ApplicationName(value.trim())
 
+  implicit val ordering: Ordering[ApplicationName] = Ordering.by[ApplicationName, String](_.value)
+
   implicit val format: Format[ApplicationName] = Json.valueFormat[ApplicationName]
+
 }
 
 trait ApplicationNameValidationFailed

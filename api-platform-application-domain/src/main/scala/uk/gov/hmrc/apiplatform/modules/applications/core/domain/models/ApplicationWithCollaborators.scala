@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ActorType, ApiIdentifier, UserId}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ActorType, ApiIdentifier, LaxEmailAddress, UserId}
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 
 trait HasCollaborators {
   self: { def collaborators: Set[Collaborator] } =>
@@ -70,6 +69,8 @@ case class ApplicationWithCollaborators(
 
 object ApplicationWithCollaborators {
   import play.api.libs.json._
+
+  implicit val nameOrdering: Ordering[ApplicationWithCollaborators] = Ordering.by[ApplicationWithCollaborators, ApplicationName](_.details.name)
 
   private val transformOldResponse: OldApplicationResponse => ApplicationWithCollaborators = (old) => {
     ApplicationWithCollaborators(

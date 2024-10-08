@@ -92,4 +92,6 @@ case class CoreApplication(
 object CoreApplication {
   import play.api.libs.json._
   implicit val format: Format[CoreApplication] = Json.format[CoreApplication]
+
+  implicit val nameOrdering: Ordering[CoreApplication] = Ordering.by[CoreApplication, ApplicationName](_.name)
 }

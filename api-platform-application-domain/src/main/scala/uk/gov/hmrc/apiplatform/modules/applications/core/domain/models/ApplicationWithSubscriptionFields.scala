@@ -58,6 +58,8 @@ case class ApplicationWithSubscriptionFields(
 object ApplicationWithSubscriptionFields {
   import play.api.libs.json._
 
+  implicit val nameOrdering: Ordering[ApplicationWithSubscriptionFields] = Ordering.by[ApplicationWithSubscriptionFields, ApplicationName](_.details.name)
+
   private val transformOldResponse: OldApplicationWithSubsFields => ApplicationWithSubscriptionFields = (old) => {
     ApplicationWithSubscriptionFields(
       details = old.application.details,
