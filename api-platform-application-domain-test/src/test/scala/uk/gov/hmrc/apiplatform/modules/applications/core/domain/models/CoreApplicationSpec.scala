@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import scala.util.Random
+
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
@@ -61,6 +63,15 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
       val newApp = app.modifyStdAccess(modifyStdAccess)
 
       newApp.access.asInstanceOf[Access.Standard].overrides shouldBe Set(OverrideFlag.PersistLogin)
+    }
+
+    "orders correctly" in {
+      val apps =
+        List("a", "b", "c", "d", "e", "f", "g").map(ApplicationName(_)).map(n => standardCoreApp.withId(ApplicationId.random).copy(name = n))
+
+      val rnd = Random.shuffle(apps)
+      rnd should not be apps
+      rnd.sorted shouldBe apps
     }
   }
 }

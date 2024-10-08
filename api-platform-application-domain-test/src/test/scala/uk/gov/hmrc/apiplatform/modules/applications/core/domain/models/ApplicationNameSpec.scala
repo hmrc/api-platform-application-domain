@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import scala.util.Random
+
 import cats.data.Validated.{Invalid, Valid}
 
 import play.api.libs.json.{JsString, Json}
@@ -39,6 +41,14 @@ class ApplicationNameSpec extends BaseJsonFormattersSpec {
 
     "read from json" in {
       testFromJson[ApplicationName](JsString("My App").toString)(ApplicationName("My App"))
+    }
+
+    "orders correctly" in {
+      val names = List("a", "b", "c", "d", "e", "f", "g").map(ApplicationName(_))
+
+      val rnd = Random.shuffle(names)
+      rnd should not be names
+      rnd.sorted shouldBe names
     }
   }
 

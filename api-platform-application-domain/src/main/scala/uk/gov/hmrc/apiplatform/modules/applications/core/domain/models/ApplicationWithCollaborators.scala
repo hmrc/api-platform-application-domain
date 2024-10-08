@@ -30,7 +30,7 @@ trait HasCollaborators {
   // TODO - remove this or make private
   def roleFor(userId: UserId): Option[Collaborator.Role] = collaborators.find(_.userId == userId).map(_.role)
   def isCollaborator(userId: UserId): Boolean            = roleFor(userId).isDefined
-  def isAdministrator(userId: UserId): Boolean           = roleFor(userId).isDefined
+  def isAdministrator(userId: UserId): Boolean           = roleFor(userId).fold(false)(_.isAdministrator)
 }
 
 case class ApplicationWithCollaborators(

@@ -16,7 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import scala.util.Random
+
 import play.api.libs.json.Json
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApplicationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
@@ -165,7 +168,40 @@ class ApplicationWithCollaboratorsSpec extends BaseJsonFormattersSpec with Appli
     "identify a collaborator" in {
       val app = example.copy(collaborators = Set(Dev.example, Admin.example))
       app.isCollaborator(Dev.example.userId) shouldBe true
+      app.isAdministrator(Dev.example.userId) shouldBe false
+    }
+
+    "identify an admin" in {
+      val app = example.copy(collaborators = Set(Dev.example, Admin.example))
+      app.isCollaborator(Admin.example.userId) shouldBe true
+      app.isAdministrator(Admin.example.userId) shouldBe true
+    }
+
+    "identify a random user correctly" in {
+      val app = example.copy(collaborators = Set(Dev.example, Admin.example))
+      app.isCollaborator(UserId.random) shouldBe false
+      app.isAdministrator(UserId.random) shouldBe false
+    }
+
+    "identify a role" in {
+      val app = example.copy(collaborators = Set(Dev.example, Admin.example))
       app.roleFor(Dev.example.userId).value shouldBe Collaborator.Roles.DEVELOPER
+      app.roleFor(Admin.example.userId).value shouldBe Collaborator.Roles.ADMINISTRATOR
+    }
+
+    "identify a role by email" in {
+      val app = example.copy(collaborators = Set(Dev.example, Admin.example))
+      app.roleFor(Dev.example.emailAddress).value shouldBe Collaborator.Roles.DEVELOPER
+      app.roleFor(Admin.example.emailAddress).value shouldBe Collaborator.Roles.ADMINISTRATOR
+      app.roleFor(UserId.random) shouldBe None
+    }
+
+    "orders correctly" in {
+      val apps = List("a", "b", "c", "d", "e", "f", "g").map(ApplicationName(_)).map(n => standardApp.withId(ApplicationId.random).modify(_.copy(name = n)))
+
+      val rnd = Random.shuffle(apps)
+      rnd should not be apps
+      rnd.sorted shouldBe apps
     }
 
     val modifyPrivAccess: (Access) => Access                  = a =>

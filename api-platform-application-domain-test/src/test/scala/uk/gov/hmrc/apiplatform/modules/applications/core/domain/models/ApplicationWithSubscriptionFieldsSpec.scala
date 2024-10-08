@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import scala.util.Random
+
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
@@ -100,6 +102,16 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec with 
       val newApp = example.modifyState(modifyState)
 
       newApp.details.state.requestedByName shouldBe Some("Bob")
+    }
+
+    "orders correctly" in {
+      val apps = List("a", "b", "c", "d", "e", "f", "g").map(ApplicationName(_)).map(n =>
+        standardApp.withId(ApplicationId.random).modify(_.copy(name = n)).withSubscriptions(Set.empty).withFieldValues(Map.empty)
+      )
+
+      val rnd = Random.shuffle(apps)
+      rnd should not be apps
+      rnd.sorted shouldBe apps
     }
   }
 }

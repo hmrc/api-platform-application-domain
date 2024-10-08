@@ -123,4 +123,11 @@ trait CoreApplicationFixtures
   val standardCoreApp3  = CoreApplicationData.Standard.three
   val privilegedCoreApp = CoreApplicationData.Privileged.one
   val ropcCoreApp       = CoreApplicationData.Ropc.one
+
+  implicit class CoreApplicationFixtureSyntax(app: CoreApplication) {
+    import monocle.syntax.all._
+    def withId(anId: ApplicationId): CoreApplication       = app.focus(_.id).replace(anId)
+    def withName(aName: ApplicationName): CoreApplication  = app.focus(_.name).replace(aName)
+    def withEnvironment(env: Environment): CoreApplication = app.focus(_.deployedTo).replace(env)
+  }
 }
