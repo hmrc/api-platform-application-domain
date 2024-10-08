@@ -19,14 +19,19 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ActorType, ApiIdentifier, UserId}
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress
 
 trait HasCollaborators {
   self: { def collaborators: Set[Collaborator] } =>
 
   lazy val admins: Set[Collaborator] = collaborators.filter(_.isAdministrator)
 
+  def roleFor(email: LaxEmailAddress): Option[Collaborator.Role] = collaborators.find(_.emailAddress == email).map(_.role)
+
+  // TODO - remove this or make private
   def roleFor(userId: UserId): Option[Collaborator.Role] = collaborators.find(_.userId == userId).map(_.role)
   def isCollaborator(userId: UserId): Boolean            = roleFor(userId).isDefined
+  def isAdministrator(userId: UserId): Boolean           = roleFor(userId).isDefined
 }
 
 case class ApplicationWithCollaborators(
