@@ -57,6 +57,10 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec with 
       example.asAppWithCollaborators shouldBe ApplicationWithCollaborators(example.details, example.collaborators)
     }
 
+    "downgrades to with subscriptions" in {
+      example.asAppWithSubscriptions shouldBe ApplicationWithSubscriptions(example.details, example.collaborators, example.subscriptions)
+    }
+
     "support modify to change the core" in {
       val newApp = example.modify(changeDescription)
 

@@ -55,6 +55,13 @@ case class ApplicationWithSubscriptionFields(
       this.details,
       this.collaborators
     )
+
+  def asAppWithSubscriptions: ApplicationWithSubscriptions =
+    ApplicationWithSubscriptions(
+      this.details,
+      this.collaborators,
+      this.subscriptions
+    )
 }
 
 object ApplicationWithSubscriptionFields {
