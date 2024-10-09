@@ -17,7 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 sealed trait OverrideType {
-  lazy val displayText: String = OverrideType.displayText(this)
+  def displayText: String = OverrideType.displayText(this)
 }
 
 object OverrideType {

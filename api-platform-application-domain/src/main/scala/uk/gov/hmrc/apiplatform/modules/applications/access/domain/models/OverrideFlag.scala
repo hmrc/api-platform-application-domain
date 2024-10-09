@@ -17,8 +17,8 @@
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 sealed trait OverrideFlag {
-  lazy val overrideType: OverrideType = OverrideFlag.asOverrideType(this)
-  override def toString()             = OverrideFlag.show(this)
+  val overrideType: OverrideType = OverrideFlag.asOverrideType(this)
+  override def toString()        = OverrideFlag.show(this)
 }
 
 object OverrideFlag {

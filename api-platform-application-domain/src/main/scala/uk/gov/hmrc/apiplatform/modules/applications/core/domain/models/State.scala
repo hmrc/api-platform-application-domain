@@ -20,30 +20,27 @@ import scala.collection.immutable.ListSet
 
 sealed trait State {
   // $COVERAGE-OFF$
-  lazy val isPreProduction: Boolean = this == State.PRE_PRODUCTION
+  val isPreProduction: Boolean = this == State.PRE_PRODUCTION
 
-  lazy val isProduction: Boolean = this == State.PRODUCTION
+  val isProduction: Boolean = this == State.PRODUCTION
 
-  lazy val isApproved: Boolean = isPreProduction || isProduction
+  val isPendingGatekeeperApproval = this == State.PENDING_GATEKEEPER_APPROVAL
 
-  lazy val isPendingApproval: Boolean = (this == State.PENDING_REQUESTER_VERIFICATION
-    || this == State.PENDING_GATEKEEPER_APPROVAL
-    || this == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION)
+  val isPendingRequesterVerification = this == State.PENDING_REQUESTER_VERIFICATION
 
-  lazy val isPendingApprovalOrProduction: Boolean = (this == State.PENDING_REQUESTER_VERIFICATION
-    || this == State.PENDING_GATEKEEPER_APPROVAL
-    || this == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION
-    || this == State.PRODUCTION)
+  val isDeleted = this == State.DELETED
 
-  lazy val isInTesting: Boolean = this == State.TESTING
+  val isTesting: Boolean = this == State.TESTING
 
-  lazy val isInTestingOrProduction: Boolean = (this == State.TESTING || this == State.PRODUCTION)
+  val isPendingResponsibleIndividualVerification = this == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION
 
-  lazy val isPendingGatekeeperApproval = this == State.PENDING_GATEKEEPER_APPROVAL
+  val isApproved: Boolean = isPreProduction || isProduction
 
-  lazy val isPendingRequesterVerification = this == State.PENDING_REQUESTER_VERIFICATION
+  val isPendingApproval: Boolean = isPendingRequesterVerification || isPendingGatekeeperApproval || isPendingResponsibleIndividualVerification
 
-  lazy val isDeleted = this == State.DELETED
+  val isPendingApprovalOrProduction: Boolean = isPendingRequesterVerification || isPendingResponsibleIndividualVerification || isPendingGatekeeperApproval || isProduction
+
+  val isInTestingOrProduction: Boolean = isTesting || isProduction
   // $COVERAGE-ON$
 }
 

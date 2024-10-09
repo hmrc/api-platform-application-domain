@@ -39,7 +39,7 @@ object Collaborator {
     def isAdministrator: Boolean
     def isDeveloper: Boolean = !isAdministrator
 
-    lazy val displayText: String = Role.displayText(this)
+    def displayText: String = Role.displayText(this)
   }
 
   object Role {

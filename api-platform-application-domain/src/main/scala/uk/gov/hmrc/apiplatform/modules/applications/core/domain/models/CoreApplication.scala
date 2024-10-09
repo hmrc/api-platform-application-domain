@@ -21,42 +21,53 @@ import java.time.Instant
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
 
 trait HasEnvironment {
   self: { def deployedTo: Environment } =>
 
-  lazy val isProduction = deployedTo.isProduction
-  lazy val isSandbox    = deployedTo.isSandbox
+  def isProduction = deployedTo.isProduction
+  def isSandbox    = deployedTo.isSandbox
 }
 
 trait HasAccess {
   self: { def access: Access } =>
 
-  lazy val isStandard   = access.isStandard
-  lazy val isPrivileged = access.isPriviledged
-  lazy val isROPC       = access.isROPC
+  def isStandard   = access.isStandard
+  def isPrivileged = access.isPriviledged
+  def isROPC       = access.isROPC
+
+  def privacyPolicyLocation: Option[PrivacyPolicyLocation] = access match {
+    case a: Access.Standard => a.privacyPolicyLocation
+    case _                  => None
+  }
+
+  def termsAndConditionsLocation: Option[TermsAndConditionsLocation] = access match {
+    case a: Access.Standard => a.termsAndConditionsLocation
+    case _                  => None
+  }
 }
 
 trait HasState {
   self: { def state: ApplicationState } =>
 
-  lazy val isInTesting                                                      = state.isInTesting
-  lazy val isPendingResponsibleIndividualVerification                       = state.isPendingResponsibleIndividualVerification
-  lazy val isPendingGatekeeperApproval                                      = state.isPendingGatekeeperApproval
-  lazy val isPendingRequesterVerification                                   = state.isPendingRequesterVerification
-  lazy val isInPreProduction                                                = state.isInPreProduction
-  lazy val isInPreProductionOrProduction                                    = state.isInPreProductionOrProduction
-  lazy val isApproved                                                       = isInPreProductionOrProduction
-  lazy val isInPendingGatekeeperApprovalOrResponsibleIndividualVerification = state.isInPendingGatekeeperApprovalOrResponsibleIndividualVerification
-  lazy val isInProduction                                                   = state.isInProduction
-  lazy val isDeleted                                                        = state.isDeleted
+  def isInTesting                                                      = state.isInTesting
+  def isPendingResponsibleIndividualVerification                       = state.isPendingResponsibleIndividualVerification
+  def isPendingGatekeeperApproval                                      = state.isPendingGatekeeperApproval
+  def isPendingRequesterVerification                                   = state.isPendingRequesterVerification
+  def isInPreProduction                                                = state.isInPreProduction
+  def isInPreProductionOrProduction                                    = state.isInProduction || state.isInPreProduction
+  def isApproved                                                       = isInPreProductionOrProduction
+  def isInPendingGatekeeperApprovalOrResponsibleIndividualVerification = isPendingGatekeeperApproval || isPendingResponsibleIndividualVerification
+  def isInProduction                                                   = state.isInProduction
+  def isDeleted                                                        = state.isDeleted
 }
 
 // AppLocking is related to whether an app is in a locked down state - typically requiring SDST to make actual changes
 trait AppLocking {
   self: HasEnvironment with HasState =>
 
-  lazy val areSubscriptionsLocked: Boolean = isProduction && !isInTesting
+  def areSubscriptionsLocked: Boolean = isProduction && !isInTesting
 }
 
 case class CoreApplication(
@@ -86,7 +97,6 @@ case class CoreApplication(
     case std: Access.Standard => this.copy(access = fn(std))
     case _                    => this
   }
-
 }
 
 object CoreApplication {

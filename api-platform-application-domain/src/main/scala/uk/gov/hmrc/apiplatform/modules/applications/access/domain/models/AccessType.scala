@@ -17,7 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 sealed trait AccessType {
-  lazy val displayText: String = this.toString().toLowerCase().capitalize
+  val displayText: String = this.toString().toLowerCase().capitalize
 }
 
 object AccessType {

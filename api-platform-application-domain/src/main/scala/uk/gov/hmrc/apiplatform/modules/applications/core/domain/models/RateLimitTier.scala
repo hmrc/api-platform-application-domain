@@ -23,7 +23,7 @@ import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
 sealed trait RateLimitTier {
   protected val orderIndex: Int
 
-  lazy val displayText: String = this.toString().toLowerCase().capitalize
+  val displayText: String = this.toString().toLowerCase().capitalize
 }
 
 object RateLimitTier {

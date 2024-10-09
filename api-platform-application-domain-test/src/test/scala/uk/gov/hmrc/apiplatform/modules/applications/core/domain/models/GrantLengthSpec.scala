@@ -65,5 +65,9 @@ class GrantLengthSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChe
     "return JsError for invalid json" in {
       Json.fromJson[GrantLength](JsString("Hello")) shouldBe JsError(JsonValidationError("error.invalid.stringPeriod"))
     }
+
+    "return with show" in {
+      GrantLength.ONE_MONTH.show() shouldBe "1 month"
+    }
   }
 }

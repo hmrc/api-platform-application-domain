@@ -38,15 +38,15 @@ case class ApplicationState(
     }
   }
 
-  lazy val isInTesting                                                      = name == State.TESTING
-  lazy val isPendingResponsibleIndividualVerification                       = name == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION
-  lazy val isPendingGatekeeperApproval                                      = name == State.PENDING_GATEKEEPER_APPROVAL
-  lazy val isPendingRequesterVerification                                   = name == State.PENDING_REQUESTER_VERIFICATION
-  lazy val isInPreProduction                                                = name == State.PRE_PRODUCTION
-  lazy val isInPreProductionOrProduction                                    = name == State.PRE_PRODUCTION || name == State.PRODUCTION
-  lazy val isInPendingGatekeeperApprovalOrResponsibleIndividualVerification = name == State.PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION || name == State.PENDING_GATEKEEPER_APPROVAL
-  lazy val isInProduction                                                   = name == State.PRODUCTION
-  lazy val isDeleted                                                        = name == State.DELETED
+  // $COVERAGE-OFF$
+  def isInTesting                                = name.isTesting
+  def isPendingResponsibleIndividualVerification = name.isPendingResponsibleIndividualVerification
+  def isPendingGatekeeperApproval                = name.isPendingGatekeeperApproval
+  def isPendingRequesterVerification             = name.isPendingRequesterVerification
+  def isInPreProduction                          = name.isPreProduction
+  def isInProduction                             = name.isProduction
+  def isDeleted                                  = name.isDeleted
+  // $COVERAGE-ON$
 
   def toProduction(timestamp: Instant) = {
     requireState(requirement = State.PRE_PRODUCTION, transitionTo = State.PRODUCTION)

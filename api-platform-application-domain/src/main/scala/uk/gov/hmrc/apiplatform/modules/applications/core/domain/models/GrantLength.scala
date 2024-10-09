@@ -27,6 +27,8 @@ sealed trait GrantLength {
   val period: Period
 
   override def toString() = GrantLength.show(this)
+
+  def show(): String = GrantLength.show(this)
 }
 
 object GrantLength {

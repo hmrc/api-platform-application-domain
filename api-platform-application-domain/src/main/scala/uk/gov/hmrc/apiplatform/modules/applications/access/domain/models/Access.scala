@@ -22,19 +22,19 @@ import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectU
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models._
 
 sealed trait Access {
-  lazy val accessType: AccessType = Access.accessType(this)
+  val accessType: AccessType = Access.accessType(this)
 
-  lazy val isStandard = this match {
+  val isStandard = this match {
     case _: Access.Standard => true
     case _                  => false
   }
 
-  lazy val isPriviledged = this match {
+  val isPriviledged = this match {
     case _: Access.Privileged => true
     case _                    => false
   }
 
-  lazy val isROPC = this match {
+  val isROPC = this match {
     case _: Access.Ropc => true
     case _              => false
   }
@@ -57,7 +57,8 @@ object Access {
       importantSubmissionData: Option[ImportantSubmissionData] = None
     ) extends Access {
 
-    def privacyPolicyLocation: Option[PrivacyPolicyLocation] = importantSubmissionData.map(_.privacyPolicyLocation).orElse(privacyPolicyUrl.map(PrivacyPolicyLocations.Url(_)))
+    def privacyPolicyLocation: Option[PrivacyPolicyLocation] =
+      importantSubmissionData.map(_.privacyPolicyLocation).orElse(privacyPolicyUrl.map(PrivacyPolicyLocations.Url(_)))
 
     def termsAndConditionsLocation: Option[TermsAndConditionsLocation] =
       importantSubmissionData.map(_.termsAndConditionsLocation).orElse(termsAndConditionsUrl.map(TermsAndConditionsLocations.Url(_)))

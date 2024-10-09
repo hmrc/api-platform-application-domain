@@ -6,7 +6,7 @@ object LibraryDependencies {
   val commonDomainVersion = "0.17.0"
   val monocleVersion = "3.1.0"
 
-  lazy val compileDependencies = Seq(
+  val compileDependencies = Seq(
     "uk.gov.hmrc"             %% "api-platform-common-domain"     % commonDomainVersion,
     "com.github.t3hnar"       %% "scala-bcrypt"                   % "4.1",
     "com.typesafe"             % "config"                         % "1.4.2",
@@ -15,7 +15,7 @@ object LibraryDependencies {
     "dev.optics"              %% "monocle-macro"                  % monocleVersion
   )
 
-  lazy val testDependencies = Seq(
+  val testDependencies = Seq(
     "org.scalactic"           %% "scalactic"                            % "3.2.14",
     "com.vladsch.flexmark"     % "flexmark-all"                         % "0.62.2",
     "org.mockito"             %% "mockito-scala-scalatest"              % "1.17.29",
@@ -23,8 +23,8 @@ object LibraryDependencies {
     "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures"  % commonDomainVersion
   )
 
-  lazy val applicationDomain = compileDependencies ++ testDependencies.map(_ % "test")
+  val applicationDomain = compileDependencies ++ testDependencies.map(_ % "test")
 
-  lazy val root = compileDependencies ++ testDependencies
+  val root = compileDependencies ++ testDependencies
   
 }

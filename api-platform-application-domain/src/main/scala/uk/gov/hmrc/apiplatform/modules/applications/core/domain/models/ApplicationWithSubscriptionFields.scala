@@ -27,17 +27,19 @@ case class ApplicationWithSubscriptionFields(
     subscriptions: Set[ApiIdentifier],
     fieldValues: ApiFieldMap[FieldValue]
   ) extends HasEnvironment with HasState with AppLocking with HasAccess with HasCollaborators {
-  lazy val id       = details.id
-  lazy val name     = details.name
-  lazy val clientId = details.clientId
+  // $COVERAGE-OFF$
+  def id: ApplicationId     = details.id
+  def name: ApplicationName = details.name
+  def clientId: ClientId    = details.clientId
 
-  lazy val deployedTo = details.deployedTo
-  lazy val state      = details.state
-  lazy val access     = details.access
+  def deployedTo: Environment = details.deployedTo
+  def state: ApplicationState = details.state
+  def access: Access          = details.access
+  // $COVERAGE-ON$
 
   // Assist with nesting
   import monocle.syntax.all._
-  def modify(fn: CoreApplication => CoreApplication)                                           = this.focus(_.details).modify(fn)
+  def modify(fn: CoreApplication => CoreApplication): ApplicationWithSubscriptionFields        = this.focus(_.details).modify(fn)
   def withState(newState: ApplicationState): ApplicationWithSubscriptionFields                 = this.focus(_.details.state).replace(newState)
   def modifyState(fn: ApplicationState => ApplicationState): ApplicationWithSubscriptionFields = this.focus(_.details.state).modify(fn)
   def withAccess(newAccess: Access): ApplicationWithSubscriptionFields                         = this.focus(_.details.access).replace(newAccess)

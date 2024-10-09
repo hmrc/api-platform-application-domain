@@ -114,7 +114,7 @@ class ApplicationWithSubscriptionsSpec extends BaseJsonFormattersSpec with Appli
     "support withState to replace it" in {
       val newApp = NoSubs.example.withState(ApplicationStateData.preProduction)
 
-      newApp.details.state.isInPreProductionOrProduction shouldBe true
+      newApp.details.isInPreProductionOrProduction shouldBe true
     }
 
     val modifyState: ApplicationState => ApplicationState = a => a.copy(requestedByName = Some("Bob"))
