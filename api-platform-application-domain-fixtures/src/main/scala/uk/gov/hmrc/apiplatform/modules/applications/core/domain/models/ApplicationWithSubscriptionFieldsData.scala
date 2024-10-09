@@ -36,9 +36,12 @@ trait ApplicationWithSubscriptionFieldsData extends ApplicationWithSubscriptions
     def withId(anId: ApplicationId): ApplicationWithSubscriptionFields                           = app.focus(_.details.id).replace(anId)
     def withName(aName: ApplicationName): ApplicationWithSubscriptionFields                      = app.focus(_.details.name).replace(aName)
     def withEnvironment(env: Environment): ApplicationWithSubscriptionFields                     = app.focus(_.details.deployedTo).replace(env)
-    def withCollaborators(collabs: Collaborator*): ApplicationWithSubscriptionFields             = app.focus(_.collaborators).replace(collabs.toSet)
-    def withSubscriptions(subs: ApiIdentifier*): ApplicationWithSubscriptionFields               = app.focus(_.subscriptions).replace(subs.toSet)
+    def withCollaborators(collabs: Set[Collaborator]): ApplicationWithSubscriptionFields         = app.focus(_.collaborators).replace(collabs)
+    def withCollaborators(collabs: Collaborator*): ApplicationWithSubscriptionFields             = withCollaborators(collabs.toSet)
+    def withSubscriptions(subs: Set[ApiIdentifier]): ApplicationWithSubscriptionFields           = app.focus(_.subscriptions).replace(subs)
+    def withSubscriptions(subs: ApiIdentifier*): ApplicationWithSubscriptionFields               = withSubscriptions(subs.toSet)
     def withFieldValues(fieldValues: ApiFieldMap[FieldValue]): ApplicationWithSubscriptionFields = app.focus(_.fieldValues).replace(fieldValues)
+    def withFieldValues(): ApplicationWithSubscriptionFields                                     = withFieldValues(Map.empty)
   }
 
 }

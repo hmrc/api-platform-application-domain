@@ -55,9 +55,10 @@ trait ApplicationWithCollaboratorsFixtures extends CoreApplicationFixtures with 
 
   implicit class ApplicationWithCollaboratorsFixtureSyntax(app: ApplicationWithCollaborators) {
     import monocle.syntax.all._
-    def withId(anId: ApplicationId): ApplicationWithCollaborators               = app.focus(_.details.id).replace(anId)
-    def withName(aName: ApplicationName): ApplicationWithCollaborators          = app.focus(_.details.name).replace(aName)
-    def withEnvironment(env: Environment): ApplicationWithCollaborators         = app.focus(_.details.deployedTo).replace(env)
-    def withCollaborators(collabs: Collaborator*): ApplicationWithCollaborators = app.focus(_.collaborators).replace(collabs.toSet)
+    def withId(anId: ApplicationId): ApplicationWithCollaborators                   = app.focus(_.details.id).replace(anId)
+    def withName(aName: ApplicationName): ApplicationWithCollaborators              = app.focus(_.details.name).replace(aName)
+    def withEnvironment(env: Environment): ApplicationWithCollaborators             = app.focus(_.details.deployedTo).replace(env)
+    def withCollaborators(collabs: Set[Collaborator]): ApplicationWithCollaborators = app.focus(_.collaborators).replace(collabs)
+    def withCollaborators(collabs: Collaborator*): ApplicationWithCollaborators     = withCollaborators(collabs.toSet)
   }
 }
