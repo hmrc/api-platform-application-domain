@@ -31,9 +31,11 @@ trait ApplicationWithSubscriptionsFixtures extends ApplicationWithCollaboratorsF
 
   implicit class ApplicationWithSubscriptionsFixtureSyntax(app: ApplicationWithSubscriptions) {
     import monocle.syntax.all._
-    def withId(anId: ApplicationId): ApplicationWithSubscriptions                   = app.focus(_.details.id).replace(anId)
-    def withName(aName: ApplicationName): ApplicationWithSubscriptions              = app.focus(_.details.name).replace(aName)
-    def withEnvironment(env: Environment): ApplicationWithSubscriptions             = app.focus(_.details.deployedTo).replace(env)
+    def withId(anId: ApplicationId): ApplicationWithSubscriptions       = app.focus(_.details.id).replace(anId)
+    def withName(aName: ApplicationName): ApplicationWithSubscriptions  = app.focus(_.details.name).replace(aName)
+    def withEnvironment(env: Environment): ApplicationWithSubscriptions = app.focus(_.details.deployedTo).replace(env)
+    def inSandbox(): ApplicationWithSubscriptions                       = app.focus(_.details.deployedTo).replace(Environment.SANDBOX)
+
     def withCollaborators(collabs: Set[Collaborator]): ApplicationWithSubscriptions = app.focus(_.collaborators).replace(collabs)
     def withCollaborators(collabs: Collaborator*): ApplicationWithSubscriptions     = withCollaborators(collabs.toSet)
     def withSubscriptions(subs: Set[ApiIdentifier]): ApplicationWithSubscriptions   = app.focus(_.subscriptions).replace(subs)
