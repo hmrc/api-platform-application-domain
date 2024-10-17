@@ -43,6 +43,24 @@ class HasAccessSpec extends HmrcSpec with Matchers with AccessFixtures {
       "termsAndConditionsLocation should return value when set" in {
         objInTest.termsAndConditionsLocation shouldBe standardAccessOne.termsAndConditionsUrl.map(TermsAndConditionsLocations.Url(_))
       }
+
+      "canAddRedirectUri should return true" in {
+        objInTest.canAddRedirectUri shouldBe true
+      }
+
+      "canAddRedirectUri should return false when 'full'" in {
+        val fullRedirects: List[RedirectUri] = List(redirectUriOne, redirectUriOne, redirectUriOne, redirectUriOne, redirectUriOne)
+        val fullObj                          = objInTest.copy(access = standardAccessOne.copy(redirectUris = fullRedirects))
+        fullObj.canAddRedirectUri shouldBe false
+      }
+
+      "hasRedirectUri should return appropriately" in {
+        objInTest.hasRedirectUri(redirectUriOne) shouldBe true
+        objInTest.hasRedirectUri(redirectUriTwo) shouldBe false
+      }
+      "hasResponsibleIndividual should return appropriately" in {
+        objInTest.hasResponsibleIndividual shouldBe false
+      }
     }
 
     "ROPC Access" should {
@@ -58,6 +76,20 @@ class HasAccessSpec extends HmrcSpec with Matchers with AccessFixtures {
       "termsAndConditionsLocation should return value when set" in {
         objInTest.termsAndConditionsLocation shouldBe None
       }
+
+      "canAddRedirectUri should return none" in {
+        objInTest.canAddRedirectUri shouldBe false
+      }
+
+      "hasRedirectUri should return appropriately" in {
+        objInTest.hasRedirectUri(redirectUriOne) shouldBe false
+        objInTest.hasRedirectUri(redirectUriTwo) shouldBe false
+      }
+
+      "hasResponsibleIndividual should return appropriately" in {
+        objInTest.hasResponsibleIndividual shouldBe false
+        objInTest.copy(access = standardAccessWithSubmission).hasResponsibleIndividual shouldBe true
+      }
     }
 
     "Priviledged Access" should {
@@ -72,6 +104,16 @@ class HasAccessSpec extends HmrcSpec with Matchers with AccessFixtures {
       }
       "termsAndConditionsLocation should return value when set" in {
         objInTest.termsAndConditionsLocation shouldBe None
+      }
+      "canAddRedirectUri should return none" in {
+        objInTest.canAddRedirectUri shouldBe false
+      }
+      "hasRedirectUri should return appropriately" in {
+        objInTest.hasRedirectUri(redirectUriOne) shouldBe false
+        objInTest.hasRedirectUri(redirectUriTwo) shouldBe false
+      }
+      "hasResponsibleIndividual should return appropriately" in {
+        objInTest.hasResponsibleIndividual shouldBe false
       }
     }
   }

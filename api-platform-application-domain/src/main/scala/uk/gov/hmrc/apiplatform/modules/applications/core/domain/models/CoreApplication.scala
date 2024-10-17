@@ -46,6 +46,25 @@ trait HasAccess {
     case a: Access.Standard => a.termsAndConditionsLocation
     case _                  => None
   }
+
+  private val maximumNumberOfRedirectUris = 5
+
+  def canAddRedirectUri: Boolean = access match {
+    case s: Access.Standard => s.redirectUris.lengthCompare(maximumNumberOfRedirectUris) < 0
+    case _                  => false
+  }
+
+  def hasResponsibleIndividual: Boolean = {
+    access match {
+      case Access.Standard(_, _, _, _, _, Some(_)) => true
+      case _                                       => false
+    }
+  }
+
+  def hasRedirectUri(redirectUri: RedirectUri): Boolean = access match {
+    case s: Access.Standard => s.redirectUris.contains(redirectUri)
+    case _                  => false
+  }
 }
 
 trait HasState {
