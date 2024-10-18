@@ -17,7 +17,13 @@
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{ImportantSubmissionData, ImportantSubmissionDataData, ImportantSubmissionDataFixtures, PrivacyPolicyLocation, TermsAndConditionsLocation}
+import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{
+  ImportantSubmissionData,
+  ImportantSubmissionDataData,
+  ImportantSubmissionDataFixtures,
+  PrivacyPolicyLocation,
+  TermsAndConditionsLocation
+}
 
 object AccessData {
 

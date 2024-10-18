@@ -38,12 +38,12 @@ trait HasAccess {
   def isROPC       = access.isROPC
 
   def privacyPolicyLocation: Option[PrivacyPolicyLocation] = access match {
-    case a: Access.Standard => a.privacyPolicyLocation
+    case a: Access.Standard => Some(a.privacyPolicyLocation)
     case _                  => None
   }
 
   def termsAndConditionsLocation: Option[TermsAndConditionsLocation] = access match {
-    case a: Access.Standard => a.termsAndConditionsLocation
+    case a: Access.Standard => Some(a.termsAndConditionsLocation)
     case _                  => None
   }
 

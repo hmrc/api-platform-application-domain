@@ -68,15 +68,15 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
     "correctly find the privacy policy" in {
       val values = Table(
         ("submission data exists", "submission value", "direct url", "expectation"),
-        (false, PrivacyPolicyLocations.InDesktopSoftware, None, None),
-        (false, PrivacyPolicyLocations.InDesktopSoftware, Some("x"), Some(PrivacyPolicyLocations.Url("x"))),
-        (true, PrivacyPolicyLocations.NoneProvided, None, Some(PrivacyPolicyLocations.NoneProvided)),
-        (true, PrivacyPolicyLocations.InDesktopSoftware, None, Some(PrivacyPolicyLocations.InDesktopSoftware)),
-        (true, PrivacyPolicyLocations.InDesktopSoftware, Some("x"), Some(PrivacyPolicyLocations.InDesktopSoftware)),
-        (true, PrivacyPolicyLocations.Url("a"), Some("x"), Some(PrivacyPolicyLocations.Url("a")))
+        (false, PrivacyPolicyLocations.InDesktopSoftware, None, PrivacyPolicyLocations.NoneProvided),
+        (false, PrivacyPolicyLocations.InDesktopSoftware, Some("x"), PrivacyPolicyLocations.Url("x")),
+        (true, PrivacyPolicyLocations.NoneProvided, None, PrivacyPolicyLocations.NoneProvided),
+        (true, PrivacyPolicyLocations.InDesktopSoftware, None, PrivacyPolicyLocations.InDesktopSoftware),
+        (true, PrivacyPolicyLocations.InDesktopSoftware, Some("x"), PrivacyPolicyLocations.InDesktopSoftware),
+        (true, PrivacyPolicyLocations.Url("a"), Some("x"), PrivacyPolicyLocations.Url("a"))
       )
 
-      def test(access: Access.Standard, expected: Option[PrivacyPolicyLocation]) = {
+      def test(access: Access.Standard, expected: PrivacyPolicyLocation) = {
         access.privacyPolicyLocation shouldBe expected
       }
 
@@ -94,15 +94,15 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
     "correctly find the terms and conditions" in {
       val values = Table(
         ("submission data exists", "submission value", "direct url", "expectation"),
-        (false, TermsAndConditionsLocations.InDesktopSoftware, None, None),
-        (false, TermsAndConditionsLocations.InDesktopSoftware, Some("x"), Some(TermsAndConditionsLocations.Url("x"))),
-        (true, TermsAndConditionsLocations.NoneProvided, None, Some(TermsAndConditionsLocations.NoneProvided)),
-        (true, TermsAndConditionsLocations.InDesktopSoftware, None, Some(TermsAndConditionsLocations.InDesktopSoftware)),
-        (true, TermsAndConditionsLocations.InDesktopSoftware, Some("x"), Some(TermsAndConditionsLocations.InDesktopSoftware)),
-        (true, TermsAndConditionsLocations.Url("a"), Some("x"), Some(TermsAndConditionsLocations.Url("a")))
+        (false, TermsAndConditionsLocations.InDesktopSoftware, None, TermsAndConditionsLocations.NoneProvided),
+        (false, TermsAndConditionsLocations.InDesktopSoftware, Some("x"), TermsAndConditionsLocations.Url("x")),
+        (true, TermsAndConditionsLocations.NoneProvided, None, TermsAndConditionsLocations.NoneProvided),
+        (true, TermsAndConditionsLocations.InDesktopSoftware, None, TermsAndConditionsLocations.InDesktopSoftware),
+        (true, TermsAndConditionsLocations.InDesktopSoftware, Some("x"), TermsAndConditionsLocations.InDesktopSoftware),
+        (true, TermsAndConditionsLocations.Url("a"), Some("x"), TermsAndConditionsLocations.Url("a"))
       )
 
-      def test(access: Access.Standard, expected: Option[TermsAndConditionsLocation]) = {
+      def test(access: Access.Standard, expected: TermsAndConditionsLocation) = {
         access.termsAndConditionsLocation shouldBe expected
       }
 
