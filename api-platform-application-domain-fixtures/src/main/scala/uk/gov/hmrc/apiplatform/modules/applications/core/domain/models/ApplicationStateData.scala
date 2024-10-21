@@ -19,12 +19,13 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.State._
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressData
 
 object ApplicationStateData extends FixedClock {
   val testing                      = ApplicationState(name = TESTING, updatedOn = instant)
   val pendingGatekeeperApproval    = ApplicationState(name = PENDING_GATEKEEPER_APPROVAL, updatedOn = instant)
   val pendingRequesterVerification = ApplicationState(name = PENDING_REQUESTER_VERIFICATION, updatedOn = instant)
-  val pendingRIVerification        = ApplicationState(name = PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION, updatedOn = instant)
+  val pendingRIVerification        = ApplicationState(name = PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION, requestedByName = Some("Fred Flintstone"), requestedByEmailAddress = Some(LaxEmailAddressData.one.text), updatedOn = instant)
   val preProduction                = ApplicationState(name = PRE_PRODUCTION, updatedOn = instant)
   val production                   = ApplicationState(name = PRODUCTION, updatedOn = instant)
   val deleted                      = ApplicationState(name = DELETED, updatedOn = instant)
