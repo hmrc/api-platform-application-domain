@@ -19,16 +19,64 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.State._
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddressData
 
 object ApplicationStateData extends FixedClock {
-  val testing                      = ApplicationState(name = TESTING, updatedOn = instant)
-  val pendingGatekeeperApproval    = ApplicationState(name = PENDING_GATEKEEPER_APPROVAL, updatedOn = instant)
-  val pendingRequesterVerification = ApplicationState(name = PENDING_REQUESTER_VERIFICATION, updatedOn = instant)
-  val pendingRIVerification        = ApplicationState(name = PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION, requestedByName = Some("Fred Flintstone"), requestedByEmailAddress = Some(LaxEmailAddressData.one.text), updatedOn = instant)
-  val preProduction                = ApplicationState(name = PRE_PRODUCTION, updatedOn = instant)
-  val production                   = ApplicationState(name = PRODUCTION, updatedOn = instant)
-  val deleted                      = ApplicationState(name = DELETED, updatedOn = instant)
+
+  object Values {
+    val requestedByName           = "john smith"
+    val requestedByEmail          = "john.smith@example.com"
+    val aVerificationCode: String = "verificationCode"
+  }
+
+  import Values._
+
+  val testing = ApplicationState(
+    name = TESTING,
+    updatedOn = instant
+  )
+
+  val pendingGatekeeperApproval = ApplicationState(
+    name = PENDING_GATEKEEPER_APPROVAL,
+    updatedOn = instant,
+    requestedByName = Some(requestedByName),
+    requestedByEmailAddress = Some(requestedByEmail)
+  )
+
+  val pendingRequesterVerification = ApplicationState(
+    name = PENDING_REQUESTER_VERIFICATION,
+    updatedOn = instant,
+    requestedByEmailAddress = Some(requestedByEmail),
+    verificationCode = Some(aVerificationCode)
+  )
+
+  val pendingRIVerification = ApplicationState(
+    name = PENDING_RESPONSIBLE_INDIVIDUAL_VERIFICATION,
+    updatedOn = instant,
+    requestedByName = Some(requestedByName),
+    requestedByEmailAddress = Some(requestedByEmail),
+    verificationCode = Some(aVerificationCode)
+  )
+
+  val preProduction = ApplicationState(
+    name = PRE_PRODUCTION,
+    updatedOn = instant,
+    requestedByEmailAddress = Some(requestedByEmail),
+    verificationCode = Some(aVerificationCode)
+  )
+
+  val production = ApplicationState(
+    name = PRODUCTION,
+    updatedOn = instant,
+    requestedByName = Some(requestedByName),
+    requestedByEmailAddress = Some(requestedByEmail)
+  )
+
+  val deleted = ApplicationState(
+    name = DELETED,
+    updatedOn = instant,
+    requestedByName = Some(requestedByName),
+    requestedByEmailAddress = Some(requestedByEmail)
+  )
 }
 
 trait ApplicationStateFixtures {
@@ -39,4 +87,8 @@ trait ApplicationStateFixtures {
   val appStatePreProduction                = ApplicationStateData.preProduction
   val appStateProduction                   = ApplicationStateData.production
   val appStateDeleted                      = ApplicationStateData.deleted
+
+  val appStateRequestByName = ApplicationStateData.Values.requestedByName
+  val appStateRequestByEmail = ApplicationStateData.Values.requestedByEmail
+  val appStateVerificationCode = ApplicationStateData.Values.aVerificationCode
 }
