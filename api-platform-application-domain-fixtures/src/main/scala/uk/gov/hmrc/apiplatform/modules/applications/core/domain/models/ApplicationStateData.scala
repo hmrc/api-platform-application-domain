@@ -88,7 +88,7 @@ trait ApplicationStateFixtures {
   val appStateProduction                   = ApplicationStateData.production
   val appStateDeleted                      = ApplicationStateData.deleted
 
-  val appStateRequestByName = ApplicationStateData.Values.requestedByName
-  val appStateRequestByEmail = ApplicationStateData.Values.requestedByEmail
+  val appStateRequestByName    = ApplicationStateData.Values.requestedByName
+  val appStateRequestByEmail   = ApplicationStateData.Values.requestedByEmail
   val appStateVerificationCode = ApplicationStateData.Values.aVerificationCode
 }
