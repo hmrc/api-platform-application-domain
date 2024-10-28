@@ -23,6 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 object CoreApplicationData extends FixedClock {
+  val appDescription = "A description"
 
   object Standard {
 
@@ -32,7 +33,7 @@ object CoreApplicationData extends FixedClock {
       gatewayId = "abc123",
       name = ApplicationNameData.one,
       deployedTo = Environment.PRODUCTION,
-      description = None,
+      description = Some(appDescription),
       createdOn = instant,
       lastAccess = Some(instant),
       grantLength = GrantLength.EIGHTEEN_MONTHS,
