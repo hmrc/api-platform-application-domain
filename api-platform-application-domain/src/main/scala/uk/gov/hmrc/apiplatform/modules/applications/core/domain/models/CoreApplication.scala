@@ -84,9 +84,9 @@ trait HasState {
 
 // AppLocking is related to whether an app is in a locked down state - typically requiring SDST to make actual changes
 trait AppLocking {
-  self: HasEnvironment with HasState =>
+  self: HasEnvironment with HasState with HasAccess =>
 
-  def areSubscriptionsLocked: Boolean = isProduction && !isInTesting
+  def areSubscriptionsLocked: Boolean = (isProduction && !isInTesting) || !isStandard
 }
 
 case class CoreApplication(

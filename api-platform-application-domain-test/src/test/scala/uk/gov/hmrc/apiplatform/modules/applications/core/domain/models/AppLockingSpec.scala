@@ -22,24 +22,28 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.Environment
 import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.HasEnvironment
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.{Access, AccessFixtures}
 
-class AppLockingSpec extends HmrcSpec with Matchers with FixedClock with ApplicationStateFixtures with TableDrivenPropertyChecks {
+class AppLockingSpec extends HmrcSpec with Matchers with FixedClock with ApplicationStateFixtures with AccessFixtures with TableDrivenPropertyChecks {
 
-  case class TestFixture(deployedTo: Environment, state: ApplicationState) extends HasEnvironment with HasState with AppLocking
+  case class TestFixture(deployedTo: Environment, state: ApplicationState, access: Access) extends HasEnvironment with HasState with HasAccess with AppLocking
 
   val values = Table(
-    ("Environment", "ApplicationState", "Expectation"),
-    (Environment.PRODUCTION, appStateTesting, false),
-    (Environment.PRODUCTION, appStateProduction, true),
-    (Environment.SANDBOX, appStateTesting, false),
-    (Environment.SANDBOX, appStateProduction, false)
+    ("Environment", "ApplicationState", "Access", "Expectation"),
+    (Environment.PRODUCTION, appStateTesting, standardAccess, false),
+    (Environment.PRODUCTION, appStateTesting, privilegedAccess, true),
+    (Environment.PRODUCTION, appStateTesting, ropcAccess, true),
+    (Environment.PRODUCTION, appStateProduction, standardAccess, true),
+    (Environment.SANDBOX, appStateTesting, standardAccess, false),
+    (Environment.SANDBOX, appStateProduction, standardAccess, false),
+    (Environment.SANDBOX, appStateProduction, privilegedAccess, true),
+    (Environment.SANDBOX, appStateProduction, ropcAccess, true)
   )
 
   "AppLocking" should {
     "return areSubscriptionsLocked as expected" in {
       forAll(values) {
-        case (env, state, expectation) => TestFixture(env, state).areSubscriptionsLocked shouldBe expectation
+        case (env, state, access, expectation) => TestFixture(env, state, access).areSubscriptionsLocked shouldBe expectation
       }
     }
   }
