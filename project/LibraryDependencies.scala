@@ -3,7 +3,7 @@ import sbt._
 object LibraryDependencies {
   def apply() = compileDependencies ++ testDependencies
   
-  val commonDomainVersion = "0.17.0"
+  val commonDomainVersion = "0.18.0"
   val monocleVersion = "3.1.0"
 
   val compileDependencies = Seq(
