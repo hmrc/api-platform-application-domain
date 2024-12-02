@@ -30,10 +30,8 @@ object DeleteRestrictionType {
 
   def unsafeApply(text: String): DeleteRestrictionType = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid Delete Restriction Type"))
 
-  def lenientApply(text: String): Option[DeleteRestrictionType] = Some(apply(text).getOrElse(NO_RESTRICTION))
-
   import play.api.libs.json.Format
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.SealedTraitJsonFormatting
-  implicit val format: Format[DeleteRestrictionType] = SealedTraitJsonFormatting.createFormatFor[DeleteRestrictionType]("Delete Restriction Type", lenientApply)
+  implicit val format: Format[DeleteRestrictionType] = SealedTraitJsonFormatting.createFormatFor[DeleteRestrictionType]("Delete Restriction Type", apply)
 
 }
