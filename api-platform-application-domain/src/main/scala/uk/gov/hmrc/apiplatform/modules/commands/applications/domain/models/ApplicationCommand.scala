@@ -183,10 +183,11 @@ object ApplicationCommand {
   implicit private val resendRequesterEmailVerificationFormat: OFormat[ResendRequesterEmailVerification]               = Json.format[ResendRequesterEmailVerification]
   implicit private val sendTermsOfUseInvitationFormat: OFormat[SendTermsOfUseInvitation]                               = Json.format[SendTermsOfUseInvitation]
 
-  implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]         = Json.format[SubscribeToApi]
-  implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi] = Json.format[UnsubscribeFromApi]
-  implicit private val UpdateRedirectUrisFormatter: OFormat[UpdateRedirectUris] = Json.format[UpdateRedirectUris]
-  implicit private val ChangeIpAllowlistFormatter: OFormat[ChangeIpAllowlist]   = Json.format[ChangeIpAllowlist]
+  implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]                       = Json.format[SubscribeToApi]
+  implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi]               = Json.format[UnsubscribeFromApi]
+  implicit private val unsubscribeFromRetiredApiFormatter: OFormat[UnsubscribeFromRetiredApi] = Json.format[UnsubscribeFromRetiredApi]
+  implicit private val UpdateRedirectUrisFormatter: OFormat[UpdateRedirectUris]               = Json.format[UpdateRedirectUris]
+  implicit private val ChangeIpAllowlistFormatter: OFormat[ChangeIpAllowlist]                 = Json.format[ChangeIpAllowlist]
 
   implicit private val blockApplicationFormat: OFormat[BlockApplication]                                 = Json.format[BlockApplication]
   implicit private val unblockApplicationFormat: OFormat[UnblockApplication]                             = Json.format[UnblockApplication]
@@ -226,6 +227,7 @@ object ApplicationCommand {
     .and[SendTermsOfUseInvitation]("sendTermsOfUseInvitation")
     .and[SubscribeToApi]("subscribeToApi")
     .and[UnsubscribeFromApi]("unsubscribeFromApi")
+    .and[UnsubscribeFromRetiredApi]("unsubscribeFromRetiredApi")
     .and[UpdateRedirectUris]("updateRedirectUris")
     .and[VerifyResponsibleIndividual]("verifyResponsibleIndividual")
     .and[ChangeIpAllowlist]("changeIpAllowlist")
