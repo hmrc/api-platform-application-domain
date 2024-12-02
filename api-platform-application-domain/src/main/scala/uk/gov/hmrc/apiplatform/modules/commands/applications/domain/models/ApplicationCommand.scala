@@ -40,6 +40,8 @@ sealed trait JobsMixin {
   def jobId: String
 }
 
+sealed trait ProcessMixin
+
 // No good way to classify commands but we don't want to have to deal with 50 types in one pattern match....
 // Maybe this will improve in future
 sealed abstract class RedirectCommand        extends ApplicationCommand
@@ -79,6 +81,7 @@ object ApplicationCommands {
 //----
   case class SubscribeToApi(actor: Actor, apiIdentifier: ApiIdentifier, timestamp: Instant)                                                           extends SubscriptionCommand
   case class UnsubscribeFromApi(actor: Actor, apiIdentifier: ApiIdentifier, timestamp: Instant)                                                       extends SubscriptionCommand
+  case class UnsubscribeFromRetiredApi(actor: Actors.Process, apiIdentifier: ApiIdentifier, timestamp: Instant)                                       extends SubscriptionCommand with ProcessMixin
 //----
   case class ChangeIpAllowlist(actor: Actor, timestamp: Instant, required: Boolean, oldIpAllowlist: List[CidrBlock], newIpAllowlist: List[CidrBlock]) extends IpAllowListCommand
 
