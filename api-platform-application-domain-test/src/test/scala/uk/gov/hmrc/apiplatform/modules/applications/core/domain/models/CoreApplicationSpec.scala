@@ -98,10 +98,11 @@ object CoreApplicationSpec extends FixedClock {
     blocked = false,
     ipAllowlist = IpAllowlist(false, Set.empty),
     allowAutoDelete = false,
+    deleteRestriction = DeleteRestriction.NoRestriction,
     lastActionActor = ActorType.UNKNOWN
   )
 
   val jsonText =
-    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"allowAutoDelete":false,"lastActionActor":"UNKNOWN"}"""
+    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"allowAutoDelete":false,"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 
 }

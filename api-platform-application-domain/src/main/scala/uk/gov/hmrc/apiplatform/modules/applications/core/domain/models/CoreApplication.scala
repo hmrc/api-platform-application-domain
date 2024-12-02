@@ -107,6 +107,7 @@ case class CoreApplication(
     blocked: Boolean,
     ipAllowlist: IpAllowlist,
     allowAutoDelete: Boolean,
+    deleteRestriction: DeleteRestriction,
     lastActionActor: ActorType
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
 
