@@ -107,8 +107,8 @@ case class CoreApplication(
     blocked: Boolean,
     ipAllowlist: IpAllowlist,
     allowAutoDelete: Boolean,
-    deleteRestriction: DeleteRestriction,
-    lastActionActor: ActorType
+    lastActionActor: ActorType,
+    deleteRestriction: DeleteRestriction = DeleteRestriction.NoRestriction
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
 
   def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
@@ -121,7 +121,7 @@ case class CoreApplication(
 
 object CoreApplication {
   import play.api.libs.json._
-  implicit val format: Format[CoreApplication] = Json.format[CoreApplication]
+  implicit val format: Format[CoreApplication] = Json.using[Json.WithDefaultValues].format[CoreApplication]
 
   implicit val nameOrdering: Ordering[CoreApplication] = Ordering.by[CoreApplication, ApplicationName](_.name)
 }
