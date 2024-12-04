@@ -90,6 +90,7 @@ object ApplicationWithSubscriptions {
         blocked = old.blocked,
         ipAllowlist = old.ipAllowlist,
         allowAutoDelete = old.allowAutoDelete,
+        deleteRestriction = DeleteRestriction.NoRestriction,
         lastActionActor = ActorType.UNKNOWN
       ),
       collaborators = old.collaborators,

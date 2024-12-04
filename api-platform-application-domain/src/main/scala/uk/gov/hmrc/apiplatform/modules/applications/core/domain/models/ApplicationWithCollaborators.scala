@@ -95,6 +95,7 @@ object ApplicationWithCollaborators {
         blocked = old.blocked,
         ipAllowlist = old.ipAllowlist,
         allowAutoDelete = old.moreApplication.fold(false)(_.allowAutoDelete),
+        deleteRestriction = DeleteRestriction.NoRestriction,
         lastActionActor = old.moreApplication.fold[ActorType](ActorType.UNKNOWN)(_.lastActionActor)
       ),
       collaborators = old.collaborators
