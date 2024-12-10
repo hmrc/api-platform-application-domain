@@ -45,6 +45,7 @@ object CoreApplicationData extends FixedClock {
       blocked = false,
       ipAllowlist = IpAllowListData.one,
       allowAutoDelete = false,
+      deleteRestriction = DeleteRestriction.NoRestriction,
       lastActionActor = ActorType.UNKNOWN
     )
 
@@ -81,6 +82,7 @@ object CoreApplicationData extends FixedClock {
       blocked = false,
       ipAllowlist = IpAllowListData.one,
       allowAutoDelete = false,
+      deleteRestriction = DeleteRestriction.NoRestriction,
       lastActionActor = ActorType.UNKNOWN
     )
   }
@@ -105,6 +107,7 @@ object CoreApplicationData extends FixedClock {
       blocked = false,
       ipAllowlist = IpAllowListData.one,
       allowAutoDelete = false,
+      deleteRestriction = DeleteRestriction.NoRestriction,
       lastActionActor = ActorType.UNKNOWN
     )
   }
