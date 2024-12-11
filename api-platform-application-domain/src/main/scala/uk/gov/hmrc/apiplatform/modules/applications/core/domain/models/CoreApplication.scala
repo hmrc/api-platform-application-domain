@@ -108,7 +108,7 @@ case class CoreApplication(
     ipAllowlist: IpAllowlist,
     allowAutoDelete: Boolean,
     lastActionActor: ActorType,
-    deleteRestriction: DeleteRestriction = DeleteRestriction.NoRestriction
+    deleteRestriction: DeleteRestriction
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
 
   def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
@@ -121,7 +121,56 @@ case class CoreApplication(
 
 object CoreApplication {
   import play.api.libs.json._
-  implicit val format: Format[CoreApplication] = Json.using[Json.WithDefaultValues].format[CoreApplication]
+
+  private case class OldCoreApplication(
+      id: ApplicationId,
+      clientId: ClientId,
+      gatewayId: String,
+      name: ApplicationName,
+      deployedTo: Environment,
+      description: Option[String],
+      createdOn: Instant,
+      lastAccess: Option[Instant],
+      grantLength: GrantLength,
+      lastAccessTokenUsage: Option[Instant],
+      access: Access,
+      state: ApplicationState,
+      rateLimitTier: RateLimitTier,
+      checkInformation: Option[CheckInformation],
+      blocked: Boolean,
+      ipAllowlist: IpAllowlist,
+      allowAutoDelete: Boolean,
+      lastActionActor: ActorType
+    )
+
+  private def transformOldResponse(old: OldCoreApplication): CoreApplication =
+    CoreApplication(
+      id = old.id,
+      clientId = old.clientId,
+      gatewayId = old.gatewayId,
+      name = old.name,
+      deployedTo = old.deployedTo,
+      description = old.description,
+      createdOn = old.createdOn,
+      lastAccess = old.lastAccess,
+      grantLength = old.grantLength,
+      lastAccessTokenUsage = old.lastAccessTokenUsage,
+      access = old.access,
+      state = old.state,
+      rateLimitTier = old.rateLimitTier,
+      checkInformation = old.checkInformation,
+      blocked = old.blocked,
+      ipAllowlist = old.ipAllowlist,
+      allowAutoDelete = old.allowAutoDelete,
+      lastActionActor = old.lastActionActor,
+      deleteRestriction = DeleteRestriction.NoRestriction
+    )
+
+  val reads: Reads[CoreApplication] = Json.reads[CoreApplication].orElse(Json.reads[OldCoreApplication].map(transformOldResponse))
+
+  val writes: Writes[CoreApplication] = Json.writes[CoreApplication]
+
+  implicit val format: Format[CoreApplication] = Format(reads, writes)
 
   implicit val nameOrdering: Ordering[CoreApplication] = Ordering.by[CoreApplication, ApplicationName](_.name)
 }
