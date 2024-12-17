@@ -70,35 +70,5 @@ object ApplicationWithSubscriptions {
 
   implicit val nameOrdering: Ordering[ApplicationWithSubscriptions] = Ordering.by[ApplicationWithSubscriptions, ApplicationName](_.details.name)
 
-  private val transformOldResponse: OldExtendedApplicationResponse => ApplicationWithSubscriptions = (old) => {
-    ApplicationWithSubscriptions(
-      details = CoreApplication(
-        id = old.id,
-        clientId = old.clientId,
-        gatewayId = old.gatewayId,
-        name = ApplicationName(old.name),
-        deployedTo = old.deployedTo,
-        description = old.description,
-        createdOn = old.createdOn,
-        lastAccess = old.lastAccess,
-        grantLength = old.grantLength,
-        lastAccessTokenUsage = old.lastAccessTokenUsage,
-        access = old.access,
-        state = old.state,
-        rateLimitTier = old.rateLimitTier,
-        checkInformation = old.checkInformation,
-        blocked = old.blocked,
-        ipAllowlist = old.ipAllowlist,
-        allowAutoDelete = old.allowAutoDelete,
-        deleteRestriction = DeleteRestriction.NoRestriction,
-        lastActionActor = ActorType.UNKNOWN
-      ),
-      collaborators = old.collaborators,
-      subscriptions = old.subscriptions.toSet
-    )
-  }
-
-  val reads: Reads[ApplicationWithSubscriptions]            = Json.reads[ApplicationWithSubscriptions].orElse(Json.reads[OldExtendedApplicationResponse].map(transformOldResponse))
-  val writes: Writes[ApplicationWithSubscriptions]          = Json.writes[ApplicationWithSubscriptions]
-  implicit val format: Format[ApplicationWithSubscriptions] = Format(reads, writes)
+  implicit val format: Format[ApplicationWithSubscriptions] = Json.format[ApplicationWithSubscriptions]
 }

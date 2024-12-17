@@ -38,13 +38,6 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec with 
       testFromJson[ApplicationWithSubscriptionFields](jsonText)(example)
     }
 
-    "read from old json" in {
-      val oldJson =
-        s"""{"application":{"id":"${example.details.id}","clientId":"${example.details.clientId}","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.Admin.jsonText}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"moreApplication":{"allowAutoDelete":false,"lastActionActor":"UNKNOWN"}}, "subscriptions":[{"context":"$apiContextOne","versionNbr":"$apiVersionNbrOne"}],"subscriptionFieldValues": {}}"""
-
-      testFromJson[ApplicationWithSubscriptionFields](oldJson)(example.copy(fieldValues = Map.empty))
-    }
-
     val modifyPrivAccess: (Access) => Access                  = a =>
       a match {
         case p: Access.Privileged => p.copy(scopes = p.scopes + "NewScope")

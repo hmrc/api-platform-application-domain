@@ -39,14 +39,6 @@ class ApplicationWithSubscriptionsSpec extends BaseJsonFormattersSpec with Appli
       testFromJson[ApplicationWithSubscriptions](jsonText)(example)
     }
 
-    "read from old json" in {
-      import NoSubs._
-      val oldJson =
-        s"""{"id":"${example.details.id}","clientId":"${example.details.clientId}","gatewayId":"","name":"App","deployedTo":"PRODUCTION","collaborators":[${CollaboratorSpec.Admin.jsonText}],"createdOn":"$nowAsText","grantLength":"P547D","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"serverToken":"123","trusted":false,"ipAllowlist":{"required":false,"allowlist":[]},"allowAutoDelete":false,"subscriptions":[]}"""
-
-      testFromJson[ApplicationWithSubscriptions](oldJson)(example)
-    }
-
     "convert to json with subs" in {
       import TwoSubs._
       Json.toJson[ApplicationWithSubscriptions](example) shouldBe Json.parse(jsonText)

@@ -75,34 +75,5 @@ object ApplicationWithCollaborators {
 
   implicit val nameOrdering: Ordering[ApplicationWithCollaborators] = Ordering.by[ApplicationWithCollaborators, ApplicationName](_.details.name)
 
-  private val transformOldResponse: OldApplicationResponse => ApplicationWithCollaborators = (old) => {
-    ApplicationWithCollaborators(
-      details = CoreApplication(
-        id = old.id,
-        clientId = old.clientId,
-        gatewayId = old.gatewayId,
-        name = old.name,
-        deployedTo = old.deployedTo,
-        description = old.description,
-        createdOn = old.createdOn,
-        lastAccess = old.lastAccess,
-        grantLength = old.grantLength,
-        lastAccessTokenUsage = old.lastAccessTokenUsage,
-        access = old.access,
-        state = old.state,
-        rateLimitTier = old.rateLimitTier,
-        checkInformation = old.checkInformation,
-        blocked = old.blocked,
-        ipAllowlist = old.ipAllowlist,
-        allowAutoDelete = old.moreApplication.fold(false)(_.allowAutoDelete),
-        deleteRestriction = DeleteRestriction.NoRestriction,
-        lastActionActor = old.moreApplication.fold[ActorType](ActorType.UNKNOWN)(_.lastActionActor)
-      ),
-      collaborators = old.collaborators
-    )
-  }
-
-  val reads: Reads[ApplicationWithCollaborators]            = Json.reads[ApplicationWithCollaborators].orElse(Json.reads[OldApplicationResponse].map(transformOldResponse))
-  val writes: Writes[ApplicationWithCollaborators]          = Json.writes[ApplicationWithCollaborators]
-  implicit val format: Format[ApplicationWithCollaborators] = Format(reads, writes)
+  implicit val format: Format[ApplicationWithCollaborators] = Json.format[ApplicationWithCollaborators]
 }
