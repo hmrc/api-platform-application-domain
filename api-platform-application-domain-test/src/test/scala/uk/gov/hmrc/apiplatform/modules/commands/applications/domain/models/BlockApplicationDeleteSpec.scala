@@ -18,10 +18,10 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
 
-class BlockApplicationAutoDeleteSpec extends ApplicationCommandBaseSpec {
+class BlockApplicationDeleteSpec extends ApplicationCommandBaseSpec {
 
-  "BlockApplicationAutoDelete" should {
-    val cmd = ApplicationCommands.BlockApplicationAutoDelete(aGatekeeperUser, reasons, aTimestamp)
+  "BlockApplicationDelete" should {
+    val cmd = ApplicationCommands.BlockApplicationDelete(aGatekeeperUser, reasons, aTimestamp)
 
     "write to json (as a command)" in {
 
@@ -29,13 +29,13 @@ class BlockApplicationAutoDeleteSpec extends ApplicationCommandBaseSpec {
         "gatekeeperUser" -> s"${aGatekeeperUser}",
         "reasons"        -> s"$reasons",
         "timestamp"      -> s"$nowAsText",
-        "updateType"     -> "blockApplicationAutoDelete"
+        "updateType"     -> "blockApplicationDelete"
       )
     }
 
     "read from json" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","reasons":"$reasons","timestamp":"$nowAsText","updateType":"blockApplicationAutoDelete"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","reasons":"$reasons","timestamp":"$nowAsText","updateType":"blockApplicationDelete"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }
