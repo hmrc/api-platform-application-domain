@@ -69,16 +69,5 @@ object ApplicationWithSubscriptionFields {
 
   implicit val nameOrdering: Ordering[ApplicationWithSubscriptionFields] = Ordering.by[ApplicationWithSubscriptionFields, ApplicationName](_.details.name)
 
-  private val transformOldResponse: OldApplicationWithSubsFields => ApplicationWithSubscriptionFields = (old) => {
-    ApplicationWithSubscriptionFields(
-      details = old.application.details,
-      collaborators = old.application.collaborators,
-      subscriptions = old.subscriptions,
-      fieldValues = old.subscriptionFieldValues
-    )
-  }
-
-  val reads: Reads[ApplicationWithSubscriptionFields]            = Json.reads[ApplicationWithSubscriptionFields].orElse(Json.reads[OldApplicationWithSubsFields].map(transformOldResponse))
-  val writes: Writes[ApplicationWithSubscriptionFields]          = Json.writes[ApplicationWithSubscriptionFields]
-  implicit val format: Format[ApplicationWithSubscriptionFields] = Format(reads, writes)
+  implicit val format: Format[ApplicationWithSubscriptionFields] = Json.format[ApplicationWithSubscriptionFields]
 }
