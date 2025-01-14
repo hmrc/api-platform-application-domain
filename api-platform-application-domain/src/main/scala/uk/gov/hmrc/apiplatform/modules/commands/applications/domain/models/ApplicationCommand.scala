@@ -96,6 +96,8 @@ object ApplicationCommands {
   case class DeleteUnusedApplication(jobId: String, authorisationKey: String, reasons: String, timestamp: Instant)                                extends DeleteCommand with JobsMixin
   case class AllowApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
   case class BlockApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
+  case class AllowApplicationDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                                  extends DeleteCommand with GatekeeperMixin
+  case class RestrictApplicationDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                               extends DeleteCommand with GatekeeperMixin
 
   case class ChangeGrantLength(gatekeeperUser: String, timestamp: Instant, grantLength: GrantLength)       extends GrantLengthCommand with GatekeeperMixin
   case class ChangeRateLimitTier(gatekeeperUser: String, timestamp: Instant, rateLimitTier: RateLimitTier) extends RateLimitCommand with GatekeeperMixin
@@ -155,6 +157,9 @@ object ApplicationCommand {
   implicit private val deleteRedirectUriFormatter: OFormat[DeleteRedirectUri]                                                         = Json.format[DeleteRedirectUri]
   implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]                                       = Json.format[AllowApplicationAutoDelete]
   implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]                                       = Json.format[BlockApplicationAutoDelete]
+  implicit private val allowApplicationDeleteFormatter: OFormat[AllowApplicationDelete]                                               = Json.format[AllowApplicationDelete]
+  implicit private val restrictApplicationDeleteFormatter: OFormat[RestrictApplicationDelete]                                         = Json.format[RestrictApplicationDelete]
+
   implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                                                         = Json.format[ChangeGrantLength]
   implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                                                     = Json.format[ChangeRateLimitTier]
   implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName]                             = Json.format[ChangeProductionApplicationName]
@@ -204,6 +209,8 @@ object ApplicationCommand {
     .and[DeleteRedirectUri]("deleteRedirectUri")
     .and[AllowApplicationAutoDelete]("allowApplicationAutoDelete")
     .and[BlockApplicationAutoDelete]("blockApplicationAutoDelete")
+    .and[AllowApplicationDelete]("allowApplicationDelete")
+    .and[RestrictApplicationDelete]("restrictApplicationDelete")
     .and[ChangeGrantLength]("changeGrantLength")
     .and[ChangeRateLimitTier]("changeRateLimitTier")
     .and[ChangeProductionApplicationName]("changeProductionApplicationName")
