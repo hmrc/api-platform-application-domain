@@ -42,19 +42,21 @@ sealed trait JobsMixin {
 
 // No good way to classify commands but we don't want to have to deal with 50 types in one pattern match....
 // Maybe this will improve in future
-sealed abstract class RedirectCommand        extends ApplicationCommand
-sealed abstract class ClientSecretCommand    extends ApplicationCommand
-sealed abstract class CollaboratorCommand    extends ApplicationCommand
-sealed abstract class SubscriptionCommand    extends ApplicationCommand
-sealed abstract class IpAllowListCommand     extends ApplicationCommand
-sealed abstract class GrantLengthCommand     extends ApplicationCommand
-sealed abstract class RateLimitCommand       extends ApplicationCommand
-sealed abstract class NameDescriptionCommand extends ApplicationCommand
-sealed abstract class DeleteCommand          extends ApplicationCommand
-sealed abstract class PolicyCommand          extends ApplicationCommand
-sealed abstract class SubmissionCommand      extends ApplicationCommand
-sealed abstract class BlockCommand           extends ApplicationCommand
-sealed abstract class ScopesCommand          extends ApplicationCommand
+sealed abstract class RedirectCommand           extends ApplicationCommand
+sealed abstract class LoginRedirectCommand      extends RedirectCommand
+sealed abstract class PostLogoutRedirectCommand extends RedirectCommand
+sealed abstract class ClientSecretCommand       extends ApplicationCommand
+sealed abstract class CollaboratorCommand       extends ApplicationCommand
+sealed abstract class SubscriptionCommand       extends ApplicationCommand
+sealed abstract class IpAllowListCommand        extends ApplicationCommand
+sealed abstract class GrantLengthCommand        extends ApplicationCommand
+sealed abstract class RateLimitCommand          extends ApplicationCommand
+sealed abstract class NameDescriptionCommand    extends ApplicationCommand
+sealed abstract class DeleteCommand             extends ApplicationCommand
+sealed abstract class PolicyCommand             extends ApplicationCommand
+sealed abstract class SubmissionCommand         extends ApplicationCommand
+sealed abstract class BlockCommand              extends ApplicationCommand
+sealed abstract class ScopesCommand             extends ApplicationCommand
 
 /*
    get list of available commands
@@ -65,10 +67,21 @@ sealed abstract class ScopesCommand          extends ApplicationCommand
     1 was solved in past by exhaustivity check i.e. that was one way of solving this...
  */
 object ApplicationCommands {
-  case class AddRedirectUri(actor: Actor, redirectUriToAdd: RedirectUri, timestamp: Instant)                                              extends RedirectCommand
-  case class ChangeRedirectUri(actor: Actor, redirectUriToReplace: RedirectUri, redirectUri: RedirectUri, timestamp: Instant)             extends RedirectCommand
-  case class DeleteRedirectUri(actor: Actor, redirectUriToDelete: RedirectUri, timestamp: Instant)                                        extends RedirectCommand
-  case class UpdateRedirectUris(actor: Actor, oldRedirectUris: List[RedirectUri], newRedirectUris: List[RedirectUri], timestamp: Instant) extends RedirectCommand
+  case class AddLoginRedirectUri(actor: Actor, redirectUriToAdd: LoginRedirectUri, timestamp: Instant)                                       extends LoginRedirectCommand
+  case class ChangeLoginRedirectUri(actor: Actor, redirectUriToReplace: LoginRedirectUri, redirectUri: LoginRedirectUri, timestamp: Instant) extends LoginRedirectCommand
+  case class DeleteLoginRedirectUri(actor: Actor, redirectUriToDelete: LoginRedirectUri, timestamp: Instant)                                 extends LoginRedirectCommand
+
+  case class UpdateLoginRedirectUris(actor: Actor, oldRedirectUris: List[LoginRedirectUri], newRedirectUris: List[LoginRedirectUri], timestamp: Instant)
+      extends LoginRedirectCommand
+
+  case class AddPostLogoutRedirectUri(actor: Actor, redirectUriToAdd: PostLogoutRedirectUri, timestamp: Instant) extends PostLogoutRedirectCommand
+
+  case class ChangePostLogoutRedirectUri(actor: Actor, redirectUriToReplace: PostLogoutRedirectUri, redirectUri: PostLogoutRedirectUri, timestamp: Instant)
+      extends PostLogoutRedirectCommand
+  case class DeletePostLogoutRedirectUri(actor: Actor, redirectUriToDelete: PostLogoutRedirectUri, timestamp: Instant) extends PostLogoutRedirectCommand
+
+  case class UpdatePostLogoutRedirectUris(actor: Actor, oldRedirectUris: List[PostLogoutRedirectUri], newRedirectUris: List[PostLogoutRedirectUri], timestamp: Instant)
+      extends PostLogoutRedirectCommand
 
 //----
   case class AddClientSecret(actor: Actors.AppCollaborator, name: String, id: ClientSecret.Id, hashedSecret: String, timestamp: Instant)              extends ClientSecretCommand
@@ -141,7 +154,6 @@ object ApplicationCommand {
   implicit private val removeCollaboratorFormatter: OFormat[RemoveCollaborator]                                             = Json.format[RemoveCollaborator]
   implicit private val addClientSecretFormatter: OFormat[AddClientSecret]                                                   = Json.format[AddClientSecret]
   implicit private val removeClientSecretFormatter: OFormat[RemoveClientSecret]                                             = Json.format[RemoveClientSecret]
-  implicit private val addRedirectUriFormatter: OFormat[AddRedirectUri]                                                     = Json.format[AddRedirectUri]
   implicit private val changeSandboxApplicationNameFormatter: OFormat[ChangeSandboxApplicationName]                         = Json.format[ChangeSandboxApplicationName]
   implicit private val changeSandboxApplicationDescriptionFormatter: OFormat[ChangeSandboxApplicationDescription]           = Json.format[ChangeSandboxApplicationDescription]
   implicit private val changeSandboxApplicationPrivacyPolicyUrlFormatter: OFormat[ChangeSandboxApplicationPrivacyPolicyUrl] = Json.format[ChangeSandboxApplicationPrivacyPolicyUrl]
@@ -153,16 +165,23 @@ object ApplicationCommand {
 
   implicit private val removeSandboxApplicationTermsAndConditionsUrlFormatter: OFormat[RemoveSandboxApplicationTermsAndConditionsUrl] =
     Json.format[RemoveSandboxApplicationTermsAndConditionsUrl]
-  implicit private val changeCollaboratorFormatter: OFormat[ChangeRedirectUri]                                                        = Json.format[ChangeRedirectUri]
-  implicit private val deleteRedirectUriFormatter: OFormat[DeleteRedirectUri]                                                         = Json.format[DeleteRedirectUri]
-  implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]                                       = Json.format[AllowApplicationAutoDelete]
-  implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]                                       = Json.format[BlockApplicationAutoDelete]
-  implicit private val allowApplicationDeleteFormatter: OFormat[AllowApplicationDelete]                                               = Json.format[AllowApplicationDelete]
-  implicit private val restrictApplicationDeleteFormatter: OFormat[RestrictApplicationDelete]                                         = Json.format[RestrictApplicationDelete]
 
-  implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                                                         = Json.format[ChangeGrantLength]
-  implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                                                     = Json.format[ChangeRateLimitTier]
-  implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName]                             = Json.format[ChangeProductionApplicationName]
+  implicit private val addLoginRedirectUriFormatter: OFormat[AddLoginRedirectUri]                   = Json.format[AddLoginRedirectUri]
+  implicit private val changeLoginCollaboratorFormatter: OFormat[ChangeLoginRedirectUri]            = Json.format[ChangeLoginRedirectUri]
+  implicit private val deleteLoginRedirectUriFormatter: OFormat[DeleteLoginRedirectUri]             = Json.format[DeleteLoginRedirectUri]
+  implicit private val UpdateLoginRedirectUrisFormatter: OFormat[UpdateLoginRedirectUris]           = Json.format[UpdateLoginRedirectUris]
+  implicit private val addPostLogoutRedirectUriFormatter: OFormat[AddPostLogoutRedirectUri]         = Json.format[AddPostLogoutRedirectUri]
+  implicit private val changePostLogoutCollaboratorFormatter: OFormat[ChangePostLogoutRedirectUri]  = Json.format[ChangePostLogoutRedirectUri]
+  implicit private val deletePostLogoutRedirectUriFormatter: OFormat[DeletePostLogoutRedirectUri]   = Json.format[DeletePostLogoutRedirectUri]
+  implicit private val UpdatePostLogoutRedirectUrisFormatter: OFormat[UpdatePostLogoutRedirectUris] = Json.format[UpdatePostLogoutRedirectUris]
+
+  implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]           = Json.format[AllowApplicationAutoDelete]
+  implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]           = Json.format[BlockApplicationAutoDelete]
+  implicit private val allowApplicationDeleteFormatter: OFormat[AllowApplicationDelete]                   = Json.format[AllowApplicationDelete]
+  implicit private val restrictApplicationDeleteFormatter: OFormat[RestrictApplicationDelete]             = Json.format[RestrictApplicationDelete]
+  implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                             = Json.format[ChangeGrantLength]
+  implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                         = Json.format[ChangeRateLimitTier]
+  implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName] = Json.format[ChangeProductionApplicationName]
 
   implicit private val changePrivacyPolicyLocationFormatter: OFormat[ChangeProductionApplicationPrivacyPolicyLocation] =
     Json.format[ChangeProductionApplicationPrivacyPolicyLocation]
@@ -191,7 +210,6 @@ object ApplicationCommand {
   implicit private val subscribeToApiFormatter: OFormat[SubscribeToApi]                       = Json.format[SubscribeToApi]
   implicit private val unsubscribeFromApiFormatter: OFormat[UnsubscribeFromApi]               = Json.format[UnsubscribeFromApi]
   implicit private val unsubscribeFromRetiredApiFormatter: OFormat[UnsubscribeFromRetiredApi] = Json.format[UnsubscribeFromRetiredApi]
-  implicit private val UpdateRedirectUrisFormatter: OFormat[UpdateRedirectUris]               = Json.format[UpdateRedirectUris]
   implicit private val ChangeIpAllowlistFormatter: OFormat[ChangeIpAllowlist]                 = Json.format[ChangeIpAllowlist]
 
   implicit private val blockApplicationFormat: OFormat[BlockApplication]                                 = Json.format[BlockApplication]
@@ -204,9 +222,14 @@ object ApplicationCommand {
     .and[RemoveCollaborator]("removeCollaborator")
     .and[AddClientSecret]("addClientSecret")
     .and[RemoveClientSecret]("removeClientSecret")
-    .and[AddRedirectUri]("addRedirectUri")
-    .and[ChangeRedirectUri]("changeRedirectUri")
-    .and[DeleteRedirectUri]("deleteRedirectUri")
+    .and[AddLoginRedirectUri]("addRedirectUri")
+    .and[ChangeLoginRedirectUri]("changeRedirectUri")
+    .and[DeleteLoginRedirectUri]("deleteRedirectUri")
+    .and[UpdateLoginRedirectUris]("updateRedirectUris")
+    .and[AddPostLogoutRedirectUri]("addPostLogoutRedirectUri")
+    .and[ChangePostLogoutRedirectUri]("changePostLogoutRedirectUri")
+    .and[DeletePostLogoutRedirectUri]("deletePostLogoutRedirectUri")
+    .and[UpdatePostLogoutRedirectUris]("updatePostLogoutRedirectUris")
     .and[AllowApplicationAutoDelete]("allowApplicationAutoDelete")
     .and[BlockApplicationAutoDelete]("blockApplicationAutoDelete")
     .and[AllowApplicationDelete]("allowApplicationDelete")
@@ -235,7 +258,6 @@ object ApplicationCommand {
     .and[SubscribeToApi]("subscribeToApi")
     .and[UnsubscribeFromApi]("unsubscribeFromApi")
     .and[UnsubscribeFromRetiredApi]("unsubscribeFromRetiredApi")
-    .and[UpdateRedirectUris]("updateRedirectUris")
     .and[VerifyResponsibleIndividual]("verifyResponsibleIndividual")
     .and[ChangeIpAllowlist]("changeIpAllowlist")
     .and[ChangeSandboxApplicationName]("changeSandboxApplicationName")

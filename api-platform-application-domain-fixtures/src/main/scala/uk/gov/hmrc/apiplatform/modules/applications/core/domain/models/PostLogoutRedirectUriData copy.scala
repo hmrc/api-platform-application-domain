@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
+package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-import play.api.libs.json.OFormat
+object PostLogoutRedirectUriData {
+  val one = PostLogoutRedirectUri.unsafeApply("http://localhost:8080/logout")
+  val two = PostLogoutRedirectUri.unsafeApply("https://abc.com/logout")
+}
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
-
-case class StandardAccessDataToCopy(
-    redirectUris: List[RedirectUri] = List.empty,
-    overrides: Set[OverrideFlag] = Set.empty
-  )
-
-object StandardAccessDataToCopy {
-  import play.api.libs.json.Json
-
-  implicit val format: OFormat[StandardAccessDataToCopy] = Json.format[StandardAccessDataToCopy]
+trait PostLogoutRedirectUriFixtures {
+  val redirectUriOne = PostLogoutRedirectUriData.one
+  val redirectUriTwo = PostLogoutRedirectUriData.two
 }

@@ -19,10 +19,10 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 import play.api.libs.json.OFormat
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.LoginRedirectUri
 
 case class StandardAccessDataToCopy(
-    redirectUris: List[RedirectUri] = List.empty,
+    redirectUris: List[LoginRedirectUri] = List.empty,
     overrides: Set[OverrideFlag] = Set.empty
   )
 

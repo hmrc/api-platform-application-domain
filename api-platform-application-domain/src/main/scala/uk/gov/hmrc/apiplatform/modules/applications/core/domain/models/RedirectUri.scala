@@ -19,13 +19,9 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import java.net.URI
 import scala.util.Try
 
-case class RedirectUri(uri: String) extends AnyVal {
-  override def toString(): String = uri
-}
-
 object RedirectUri {
 
-  private def isValidRedirectUri(s: String): Boolean = {
+  def isValidRedirectUri(s: String): Boolean = {
     def isNotBlankString: String => Boolean = s => s.trim.nonEmpty
     def hasNoFragments: String => Boolean   = s => Try(new URI(s.trim).getFragment == null).getOrElse(false)
     def isLocalhostUrl: String => Boolean   = s => Try(new URI(s.trim).getHost == "localhost").getOrElse(false)
@@ -34,14 +30,32 @@ object RedirectUri {
 
     isNotBlankString(s) && hasNoFragments(s) && isAbsoluteUrl(s) && (isLocalhostUrl(s) || isNotHttpUrl(s))
   }
+}
 
-  def apply(uri: String): Option[RedirectUri] = Some(new RedirectUri(uri)).filter(_ => isValidRedirectUri(uri))
+case class LoginRedirectUri(uri: String) extends AnyVal {
+  override def toString(): String = uri
+}
 
-  def unsafeApply(uri: String): RedirectUri =
+object LoginRedirectUri {
+  def apply(uri: String): Option[LoginRedirectUri] = Some(new LoginRedirectUri(uri)).filter(_ => RedirectUri.isValidRedirectUri(uri))
+
+  def unsafeApply(uri: String): LoginRedirectUri =
     apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
 
   import play.api.libs.json._
+  implicit val format: Format[LoginRedirectUri] = Json.valueFormat[LoginRedirectUri]
+}
 
-  implicit val format: Format[RedirectUri] = Json.valueFormat[RedirectUri]
+case class PostLogoutRedirectUri(uri: String) extends AnyVal {
+  override def toString(): String = uri
+}
 
+object PostLogoutRedirectUri {
+  def apply(uri: String): Option[PostLogoutRedirectUri] = Some(new PostLogoutRedirectUri(uri)).filter(_ => RedirectUri.isValidRedirectUri(uri))
+
+  def unsafeApply(uri: String): PostLogoutRedirectUri =
+    apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
+
+  import play.api.libs.json._
+  implicit val format: Format[PostLogoutRedirectUri] = Json.valueFormat[PostLogoutRedirectUri]
 }

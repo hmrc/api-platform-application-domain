@@ -19,38 +19,28 @@ package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
+class ChangeLoginRedirectUriSpec extends ApplicationCommandBaseSpec {
 
-class UpdateRedirectUrisSpec extends ApplicationCommandBaseSpec {
-  val base  = "http://localhost:1001"
-  val one   = RedirectUri.unsafeApply(s"$base/a")
-  val two   = RedirectUri.unsafeApply(s"$base/b")
-  val three = RedirectUri.unsafeApply(s"$base/c")
-  val four  = RedirectUri.unsafeApply(s"$base/x")
-
-  val oldUris = List(one, two, three)
-  val newUris = List(one, two, four)
-
-  "UpdateRedirectUris" should {
-    val cmd = ApplicationCommands.UpdateRedirectUris(Actors.AppCollaborator(anActorEmail), oldUris, newUris, aTimestamp)
+  "ChangeLoginRedirectUris" should {
+    val cmd = ApplicationCommands.ChangeLoginRedirectUri(Actors.AppCollaborator(anActorEmail), redirectUriToChange.value, redirectUri.value, aTimestamp)
 
     "write to json (as a command)" in {
 
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
-        "actor"           -> Json.obj(
+        "actor"                -> Json.obj(
           "email"     -> "bob@example.com",
           "actorType" -> "COLLABORATOR"
         ),
-        "oldRedirectUris" -> Json.arr(one, two, three),
-        "newRedirectUris" -> Json.arr(one, two, four),
-        "timestamp"       -> s"$nowAsText",
-        "updateType"      -> "updateRedirectUris"
+        "redirectUriToReplace" -> s"${redirectUriToChange.value.uri}",
+        "redirectUri"          -> s"${redirectUri.value.uri}",
+        "timestamp"            -> s"$nowAsText",
+        "updateType"           -> "changeRedirectUri"
       )
     }
 
     "read from json" in {
       val jsonText =
-        s""" {"actor":{"email":"bob@example.com","actorType":"COLLABORATOR"},"timestamp":"$nowAsText","oldRedirectUris":["$base/a","$base/b","$base/c"],"newRedirectUris":["$base/a","$base/b","$base/x"],"updateType":"updateRedirectUris"} """
+        s""" {"actor":{"email":"bob@example.com","actorType":"COLLABORATOR"},"redirectUriToReplace":"${redirectUriToChange.value.uri}","redirectUri":"${redirectUri.value.uri}","timestamp":"$nowAsText","updateType":"changeRedirectUri"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }

@@ -21,7 +21,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.Stri
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContext, ApiIdentifier, ApiVersionNbr, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.{ClientSecret, Collaborator, RedirectUri}
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.{ClientSecret, Collaborator, LoginRedirectUri}
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocations, TermsAndConditionsLocations}
 
 trait ApplicationCommandBaseSpec extends HmrcSpec with FixedClock {
@@ -46,8 +46,8 @@ trait ApplicationCommandBaseSpec extends HmrcSpec with FixedClock {
   val aScheduledJob      = "aJobId"
   val anAuthorisationKey = "1234"
 
-  val redirectUri         = RedirectUri("https://someurl.com/path/to/glory")
-  val redirectUriToChange = RedirectUri("https://oldUrl/that/needs/a/change")
+  val redirectUri         = LoginRedirectUri("https://someurl.com/path/to/glory")
+  val redirectUriToChange = LoginRedirectUri("https://oldUrl/that/needs/a/change")
 
   val aGatekeeperUser = "Bob in SDST"
 }
