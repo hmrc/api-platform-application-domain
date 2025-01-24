@@ -107,8 +107,6 @@ object ApplicationCommands {
   case class DeleteProductionCredentialsApplication(jobId: String, reasons: String, timestamp: Instant)                                           extends DeleteCommand with JobsMixin
   case class DeleteApplicationByCollaborator(instigator: UserId, reasons: String, timestamp: Instant)                                             extends DeleteCommand
   case class DeleteUnusedApplication(jobId: String, authorisationKey: String, reasons: String, timestamp: Instant)                                extends DeleteCommand with JobsMixin
-  case class AllowApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
-  case class BlockApplicationAutoDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                              extends DeleteCommand with GatekeeperMixin
   case class AllowApplicationDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                                  extends DeleteCommand with GatekeeperMixin
   case class RestrictApplicationDelete(gatekeeperUser: String, reasons: String, timestamp: Instant)                                               extends DeleteCommand with GatekeeperMixin
 
@@ -165,20 +163,18 @@ object ApplicationCommand {
 
   implicit private val removeSandboxApplicationTermsAndConditionsUrlFormatter: OFormat[RemoveSandboxApplicationTermsAndConditionsUrl] =
     Json.format[RemoveSandboxApplicationTermsAndConditionsUrl]
+  implicit private val addLoginRedirectUriFormatter: OFormat[AddLoginRedirectUri]                                                     = Json.format[AddLoginRedirectUri]
+  implicit private val changeLoginCollaboratorFormatter: OFormat[ChangeLoginRedirectUri]                                              = Json.format[ChangeLoginRedirectUri]
+  implicit private val deleteLoginRedirectUriFormatter: OFormat[DeleteLoginRedirectUri]                                               = Json.format[DeleteLoginRedirectUri]
+  implicit private val UpdateLoginRedirectUrisFormatter: OFormat[UpdateLoginRedirectUris]                                             = Json.format[UpdateLoginRedirectUris]
+  implicit private val addPostLogoutRedirectUriFormatter: OFormat[AddPostLogoutRedirectUri]                                           = Json.format[AddPostLogoutRedirectUri]
+  implicit private val changePostLogoutCollaboratorFormatter: OFormat[ChangePostLogoutRedirectUri]                                    = Json.format[ChangePostLogoutRedirectUri]
+  implicit private val deletePostLogoutRedirectUriFormatter: OFormat[DeletePostLogoutRedirectUri]                                     = Json.format[DeletePostLogoutRedirectUri]
+  implicit private val UpdatePostLogoutRedirectUrisFormatter: OFormat[UpdatePostLogoutRedirectUris]                                   = Json.format[UpdatePostLogoutRedirectUris]
 
-  implicit private val addLoginRedirectUriFormatter: OFormat[AddLoginRedirectUri]                   = Json.format[AddLoginRedirectUri]
-  implicit private val changeLoginCollaboratorFormatter: OFormat[ChangeLoginRedirectUri]            = Json.format[ChangeLoginRedirectUri]
-  implicit private val deleteLoginRedirectUriFormatter: OFormat[DeleteLoginRedirectUri]             = Json.format[DeleteLoginRedirectUri]
-  implicit private val UpdateLoginRedirectUrisFormatter: OFormat[UpdateLoginRedirectUris]           = Json.format[UpdateLoginRedirectUris]
-  implicit private val addPostLogoutRedirectUriFormatter: OFormat[AddPostLogoutRedirectUri]         = Json.format[AddPostLogoutRedirectUri]
-  implicit private val changePostLogoutCollaboratorFormatter: OFormat[ChangePostLogoutRedirectUri]  = Json.format[ChangePostLogoutRedirectUri]
-  implicit private val deletePostLogoutRedirectUriFormatter: OFormat[DeletePostLogoutRedirectUri]   = Json.format[DeletePostLogoutRedirectUri]
-  implicit private val UpdatePostLogoutRedirectUrisFormatter: OFormat[UpdatePostLogoutRedirectUris] = Json.format[UpdatePostLogoutRedirectUris]
+  implicit private val allowApplicationDeleteFormatter: OFormat[AllowApplicationDelete]       = Json.format[AllowApplicationDelete]
+  implicit private val restrictApplicationDeleteFormatter: OFormat[RestrictApplicationDelete] = Json.format[RestrictApplicationDelete]
 
-  implicit private val allowApplicationAutoDeleteFormatter: OFormat[AllowApplicationAutoDelete]           = Json.format[AllowApplicationAutoDelete]
-  implicit private val blockApplicationAutoDeleteFormatter: OFormat[BlockApplicationAutoDelete]           = Json.format[BlockApplicationAutoDelete]
-  implicit private val allowApplicationDeleteFormatter: OFormat[AllowApplicationDelete]                   = Json.format[AllowApplicationDelete]
-  implicit private val restrictApplicationDeleteFormatter: OFormat[RestrictApplicationDelete]             = Json.format[RestrictApplicationDelete]
   implicit private val changeGrantLengthFormatter: OFormat[ChangeGrantLength]                             = Json.format[ChangeGrantLength]
   implicit private val changeRateLimitTierFormatter: OFormat[ChangeRateLimitTier]                         = Json.format[ChangeRateLimitTier]
   implicit private val changeProductionApplicationNameFormatter: OFormat[ChangeProductionApplicationName] = Json.format[ChangeProductionApplicationName]
@@ -230,8 +226,6 @@ object ApplicationCommand {
     .and[ChangePostLogoutRedirectUri]("changePostLogoutRedirectUri")
     .and[DeletePostLogoutRedirectUri]("deletePostLogoutRedirectUri")
     .and[UpdatePostLogoutRedirectUris]("updatePostLogoutRedirectUris")
-    .and[AllowApplicationAutoDelete]("allowApplicationAutoDelete")
-    .and[BlockApplicationAutoDelete]("blockApplicationAutoDelete")
     .and[AllowApplicationDelete]("allowApplicationDelete")
     .and[RestrictApplicationDelete]("restrictApplicationDelete")
     .and[ChangeGrantLength]("changeGrantLength")
