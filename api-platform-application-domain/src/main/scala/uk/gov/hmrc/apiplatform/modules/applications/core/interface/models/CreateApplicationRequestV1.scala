@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import scala.util.Try
+
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
@@ -30,16 +32,18 @@ case class CreateApplicationRequestV1 private (
     subscriptions: Option[Set[ApiIdentifier]]
   ) extends CreateApplicationRequest {
 
-  validate(this)
+  validate()
 
   lazy val accessType = access.accessType
 
   lazy val anySubscriptions: Set[ApiIdentifier] = subscriptions.getOrElse(Set.empty)
 
-  private def validate(in: CreateApplicationRequestV1): Unit = {
-    super.validate(in)
-    in.access match {
-      case a: Access.Standard => require(a.redirectUris.size <= 5, "maximum number of redirect URIs exceeded")
+  private def validate(): Unit = {
+    super.validate(this)
+    access match {
+      case a: Access.Standard =>
+        require(a.redirectUris.size <= 5, "maximum number of login redirect URIs exceeded")
+        require(a.postLogoutRedirectUris.size <= 5, "maximum number of post logout redirect URIs exceeded")
       case _                  =>
     }
   }
@@ -58,5 +62,12 @@ object CreateApplicationRequestV1 {
     ): CreateApplicationRequestV1 = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
 
   import play.api.libs.json._
-  implicit val format: OFormat[CreateApplicationRequestV1] = Json.format[CreateApplicationRequestV1]
+
+  private def handleValidation(car: CreateApplicationRequestV1): JsResult[CreateApplicationRequestV1] = {
+    Try(car.validate(car)).fold(err => JsError(err.getMessage), _ => JsSuccess(car))
+  }
+
+  private val reads: Reads[CreateApplicationRequestV1]     = Json.reads[CreateApplicationRequestV1].flatMapResult(handleValidation(_))
+  private val writes: Writes[CreateApplicationRequestV1]   = Json.writes[CreateApplicationRequestV1]
+  implicit val format1: Format[CreateApplicationRequestV1] = Format(reads, writes)
 }

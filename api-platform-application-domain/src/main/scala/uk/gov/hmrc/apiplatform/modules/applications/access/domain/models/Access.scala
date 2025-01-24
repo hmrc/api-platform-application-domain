@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
 import play.api.libs.json._
 
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models._
 
 sealed trait Access {
@@ -49,7 +49,8 @@ object Access {
   }
 
   case class Standard(
-      redirectUris: List[RedirectUri] = List.empty,
+      redirectUris: List[LoginRedirectUri] = List.empty,
+      postLogoutRedirectUris: List[PostLogoutRedirectUri] = List.empty,
       termsAndConditionsUrl: Option[String] = None,
       privacyPolicyUrl: Option[String] = None,
       overrides: Set[OverrideFlag] = Set.empty,

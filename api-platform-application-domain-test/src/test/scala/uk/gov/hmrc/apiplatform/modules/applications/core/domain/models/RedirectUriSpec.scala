@@ -47,48 +47,65 @@ class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with Appe
 
     for ((k, v) <- invalidCases) {
       s"reject redirect uri for $k url" in {
-        RedirectUri(v) shouldBe None withClue (s"$k: $v should be Invalid")
+        LoginRedirectUri(v) shouldBe None withClue (s"$k: $v should be Invalid")
+        PostLogoutRedirectUri(v) shouldBe None withClue (s"$k: $v should be Invalid")
       }
     }
 
     for ((k, v) <- validCases) {
       s"accept redirect uri for $k" in {
-        RedirectUri(v).value.uri shouldBe v withClue (s"$k: $v should be Valid")
+        LoginRedirectUri(v).value.uri shouldBe v withClue (s"$k: $v should be Valid")
+        PostLogoutRedirectUri(v).value.uri shouldBe v withClue (s"$k: $v should be Valid")
       }
     }
 
     for ((k, v) <- validCases) {
       s"unsafeApply successfully $k" in {
-        RedirectUri.unsafeApply(v).uri shouldBe v withClue (s"$k: $v should be Valid")
+        LoginRedirectUri.unsafeApply(v).uri shouldBe v withClue (s"$k: $v should be Valid")
+        PostLogoutRedirectUri.unsafeApply(v).uri shouldBe v withClue (s"$k: $v should be Valid")
       }
     }
 
     for ((k, v) <- invalidCases) {
       s"unsafeApply fail appropriately $k" in {
         intercept[RuntimeException] {
-          RedirectUri.unsafeApply(v).uri
+          LoginRedirectUri.unsafeApply(v).uri
+        }
+        intercept[RuntimeException] {
+          PostLogoutRedirectUri.unsafeApply(v).uri
         }
       }
     }
 
     import play.api.libs.json._
-    val validUri   = RedirectUri.unsafeApply("https://abc.com/a")
-    val invalidUri = new RedirectUri("broken")
+    val validLoginUri   = LoginRedirectUri.unsafeApply("https://abc.com/a")
+    val invalidLoginUri = new LoginRedirectUri("broken")
+
+    val validPostLogoutUri   = PostLogoutRedirectUri.unsafeApply("https://abc.com/b")
+    val invalidPostLogoutUri = new PostLogoutRedirectUri("broken2")
 
     "convert to json" in {
-      Json.toJson[RedirectUri](validUri) shouldBe JsString("https://abc.com/a")
-      Json.toJson[RedirectUri](invalidUri) shouldBe JsString("broken")
+      Json.toJson[LoginRedirectUri](validLoginUri) shouldBe JsString("https://abc.com/a")
+      Json.toJson[LoginRedirectUri](invalidLoginUri) shouldBe JsString("broken")
+
+      Json.toJson[PostLogoutRedirectUri](validPostLogoutUri) shouldBe JsString("https://abc.com/b")
+      Json.toJson[PostLogoutRedirectUri](invalidPostLogoutUri) shouldBe JsString("broken2")
     }
 
     "read from json" in {
-      testFromJson[RedirectUri](""" "broken" """)(invalidUri)
-      testFromJson[RedirectUri](""" "https://abc.com/a" """)(validUri)
+      testFromJson[LoginRedirectUri](""" "broken" """)(invalidLoginUri)
+      testFromJson[LoginRedirectUri](""" "https://abc.com/a" """)(validLoginUri)
+
+      testFromJson[PostLogoutRedirectUri](""" "broken2" """)(invalidPostLogoutUri)
+      testFromJson[PostLogoutRedirectUri](""" "https://abc.com/b" """)(validPostLogoutUri)
     }
 
     "supports toString" in {
-      val redirectUri = RedirectUri("https://localhost:101/abc").get
+      val loginRedirectUri = LoginRedirectUri("https://localhost:101/abc").get
+      s"$loginRedirectUri" shouldBe "https://localhost:101/abc"
 
-      s"$redirectUri" shouldBe "https://localhost:101/abc"
+      val postLogoutRedirectUri = PostLogoutRedirectUri("https://localhost:101/abc").get
+      s"$postLogoutRedirectUri" shouldBe "https://localhost:101/abc"
     }
   }
 }

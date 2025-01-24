@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.OverrideFlag
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.RedirectUri
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.LoginRedirectUri
 
 class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
   import StandardAccessDataToCopySpec._
@@ -39,7 +39,7 @@ class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
 object StandardAccessDataToCopySpec {
 
   val example  = StandardAccessDataToCopy(
-    redirectUris = List(RedirectUri.unsafeApply("https://abc.com/abc")),
+    redirectUris = List(LoginRedirectUri.unsafeApply("https://abc.com/abc")),
     overrides = Set(OverrideFlag.PersistLogin)
   )
   val jsonText = """{"redirectUris":["https://abc.com/abc"],"overrides":[{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}]}"""

@@ -49,8 +49,8 @@ class HasAccessSpec extends HmrcSpec with Matchers with AccessFixtures {
       }
 
       "canAddRedirectUri should return false when 'full'" in {
-        val fullRedirects: List[RedirectUri] = List(redirectUriOne, redirectUriOne, redirectUriOne, redirectUriOne, redirectUriOne)
-        val fullObj                          = objInTest.copy(access = standardAccessOne.copy(redirectUris = fullRedirects))
+        val fullRedirects: List[LoginRedirectUri] = List(redirectUriOne, redirectUriOne, redirectUriOne, redirectUriOne, redirectUriOne)
+        val fullObj                               = objInTest.copy(access = standardAccessOne.copy(redirectUris = fullRedirects))
         fullObj.canAddRedirectUri shouldBe false
       }
 

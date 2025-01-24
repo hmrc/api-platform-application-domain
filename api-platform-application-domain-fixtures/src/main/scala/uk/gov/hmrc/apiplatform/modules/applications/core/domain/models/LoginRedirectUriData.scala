@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-object RedirectUriData {
-  val one = RedirectUri.unsafeApply("http://localhost:8080/callback")
-  val two = RedirectUri.unsafeApply("https://abc.com/callback")
+object LoginRedirectUriData {
+  val one = LoginRedirectUri.unsafeApply("http://localhost:8080/callback")
+  val two = LoginRedirectUri.unsafeApply("https://abc.com/callback")
 }
 
-trait RedirectUriFixtures {
-  val redirectUriOne = RedirectUriData.one
-  val redirectUriTwo = RedirectUriData.two
+trait LoginRedirectUriFixtures {
+  val redirectUriOne = LoginRedirectUriData.one
+  val redirectUriTwo = LoginRedirectUriData.two
 }

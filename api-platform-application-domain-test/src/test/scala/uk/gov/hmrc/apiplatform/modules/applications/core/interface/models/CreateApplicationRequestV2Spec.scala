@@ -64,13 +64,14 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
       Json.parse(jsonText).as[CreateApplicationRequest] shouldBe request
     }
 
-    "reads and validates from json" in {
+    "reads and validates from V2 json" in {
       val redirectUris         = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
       val jsonTextOfBadRequest =
-        s""" {"name":"an application","access":{"redirectUris":[$redirectUris],"overrides":[],"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
+        s"""{"name":"an application","access":{"redirectUris":[$redirectUris],"overrides":[]},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}],"upliftRequest":{"sellResellOrDistribute":"miscblah","subscriptions":[{"context":"context","version":"version"}],"requestedBy":"bob"},"requestedBy":"bob","sandboxApplicationId":"$sandboxApplicationId"}"""
 
       intercept[IllegalArgumentException] {
-        Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]
+        val x = Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]
+        println(x)
       }
     }
 

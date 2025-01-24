@@ -40,8 +40,8 @@ object CreateApplicationRequest {
   import play.api.libs.functional.syntax._
   import play.api.libs.json.Reads
 
-  private val readsV1: Reads[CreateApplicationRequestV1] = CreateApplicationRequestV1.format.reads _
-  private val readsV2: Reads[CreateApplicationRequestV2] = CreateApplicationRequestV2.format.reads _
+  private val readsV1: Reads[CreateApplicationRequestV1] = CreateApplicationRequestV1.format1.reads _
+  private val readsV2: Reads[CreateApplicationRequestV2] = CreateApplicationRequestV2.format2.reads _
 
   implicit val reads: Reads[CreateApplicationRequest] =
     readsV2.map(_.asInstanceOf[CreateApplicationRequest]) or readsV1.map(_.asInstanceOf[CreateApplicationRequest])

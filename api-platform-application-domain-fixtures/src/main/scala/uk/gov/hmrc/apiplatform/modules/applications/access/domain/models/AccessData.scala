@@ -31,13 +31,13 @@ object AccessData {
     val default = Access.Standard()
 
     val one = default.copy(
-      redirectUris = List(RedirectUriData.one),
+      redirectUris = List(LoginRedirectUriData.one),
       termsAndConditionsUrl = Some("http://localhost:22222/terms"),
       privacyPolicyUrl = Some("http://localhost:22222/privacy")
     )
 
     val withSubmission = default.copy(
-      redirectUris = List(RedirectUriData.one),
+      redirectUris = List(LoginRedirectUriData.one),
       termsAndConditionsUrl = Some("http://localhost:22222/terms"),
       privacyPolicyUrl = Some("http://localhost:22222/privacy"),
       importantSubmissionData = Some(ImportantSubmissionDataData.desktop)
@@ -53,7 +53,7 @@ object AccessData {
   }
 }
 
-trait AccessFixtures extends RedirectUriFixtures with SellResellOrDistributeFixtures with ImportantSubmissionDataFixtures {
+trait AccessFixtures extends LoginRedirectUriFixtures with SellResellOrDistributeFixtures with ImportantSubmissionDataFixtures {
   val standardAccess               = AccessData.Standard.default
   val standardAccessOne            = AccessData.Standard.one
   val standardAccessWithSubmission = AccessData.Standard.withSubmission

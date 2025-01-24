@@ -42,7 +42,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       )
 
     val jsonText =
-      s""" {"name":"an application","access":{"redirectUris":[],"overrides":[],"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
+      s""" {"name":"an application","access":{"redirectUris":[],"postLogoutRedirectUris":[],"overrides":[],"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
 
     "write to json" in {
       Json.toJson(request) shouldBe Json.parse(jsonText)
@@ -59,7 +59,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
     "reads and validates from json" in {
       val redirectUris         = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
       val jsonTextOfBadRequest =
-        s""" {"name":"an application","access":{"redirectUris":[$redirectUris],"overrides":[],"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
+        s""" {"name":"an application","access":{"redirectUris":[$redirectUris],"postLogoutRedirectUris":[],"overrides":[],"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
 
       intercept[IllegalArgumentException] {
         Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]

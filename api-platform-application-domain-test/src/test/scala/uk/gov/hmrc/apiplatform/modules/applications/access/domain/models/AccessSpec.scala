@@ -122,7 +122,7 @@ class AccessSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
 }
 
 object AccessSpec {
-  val emptyStandard    = """{"redirectUris":[],"overrides":[],"accessType":"STANDARD"}"""
+  val emptyStandard    = """{"redirectUris":[],"postLogoutRedirectUris":[],"overrides":[],"accessType":"STANDARD"}"""
   val emptyPriviledged = """{"scopes":[],"accessType":"PRIVILEGED"}"""
   val emptyRopc        = """{"scopes":[],"accessType":"ROPC"}"""
 }

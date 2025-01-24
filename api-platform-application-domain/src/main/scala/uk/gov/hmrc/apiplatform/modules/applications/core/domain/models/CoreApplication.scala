@@ -56,12 +56,12 @@ trait HasAccess {
 
   def hasResponsibleIndividual: Boolean = {
     access match {
-      case Access.Standard(_, _, _, _, _, Some(_)) => true
-      case _                                       => false
+      case Access.Standard(_, _, _, _, _, _, Some(_)) => true
+      case _                                          => false
     }
   }
 
-  def hasRedirectUri(redirectUri: RedirectUri): Boolean = access match {
+  def hasRedirectUri(redirectUri: LoginRedirectUri): Boolean = access match {
     case s: Access.Standard => s.redirectUris.contains(redirectUri)
     case _                  => false
   }
