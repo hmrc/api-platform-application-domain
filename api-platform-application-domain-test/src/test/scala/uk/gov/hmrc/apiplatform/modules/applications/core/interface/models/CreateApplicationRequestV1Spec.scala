@@ -60,7 +60,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       // the name, collaborator values are all valid as well so should not throw an error
       CreateApplicationRequestV1.create(
         name = ApplicationName("name"),
-        access = CreationAccess.Privileged(),
+        access = CreationAccess.Privileged,
         description = None,
         environment = Environment.PRODUCTION,
         collaborators = Set(admin),

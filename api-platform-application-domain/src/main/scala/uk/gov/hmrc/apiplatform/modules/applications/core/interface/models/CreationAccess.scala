@@ -21,25 +21,23 @@ import play.api.libs.json._
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.AccessType
 
 sealed trait CreationAccess {
-  val accessType: AccessType = CreationAccess.accessType(this)
+  def accessType: AccessType
 }
 
 object CreationAccess {
 
-  def accessType(access: CreationAccess): AccessType = access match {
-    case _ @CreationAccess.Standard   => AccessType.STANDARD
-    case _: CreationAccess.Privileged => AccessType.PRIVILEGED
+  case object Standard   extends CreationAccess {
+    val accessType = AccessType.STANDARD
   }
 
-  case object Standard                                   extends CreationAccess
-  case class Privileged(scopes: Set[String] = Set.empty) extends CreationAccess
+  case object Privileged extends CreationAccess {
+    val accessType = AccessType.PRIVILEGED
+  }
 
   import uk.gov.hmrc.play.json.Union
 
-  private implicit val formatPrivileged: OFormat[CreationAccess.Privileged] = Json.format[CreationAccess.Privileged]
-
   implicit val format: OFormat[CreationAccess] = Union.from[CreationAccess]("accessType")
     .andType[CreationAccess.Standard.type](AccessType.STANDARD.toString, () => CreationAccess.Standard)
-    .and[CreationAccess.Privileged](AccessType.PRIVILEGED.toString)
+    .andType[CreationAccess.Privileged.type](AccessType.PRIVILEGED.toString, () => CreationAccess.Privileged)
     .format
 }
