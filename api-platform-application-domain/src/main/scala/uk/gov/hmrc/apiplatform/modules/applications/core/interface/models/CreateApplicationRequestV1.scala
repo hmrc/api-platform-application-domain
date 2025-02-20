@@ -25,7 +25,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 case class CreateApplicationRequestV1 private (
     name: ApplicationName,
-    access: Access,
+    access: CreationAccess,
     description: Option[String],
     environment: Environment,
     collaborators: Set[Collaborator],
@@ -54,7 +54,7 @@ object CreateApplicationRequestV1 {
 
   def create(
       name: ApplicationName,
-      access: Access,
+      access: CreationAccess,
       description: Option[String],
       environment: Environment,
       collaborators: Set[Collaborator],
