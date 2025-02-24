@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.ActorType
 
-case class MoreApplication(allowAutoDelete: Boolean, lastActionActor: ActorType = ActorType.UNKNOWN)
+case class MoreApplication(lastActionActor: ActorType = ActorType.UNKNOWN)
 
 object MoreApplication {
   import play.api.libs.json.{Json, OFormat}

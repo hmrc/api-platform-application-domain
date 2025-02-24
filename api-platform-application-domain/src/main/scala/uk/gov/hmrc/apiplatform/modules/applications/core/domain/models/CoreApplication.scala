@@ -106,7 +106,6 @@ case class CoreApplication(
     checkInformation: Option[CheckInformation],
     blocked: Boolean,
     ipAllowlist: IpAllowlist,
-    allowAutoDelete: Boolean,
     lastActionActor: ActorType,
     deleteRestriction: DeleteRestriction
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
@@ -139,7 +138,6 @@ object CoreApplication {
       checkInformation: Option[CheckInformation],
       blocked: Boolean,
       ipAllowlist: IpAllowlist,
-      allowAutoDelete: Boolean,
       lastActionActor: ActorType
     )
 
@@ -161,7 +159,6 @@ object CoreApplication {
       checkInformation = old.checkInformation,
       blocked = old.blocked,
       ipAllowlist = old.ipAllowlist,
-      allowAutoDelete = old.allowAutoDelete,
       lastActionActor = old.lastActionActor,
       deleteRestriction = DeleteRestriction.NoRestriction
     )
