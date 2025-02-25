@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
+import play.api.libs.json.Writes
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
@@ -46,4 +47,9 @@ object CreateApplicationRequest {
   implicit val reads: Reads[CreateApplicationRequest] =
     readsV2.map(_.asInstanceOf[CreateApplicationRequest]) or readsV1.map(_.asInstanceOf[CreateApplicationRequest])
 
+  implicit val writes: Writes[CreateApplicationRequest] = (car: CreateApplicationRequest) =>
+    car match {
+      case v1: CreateApplicationRequestV1 => CreateApplicationRequestV1.format1.writes(v1)
+      case v2: CreateApplicationRequestV2 => CreateApplicationRequestV2.format2.writes(v2)
+    }
 }

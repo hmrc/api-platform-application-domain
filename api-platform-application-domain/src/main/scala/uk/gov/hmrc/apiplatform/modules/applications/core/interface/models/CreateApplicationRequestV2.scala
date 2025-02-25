@@ -46,6 +46,7 @@ case class CreateApplicationRequestV2 private (
   private def validate(): Unit = {
     super.validate(this)
     require(access.redirectUris.size <= 5, "maximum number of login redirect URIs exceeded")
+    require(access.postLogoutRedirectUris.size <= 5, "maximum number of post logout redirect URIs exceeded")
   }
 }
 
@@ -65,7 +66,6 @@ object CreateApplicationRequestV2 {
   import play.api.libs.json._
 
   private def handleValidation(car: CreateApplicationRequestV2): JsResult[CreateApplicationRequestV2] = {
-    println("VALIDATING")
     Try(car.validate(car)).fold(err => JsError(err.getMessage), _ => JsSuccess(car))
   }
 

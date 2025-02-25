@@ -45,17 +45,3 @@ object LoginRedirectUri {
   import play.api.libs.json._
   implicit val format: Format[LoginRedirectUri] = Json.valueFormat[LoginRedirectUri]
 }
-
-case class PostLogoutRedirectUri(uri: String) extends AnyVal {
-  override def toString(): String = uri
-}
-
-object PostLogoutRedirectUri {
-  def apply(uri: String): Option[PostLogoutRedirectUri] = Some(new PostLogoutRedirectUri(uri)).filter(_ => RedirectUri.isValidRedirectUri(uri))
-
-  def unsafeApply(uri: String): PostLogoutRedirectUri =
-    apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
-
-  import play.api.libs.json._
-  implicit val format: Format[PostLogoutRedirectUri] = Json.valueFormat[PostLogoutRedirectUri]
-}
