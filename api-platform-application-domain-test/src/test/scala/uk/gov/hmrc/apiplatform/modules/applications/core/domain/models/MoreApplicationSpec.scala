@@ -34,6 +34,6 @@ class MoreApplicationSpec extends BaseJsonFormattersSpec {
 }
 
 object MoreApplicationSpec {
-  val example  = MoreApplication(allowAutoDelete = false)
-  val jsonText = """{"allowAutoDelete":false, "lastActionActor":"UNKNOWN"}"""
+  val example  = MoreApplication()
+  val jsonText = """{"lastActionActor":"UNKNOWN"}"""
 }
