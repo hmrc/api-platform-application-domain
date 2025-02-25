@@ -26,7 +26,7 @@ sealed trait CreationAccess {
 
 object CreationAccess {
 
-  case object Standard   extends CreationAccess {
+  case object Standard extends CreationAccess {
     val accessType = AccessType.STANDARD
   }
 

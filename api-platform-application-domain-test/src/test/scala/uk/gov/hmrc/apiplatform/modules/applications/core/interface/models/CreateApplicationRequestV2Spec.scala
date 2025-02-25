@@ -56,6 +56,10 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
       Json.toJson(request) shouldBe Json.parse(jsonText)
     }
 
+    "write to json as parent type" in {
+      Json.toJson[CreateApplicationRequest](request) shouldBe Json.parse(jsonText)
+    }
+
     "reads from json" in {
       Json.parse(jsonText).as[CreateApplicationRequestV2] shouldBe request
     }
@@ -73,6 +77,7 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
         Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]
       }
     }
+
     "reads and validates bad post logout redirect list from V2 json" in {
       val postLogoutUris = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
 

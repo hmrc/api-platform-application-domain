@@ -47,6 +47,10 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       Json.toJson(request) shouldBe Json.parse(jsonText)
     }
 
+    "write to json as parent type" in {
+      Json.toJson[CreateApplicationRequest](request) shouldBe Json.parse(jsonText)
+    }
+
     "reads from json" in {
       Json.parse(jsonText).as[CreateApplicationRequestV1] shouldBe request
     }
