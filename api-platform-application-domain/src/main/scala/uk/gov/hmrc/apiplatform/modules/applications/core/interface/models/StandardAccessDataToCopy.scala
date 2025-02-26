@@ -23,7 +23,15 @@ case class StandardAccessDataToCopy(
     redirectUris: List[LoginRedirectUri] = List.empty,
     postLogoutRedirectUris: List[PostLogoutRedirectUri] = List.empty,
     overrides: Set[OverrideFlag] = Set.empty
-  )
+  ) {
+
+  validate()
+
+  final def validate(): Unit = {
+    require(redirectUris.size <= 5, "maximum number of login redirect URIs exceeded")
+    require(postLogoutRedirectUris.size <= 5, "maximum number of post logout redirect URIs exceeded")
+  }
+}
 
 object StandardAccessDataToCopy {
   import play.api.libs.json._

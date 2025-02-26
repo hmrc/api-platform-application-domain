@@ -38,6 +38,22 @@ class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
       testFromJson[StandardAccessDataToCopy](oldJsonText)(example.copy(postLogoutRedirectUris = List.empty))
     }
 
+    "prevents creation for long login redirect list" in {
+      val uris = Range.inclusive(1, 6).map(i => s"https://abc.com/abc$i").map(LoginRedirectUri.unsafeApply(_)).toList
+
+      intercept[IllegalArgumentException] {
+        StandardAccessDataToCopy(redirectUris = uris)
+      }
+    }
+
+    "prevents creation for long post logout redirect list" in {
+      val uris = Range.inclusive(1, 6).map(i => s"https://abc.com/abc$i").map(PostLogoutRedirectUri.unsafeApply(_)).toList
+
+      intercept[IllegalArgumentException] {
+        StandardAccessDataToCopy(postLogoutRedirectUris = uris)
+      }
+    }
+
     "reads and validates bad login redirect list from V2 json" in {
       val redirectUris = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
 

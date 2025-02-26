@@ -26,7 +26,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 /*
 ** This is only used for creating an app when uplifting a standard sandbox app to production
  */
-case class CreateApplicationRequestV2 private (
+case class CreateApplicationRequestV2(
     name: ApplicationName,
     access: StandardAccessDataToCopy,
     description: Option[String],
@@ -45,23 +45,11 @@ case class CreateApplicationRequestV2 private (
 
   private def validate(): Unit = {
     super.validate(this)
-    require(access.redirectUris.size <= 5, "maximum number of login redirect URIs exceeded")
-    require(access.postLogoutRedirectUris.size <= 5, "maximum number of post logout redirect URIs exceeded")
+    access.validate()
   }
 }
 
 object CreateApplicationRequestV2 {
-
-  def create(
-      name: ApplicationName,
-      access: StandardAccessDataToCopy,
-      description: Option[String],
-      environment: Environment,
-      collaborators: Set[Collaborator],
-      upliftRequest: UpliftRequest,
-      requestedBy: String,
-      sandboxApplicationId: ApplicationId
-    ): CreateApplicationRequestV2 = CreateApplicationRequestV2(name, access, description, environment, collaborators, upliftRequest, requestedBy, sandboxApplicationId)
 
   import play.api.libs.json._
 

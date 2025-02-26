@@ -38,7 +38,7 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
     )
 
     val request =
-      CreateApplicationRequestV2.create(
+      CreateApplicationRequestV2(
         name = ApplicationName("an application"),
         access = StandardAccessDataToCopy(),
         description = None,
