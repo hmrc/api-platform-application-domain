@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsResultException, Json}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.OverrideFlag
@@ -54,7 +54,7 @@ class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
       }
     }
 
-    "reads and validates bad login redirect list from V2 json" in {
+    "reads and validates long login redirects list from V2 json" in {
       val redirectUris = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
 
       intercept[IllegalArgumentException] {
@@ -64,12 +64,19 @@ class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
       }
     }
 
-    "reads and validates bad post logout redirect list from V2 json" in {
+    "reads and validates long post logout redirect list from V2 json" in {
       val postLogoutUris = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
 
       intercept[IllegalArgumentException] {
         val jsonTextOfBadRequest =
           s"""{"redirectUris":[],"postLogoutRedirectUris":[$postLogoutUris],"overrides":[]}"""
+        Json.parse(jsonTextOfBadRequest).as[StandardAccessDataToCopy]
+      }
+    }
+
+    "handle any bad post logout redirect by failing rather than returning an empty list/default" in {
+      val jsonTextOfBadRequest = s"""{"redirectUris":[],"postLogoutRedirectUris":["http://bang.com"],"overrides":[]}"""
+      intercept[JsResultException] {
         Json.parse(jsonTextOfBadRequest).as[StandardAccessDataToCopy]
       }
     }

@@ -39,7 +39,7 @@ object StandardAccessDataToCopy {
 
   private val reads: Reads[StandardAccessDataToCopy] = (
     (JsPath \ "redirectUris").read[List[LoginRedirectUri]] and
-      ((JsPath \ "postLogoutRedirectUris").read[List[PostLogoutRedirectUri]] or Reads.pure(List.empty[PostLogoutRedirectUri])) and
+      ((JsPath \ "postLogoutRedirectUris").readNullable[List[PostLogoutRedirectUri]].map(_.getOrElse(List.empty))) and
       (JsPath \ "overrides").read[Set[OverrideFlag]]
   )(StandardAccessDataToCopy.apply _)
 
