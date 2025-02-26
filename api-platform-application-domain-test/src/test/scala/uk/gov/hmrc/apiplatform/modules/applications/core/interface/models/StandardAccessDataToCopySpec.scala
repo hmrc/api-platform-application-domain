@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.OverrideFlag
-import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.LoginRedirectUri
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.{LoginRedirectUri, PostLogoutRedirectUri}
 
 class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
   import StandardAccessDataToCopySpec._
@@ -33,14 +33,40 @@ class StandardAccessDataToCopySpec extends BaseJsonFormattersSpec {
     "read from json" in {
       testFromJson[StandardAccessDataToCopy](jsonText)(example)
     }
+
+    "read from old json" in {
+      testFromJson[StandardAccessDataToCopy](oldJsonText)(example.copy(postLogoutRedirectUris = List.empty))
+    }
+
+    "reads and validates bad login redirect list from V2 json" in {
+      val redirectUris = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
+
+      intercept[IllegalArgumentException] {
+        val jsonTextOfBadRequest =
+          s"""{"redirectUris":[$redirectUris],"postLogoutRedirectUris":[],"overrides":[]}"""
+        Json.parse(jsonTextOfBadRequest).as[StandardAccessDataToCopy]
+      }
+    }
+
+    "reads and validates bad post logout redirect list from V2 json" in {
+      val postLogoutUris = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
+
+      intercept[IllegalArgumentException] {
+        val jsonTextOfBadRequest =
+          s"""{"redirectUris":[],"postLogoutRedirectUris":[$postLogoutUris],"overrides":[]}"""
+        Json.parse(jsonTextOfBadRequest).as[StandardAccessDataToCopy]
+      }
+    }
   }
 }
 
 object StandardAccessDataToCopySpec {
 
-  val example  = StandardAccessDataToCopy(
+  val example     = StandardAccessDataToCopy(
     redirectUris = List(LoginRedirectUri.unsafeApply("https://abc.com/abc")),
+    postLogoutRedirectUris = List(PostLogoutRedirectUri.unsafeApply("https://abc.com/logout")),
     overrides = Set(OverrideFlag.PersistLogin)
   )
-  val jsonText = """{"redirectUris":["https://abc.com/abc"],"overrides":[{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}]}"""
+  val jsonText    = """{"redirectUris":["https://abc.com/abc"],"postLogoutRedirectUris":["https://abc.com/logout"],"overrides":[{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}]}"""
+  val oldJsonText = """{"redirectUris":["https://abc.com/abc"],"overrides":[{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}]}"""
 }
