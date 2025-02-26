@@ -22,7 +22,6 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.Environment
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.Access
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName
 
 class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with CollaboratorsSyntax {
@@ -32,9 +31,9 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
     val developer = "jim@example.com".toLaxEmail.asDeveloper().copy(userId = admin.userId)
 
     val request =
-      CreateApplicationRequestV1.create(
+      CreateApplicationRequestV1(
         name = ApplicationName("an application"),
-        access = Access.Standard(),
+        access = CreationAccess.Standard,
         description = None,
         environment = Environment.PRODUCTION,
         collaborators = Set(admin),
@@ -42,7 +41,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       )
 
     val jsonText =
-      s""" {"name":"an application","access":{"redirectUris":[],"postLogoutRedirectUris":[],"overrides":[],"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
+      s""" {"name":"an application","access":{"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
 
     "write to json" in {
       Json.toJson(request) shouldBe Json.parse(jsonText)
@@ -60,22 +59,12 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
       Json.parse(jsonText).as[CreateApplicationRequest] shouldBe request
     }
 
-    "reads and validates from json" in {
-      val redirectUris         = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
-      val jsonTextOfBadRequest =
-        s""" {"name":"an application","access":{"redirectUris":[$redirectUris],"postLogoutRedirectUris":[],"overrides":[],"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
-
-      intercept[IllegalArgumentException] {
-        Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]
-      }
-    }
-
     "create does not throw for non standard apps" in {
       // This test is only checking the flow for validate, i.e. that anything other than Standard Access are created without extra validation
       // the name, collaborator values are all valid as well so should not throw an error
-      CreateApplicationRequestV1.create(
+      CreateApplicationRequestV1(
         name = ApplicationName("name"),
-        access = Access.Privileged(),
+        access = CreationAccess.Privileged,
         description = None,
         environment = Environment.PRODUCTION,
         collaborators = Set(admin),
@@ -85,9 +74,9 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
 
     "create returns error when no admins as collaborators (validate)" in {
       val error = intercept[IllegalArgumentException] {
-        CreateApplicationRequestV1.create(
+        CreateApplicationRequestV1(
           name = ApplicationName("someName"),
-          access = Access.Standard(),
+          access = CreationAccess.Standard,
           description = None,
           environment = Environment.PRODUCTION,
           collaborators = Set(developer),
@@ -100,9 +89,9 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
 
     "create returns error when collaborators have same email address (validate)" in {
       val error = intercept[IllegalArgumentException] {
-        CreateApplicationRequestV1.create(
+        CreateApplicationRequestV1(
           name = ApplicationName("someName"),
-          access = Access.Standard(),
+          access = CreationAccess.Standard,
           description = None,
           environment = Environment.PRODUCTION,
           collaborators = Set(admin, "Jim@Example.com".toLaxEmail.asAdministrator(), developer, "Jim@Example.com".toLaxEmail.asDeveloper()),

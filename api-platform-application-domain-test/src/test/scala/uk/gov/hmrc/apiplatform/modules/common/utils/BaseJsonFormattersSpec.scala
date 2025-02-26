@@ -38,4 +38,9 @@ trait BaseJsonFormattersSpec extends HmrcSpec with Matchers {
       case JsError(errors)                            => fail(s"Did not succeed ${errors}")
     }
 
+  def testFailJson[T](text: String)(implicit rdr: Reads[T]) =
+    Json.parse(text).validate[T] match {
+      case JsSuccess(_, _) => fail(s"Should have got a JsError)")
+      case JsError(_)      => succeed
+    }
 }

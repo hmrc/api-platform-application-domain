@@ -23,9 +23,9 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
-case class CreateApplicationRequestV1 private (
+case class CreateApplicationRequestV1(
     name: ApplicationName,
-    access: Access,
+    access: CreationAccess,
     description: Option[String],
     environment: Environment,
     collaborators: Set[Collaborator],
@@ -51,15 +51,6 @@ case class CreateApplicationRequestV1 private (
 }
 
 object CreateApplicationRequestV1 {
-
-  def create(
-      name: ApplicationName,
-      access: Access,
-      description: Option[String],
-      environment: Environment,
-      collaborators: Set[Collaborator],
-      subscriptions: Option[Set[ApiIdentifier]]
-    ): CreateApplicationRequestV1 = new CreateApplicationRequestV1(name, access, description, environment, collaborators, subscriptions)
 
   import play.api.libs.json._
 

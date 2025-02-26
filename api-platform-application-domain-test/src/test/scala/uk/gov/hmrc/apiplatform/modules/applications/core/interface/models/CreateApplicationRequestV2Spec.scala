@@ -38,7 +38,7 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
     )
 
     val request =
-      CreateApplicationRequestV2.create(
+      CreateApplicationRequestV2(
         name = ApplicationName("an application"),
         access = StandardAccessDataToCopy(),
         description = None,
@@ -50,7 +50,7 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
       )
 
     val jsonText =
-      s"""{"name":"an application","access":{"redirectUris":[],"overrides":[]},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}],"upliftRequest":{"sellResellOrDistribute":"miscblah","subscriptions":[{"context":"context","version":"version"}],"requestedBy":"bob"},"requestedBy":"bob","sandboxApplicationId":"$sandboxApplicationId"}"""
+      s"""{"name":"an application","access":{"redirectUris":[],"postLogoutRedirectUris":[],"overrides":[]},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}],"upliftRequest":{"sellResellOrDistribute":"miscblah","subscriptions":[{"context":"context","version":"version"}],"requestedBy":"bob"},"requestedBy":"bob","sandboxApplicationId":"$sandboxApplicationId"}"""
 
     "write to json" in {
       Json.toJson(request) shouldBe Json.parse(jsonText)
@@ -59,6 +59,7 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
     "write to json as parent type" in {
       Json.toJson[CreateApplicationRequest](request) shouldBe Json.parse(jsonText)
     }
+
     "reads from json" in {
       Json.parse(jsonText).as[CreateApplicationRequestV2] shouldBe request
     }
@@ -66,17 +67,5 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
     "reads as base from json" in {
       Json.parse(jsonText).as[CreateApplicationRequest] shouldBe request
     }
-
-    "reads and validates from V2 json" in {
-      val redirectUris         = Range.inclusive(1, 6).map(i => s""" "https://abc.com/abc$i" """).mkString(",")
-      val jsonTextOfBadRequest =
-        s"""{"name":"an application","access":{"redirectUris":[$redirectUris],"overrides":[]},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}],"upliftRequest":{"sellResellOrDistribute":"miscblah","subscriptions":[{"context":"context","version":"version"}],"requestedBy":"bob"},"requestedBy":"bob","sandboxApplicationId":"$sandboxApplicationId"}"""
-
-      intercept[IllegalArgumentException] {
-        val x = Json.parse(jsonTextOfBadRequest).as[CreateApplicationRequest]
-        println(x)
-      }
-    }
-
   }
 }
