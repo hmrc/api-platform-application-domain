@@ -42,5 +42,5 @@ object ApplicationNameValidationRequestSpec {
   val exampleNew: ApplicationNameValidationRequest    = NewApplicationNameValidationRequest("validName")
 
   val changeRequestJsonText = s"""{"nameToValidate":"validName","applicationId":"${ApplicationIdData.one}"}"""
-  val newRequestJsonText = s"""{"nameToValidate":"validName"}"""
+  val newRequestJsonText    = s"""{"nameToValidate":"validName"}"""
 }
