@@ -9,7 +9,7 @@ import bloop.integrations.sbt.BloopDefaults
 Global / bloopAggregateSourceDependencies := true
 Global / bloopExportJarClassifiers := Some(Set("sources"))
 
-val appName = "api-platform-application-domain"
+val libName = "api-platform-application-domain"
 
 lazy val scala2_13 = "2.13.12"
 
@@ -22,7 +22,7 @@ ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" 
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
-lazy val library = (project in file("."))
+lazy val library = Project(s"$libName-root", file("."))
   .settings(
     publish / skip := true
   )
@@ -30,8 +30,7 @@ lazy val library = (project in file("."))
     apiPlatformApplicationDomain, apiPlatformApplicationDomainFixtures, apiPlatformApplicationDomainTest
   )
 
-
-lazy val apiPlatformApplicationDomain = Project("api-platform-application-domain", file("api-platform-application-domain"))
+lazy val apiPlatformApplicationDomain = Project(libName, file(libName))
   .settings(
     libraryDependencies ++= LibraryDependencies.applicationDomain,
     ScoverageSettings(),
@@ -40,7 +39,7 @@ lazy val apiPlatformApplicationDomain = Project("api-platform-application-domain
   .disablePlugins(JUnitXmlReportPlugin)
 
 
-lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-application-domain-fixtures", file("api-platform-application-domain-fixtures"))
+lazy val apiPlatformApplicationDomainFixtures = Project(s"$libName-fixtures", file(s"$libName-fixtures"))
   .dependsOn(
     apiPlatformApplicationDomain % "compile"
   )
@@ -52,7 +51,7 @@ lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-applicatio
   .disablePlugins(JUnitXmlReportPlugin)
 
 
-lazy val apiPlatformApplicationDomainTest = Project("api-platform-application-domain-test", file("api-platform-application-domain-test"))
+lazy val apiPlatformApplicationDomainTest = Project(s"$libName-test", file(s"$libName-test"))
   .dependsOn(
     apiPlatformApplicationDomain,
     apiPlatformApplicationDomainFixtures
