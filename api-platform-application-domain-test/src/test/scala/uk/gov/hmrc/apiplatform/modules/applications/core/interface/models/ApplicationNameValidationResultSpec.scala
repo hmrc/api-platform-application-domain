@@ -24,21 +24,21 @@ class ApplicationNameValidationResultSpec extends BaseJsonFormattersSpec {
 
   "ApplicationNameValidationResult" should {
     "convert to json" in {
-      Json.toJson[ApplicationNameValidationResult](ApplicationNameValidationResult.ValidApplicationName) shouldBe Json.parse(validNameJson)
-      Json.toJson[ApplicationNameValidationResult](ApplicationNameValidationResult.InvalidApplicationName) shouldBe Json.parse(invalidNameJson)
-      Json.toJson[ApplicationNameValidationResult](ApplicationNameValidationResult.DuplicateApplicationName) shouldBe Json.parse(duplicateNameJson)
+      Json.toJson[ApplicationNameValidationResult](ApplicationNameValidationResult.Valid) shouldBe Json.parse(validNameJson)
+      Json.toJson[ApplicationNameValidationResult](ApplicationNameValidationResult.Invalid) shouldBe Json.parse(invalidNameJson)
+      Json.toJson[ApplicationNameValidationResult](ApplicationNameValidationResult.Duplicate) shouldBe Json.parse(duplicateNameJson)
     }
 
     "read from json" in {
-      testFromJson[ApplicationNameValidationResult](validNameJson)(ApplicationNameValidationResult.ValidApplicationName)
-      testFromJson[ApplicationNameValidationResult](invalidNameJson)(ApplicationNameValidationResult.InvalidApplicationName)
-      testFromJson[ApplicationNameValidationResult](duplicateNameJson)(ApplicationNameValidationResult.DuplicateApplicationName)
+      testFromJson[ApplicationNameValidationResult](validNameJson)(ApplicationNameValidationResult.Valid)
+      testFromJson[ApplicationNameValidationResult](invalidNameJson)(ApplicationNameValidationResult.Invalid)
+      testFromJson[ApplicationNameValidationResult](duplicateNameJson)(ApplicationNameValidationResult.Duplicate)
     }
   }
 }
 
 object ApplicationNameValidationResultSpec {
-  val validNameJson     = """{"resultType": "ValidApplicationName"}"""
-  val invalidNameJson   = """{"resultType": "InvalidApplicationName"}"""
-  val duplicateNameJson = """{"resultType": "DuplicateApplicationName"}"""
+  val validNameJson     = """{"validationResult": "VALID"}"""
+  val invalidNameJson   = """{"validationResult": "INVALID"}"""
+  val duplicateNameJson = """{"validationResult": "DUPLICATE"}"""
 }

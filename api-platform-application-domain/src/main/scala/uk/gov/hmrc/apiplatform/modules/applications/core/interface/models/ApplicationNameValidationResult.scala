@@ -22,13 +22,13 @@ import uk.gov.hmrc.play.json.Union
 sealed trait ApplicationNameValidationResult
 
 object ApplicationNameValidationResult {
-  case object ValidApplicationName     extends ApplicationNameValidationResult
-  case object InvalidApplicationName   extends ApplicationNameValidationResult
-  case object DuplicateApplicationName extends ApplicationNameValidationResult
+  case object Valid     extends ApplicationNameValidationResult
+  case object Invalid   extends ApplicationNameValidationResult
+  case object Duplicate extends ApplicationNameValidationResult
 
-  implicit val formatter: OFormat[ApplicationNameValidationResult] = Union.from[ApplicationNameValidationResult]("resultType")
-    .andType[ValidApplicationName.type](ValidApplicationName.toString(), () => ValidApplicationName)
-    .andType[InvalidApplicationName.type](InvalidApplicationName.toString(), () => InvalidApplicationName)
-    .andType[DuplicateApplicationName.type](DuplicateApplicationName.toString(), () => DuplicateApplicationName)
+  implicit val formatter: OFormat[ApplicationNameValidationResult] = Union.from[ApplicationNameValidationResult]("validationResult")
+    .andType[Valid.type]("VALID", () => Valid)
+    .andType[Invalid.type]("INVALID", () => Invalid)
+    .andType[Duplicate.type]("DUPLICATE", () => Duplicate)
     .format
 }
