@@ -71,7 +71,7 @@ object ApplicationCommands {
   case class ChangeLoginRedirectUri(actor: Actor, redirectUriToReplace: LoginRedirectUri, redirectUri: LoginRedirectUri, timestamp: Instant) extends LoginRedirectCommand
   case class DeleteLoginRedirectUri(actor: Actor, redirectUriToDelete: LoginRedirectUri, timestamp: Instant)                                 extends LoginRedirectCommand
 
-  case class UpdateLoginRedirectUris(actor: Actor, oldRedirectUris: List[LoginRedirectUri], newRedirectUris: List[LoginRedirectUri], timestamp: Instant)
+  case class UpdateLoginRedirectUris(actor: Actor, newRedirectUris: List[LoginRedirectUri], timestamp: Instant)
       extends LoginRedirectCommand
 
   case class AddPostLogoutRedirectUri(actor: Actor, redirectUriToAdd: PostLogoutRedirectUri, timestamp: Instant) extends PostLogoutRedirectCommand
@@ -80,8 +80,7 @@ object ApplicationCommands {
       extends PostLogoutRedirectCommand
   case class DeletePostLogoutRedirectUri(actor: Actor, redirectUriToDelete: PostLogoutRedirectUri, timestamp: Instant) extends PostLogoutRedirectCommand
 
-  case class UpdatePostLogoutRedirectUris(actor: Actor, oldRedirectUris: List[PostLogoutRedirectUri], newRedirectUris: List[PostLogoutRedirectUri], timestamp: Instant)
-      extends PostLogoutRedirectCommand
+  case class UpdatePostLogoutRedirectUris(actor: Actor, newRedirectUris: List[PostLogoutRedirectUri], timestamp: Instant) extends PostLogoutRedirectCommand
 
 //----
   case class AddClientSecret(actor: Actors.AppCollaborator, name: String, id: ClientSecret.Id, hashedSecret: String, timestamp: Instant)              extends ClientSecretCommand

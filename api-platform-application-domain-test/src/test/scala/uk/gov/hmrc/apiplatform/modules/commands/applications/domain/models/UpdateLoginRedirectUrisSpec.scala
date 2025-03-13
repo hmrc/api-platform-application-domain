@@ -32,7 +32,7 @@ class UpdateLoginRedirectUrisSpec extends ApplicationCommandBaseSpec {
   val newUris = List(one, two, four)
 
   "UpdateRedirectUris" should {
-    val cmd = ApplicationCommands.UpdateLoginRedirectUris(Actors.AppCollaborator(anActorEmail), oldUris, newUris, aTimestamp)
+    val cmd = ApplicationCommands.UpdateLoginRedirectUris(Actors.AppCollaborator(anActorEmail), newUris, aTimestamp)
 
     "write to json (as a command)" in {
 
@@ -41,7 +41,6 @@ class UpdateLoginRedirectUrisSpec extends ApplicationCommandBaseSpec {
           "email"     -> "bob@example.com",
           "actorType" -> "COLLABORATOR"
         ),
-        "oldRedirectUris" -> Json.arr(one, two, three),
         "newRedirectUris" -> Json.arr(one, two, four),
         "timestamp"       -> s"$nowAsText",
         "updateType"      -> "updateRedirectUris"
@@ -50,7 +49,7 @@ class UpdateLoginRedirectUrisSpec extends ApplicationCommandBaseSpec {
 
     "read from json" in {
       val jsonText =
-        s""" {"actor":{"email":"bob@example.com","actorType":"COLLABORATOR"},"timestamp":"$nowAsText","oldRedirectUris":["$base/a","$base/b","$base/c"],"newRedirectUris":["$base/a","$base/b","$base/x"],"updateType":"updateRedirectUris"} """
+        s""" {"actor":{"email":"bob@example.com","actorType":"COLLABORATOR"},"timestamp":"$nowAsText","newRedirectUris":["$base/a","$base/b","$base/x"],"updateType":"updateRedirectUris"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }
