@@ -32,8 +32,8 @@ class ApiFieldMapSpec
 
     "extract an api from an ApiIdentifier" in {
       val fieldIntMap = Map(
-        uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldNameData.one -> 1,
-        uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldNameData.two -> 2
+        FieldNameData.one -> 1,
+        FieldNameData.two -> 2
       )
       val x           = Map(apiContextOne -> Map(apiVersionNbrOne -> fieldIntMap))
 

@@ -26,4 +26,8 @@ case class SubscriptionFieldsId(value: ju.UUID) extends AnyVal {
   override def toString() = value.toString
 }
 
+object SubscriptionFieldsId {
+  def random: SubscriptionFieldsId = SubscriptionFieldsId(ju.UUID.randomUUID())
+}
+
 case class SubscriptionFields(clientId: ClientId, apiContext: ApiContext, apiVersion: ApiVersionNbr, fieldsId: SubscriptionFieldsId, fields: Fields)
