@@ -18,16 +18,16 @@ package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.interface.mod
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
-import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.ApiFieldMapData
+import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldsData
 
 object BulkSubscriptionFieldsResponseData {
   val fieldsIdOne: SubscriptionFieldsId = SubscriptionFieldsId.random
 
   val one = BulkSubscriptionFieldsResponse(
     Seq(
-      SubscriptionFields(ClientIdData.one, ApiContextData.one, ApiVersionNbrData.one, fieldsIdOne, ApiFieldMapData.one),
-      SubscriptionFields(ClientIdData.one, ApiContextData.one, ApiVersionNbrData.two, fieldsIdOne, ApiFieldMapData.two),
-      SubscriptionFields(ClientIdData.one, ApiContextData.two, ApiVersionNbrData.one, fieldsIdOne, ApiFieldMapData.three)
+      SubscriptionFields(ClientIdData.one, ApiContextData.one, ApiVersionNbrData.one, fieldsIdOne, FieldsData.one),
+      SubscriptionFields(ClientIdData.one, ApiContextData.one, ApiVersionNbrData.two, fieldsIdOne, FieldsData.two),
+      SubscriptionFields(ClientIdData.one, ApiContextData.two, ApiVersionNbrData.one, fieldsIdOne, FieldsData.three)
     )
   )
 }

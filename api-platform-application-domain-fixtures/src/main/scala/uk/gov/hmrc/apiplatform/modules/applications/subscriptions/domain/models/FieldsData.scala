@@ -16,28 +16,14 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContextData, ApiVersionNbrData}
-
-object ApiFieldMapData {
-
-  val simple = Map(
-    ApiContextData.one -> Map(
-      ApiVersionNbrData.one -> FieldsData.one
-    )
-  )
-
-  val one = Map(
-    ApiContextData.one -> Map(
-      ApiVersionNbrData.one -> FieldsData.one,
-      ApiVersionNbrData.two -> FieldsData.two
-    ),
-    ApiContextData.two -> Map(
-      ApiVersionNbrData.one -> FieldsData.three
-    )
-  )
+object FieldsData {
+  val one   = Map(FieldNameData.one -> FieldValueData.one)
+  val two   = Map(FieldNameData.one -> FieldValueData.one, FieldNameData.two -> FieldValueData.two)
+  val three = Map(FieldNameData.one -> FieldValueData.one, FieldNameData.two -> FieldValueData.two, FieldNameData.three -> FieldValueData.three)
 }
 
-trait ApiFieldMapFixtures {
-  val apiFieldsMapSimple = ApiFieldMapData.simple
-  val apiFieldsMapOne    = ApiFieldMapData.one
+trait FieldsFixtures {
+  val fieldMapOne   = FieldsData.one
+  val fieldMapTwo   = FieldsData.two
+  val fieldMapThree = FieldsData.three
 }

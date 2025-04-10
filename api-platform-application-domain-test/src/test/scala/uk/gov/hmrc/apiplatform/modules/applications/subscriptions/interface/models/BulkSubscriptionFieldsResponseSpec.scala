@@ -19,10 +19,15 @@ package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.interface.mod
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.ApiIdentifierFixtures
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
-import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.ApiFieldMapFixtures
+import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.{ApiFieldMapFixtures, FieldsFixtures}
 import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.interface.models.BulkSubscriptionFieldsResponseFixtures
 
-class BulkSubscriptionFieldsResponseSpec extends HmrcSpec with BulkSubscriptionFieldsResponseFixtures with ApiIdentifierFixtures with ApiFieldMapFixtures {
+class BulkSubscriptionFieldsResponseSpec extends HmrcSpec
+    with BulkSubscriptionFieldsResponseFixtures
+    with ApiIdentifierFixtures
+    with FieldsFixtures
+    with ApiFieldMapFixtures {
+
   "BulkSubscriptionFieldsResponse" should {
     "convert to api fields map" in {
 
