@@ -45,5 +45,4 @@ object BulkSubscriptionFieldsResponse {
       response.subscriptions.map(s => Map(s.apiContext -> Map(s.apiVersion -> s.fields)))
     )
   }
-
 }
