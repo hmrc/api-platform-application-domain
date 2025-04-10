@@ -21,6 +21,8 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 package object models {
   type ApiFieldMap[V] = Map[ApiContext, Map[ApiVersionNbr, Map[FieldName, V]]]
 
+  type Fields = Map[FieldName, FieldValue]
+
   object ApiFieldMap {
     def empty[V]: ApiFieldMap[V] = Map.empty
 
