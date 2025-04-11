@@ -20,7 +20,9 @@ import scala.util.Random
 
 import play.api.libs.json._
 
-case class FieldName private (value: String) extends AnyVal
+case class FieldName private (value: String) extends AnyVal {
+  override def toString(): String = value
+}
 
 object FieldName {
   def apply(value: String): FieldName             = safeApply(value).getOrElse(throw new RuntimeException("FieldName cannot be blank"))

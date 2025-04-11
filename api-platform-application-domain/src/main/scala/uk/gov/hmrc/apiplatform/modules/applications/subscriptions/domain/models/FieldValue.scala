@@ -22,6 +22,8 @@ import play.api.libs.json.{Format, Json}
 
 case class FieldValue(value: String) extends AnyVal {
   def isEmpty = value.isEmpty
+
+  override def toString(): String = value
 }
 
 object FieldValue {
