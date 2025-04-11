@@ -20,14 +20,16 @@ import scala.util.Random
 
 import play.api.libs.json._
 
-case class FieldName private (value: String) extends AnyVal
+case class FieldName private (value: String) extends AnyVal {
+  override def toString(): String = value
+}
 
 object FieldName {
   def apply(value: String): FieldName             = safeApply(value).getOrElse(throw new RuntimeException("FieldName cannot be blank"))
   def safeApply(value: String): Option[FieldName] = Some(value.trim()).filterNot(_.isEmpty()).map(new FieldName(_))
 
-  implicit val reads: Reads[FieldName]    = Reads.StringReads.flatMapResult(FieldName.safeApply(_).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f)))
-  implicit val writers: Writes[FieldName] = Writes.StringWrites.contramap(_.value)
+  implicit val readsFN: Reads[FieldName]    = Reads.StringReads.flatMapResult(FieldName.safeApply(_).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f)))
+  implicit val writersFN: Writes[FieldName] = Writes.StringWrites.contramap(_.value)
 
   implicit val keyReadsFieldName: KeyReads[FieldName]   = key => FieldName.safeApply(key).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f))
   implicit val keyWritesFieldName: KeyWrites[FieldName] = _.value

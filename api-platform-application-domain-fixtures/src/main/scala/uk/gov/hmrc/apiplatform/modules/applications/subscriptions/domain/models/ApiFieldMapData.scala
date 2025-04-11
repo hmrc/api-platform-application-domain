@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,28 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
-import scala.util.Random
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContextData, ApiVersionNbrData}
 
-import play.api.libs.json.{Format, Json}
+object ApiFieldMapData {
 
-case class FieldValue(value: String) extends AnyVal {
-  def isEmpty = value.isEmpty
+  val simple = Map(
+    ApiContextData.one -> Map(
+      ApiVersionNbrData.one -> FieldsData.one
+    )
+  )
 
-  override def toString(): String = value
+  val one = Map(
+    ApiContextData.one -> Map(
+      ApiVersionNbrData.one -> FieldsData.one,
+      ApiVersionNbrData.two -> FieldsData.two
+    ),
+    ApiContextData.two -> Map(
+      ApiVersionNbrData.one -> FieldsData.three
+    )
+  )
 }
 
-object FieldValue {
-  implicit val formatFV: Format[FieldValue] = Json.valueFormat[FieldValue]
-
-  def empty: FieldValue = FieldValue("")
-
-  def random = FieldValue(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
+trait ApiFieldMapFixtures {
+  val apiFieldsMapSimple = ApiFieldMapData.simple
+  val apiFieldsMapOne    = ApiFieldMapData.one
 }
