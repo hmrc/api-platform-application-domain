@@ -35,6 +35,7 @@ class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec with 
     }
 
     "read from json" in {
+      println(Json.prettyPrint(Json.parse(jsonText)))
       testFromJson[ApplicationWithSubscriptionFields](jsonText)(example)
     }
 

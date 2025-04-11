@@ -25,7 +25,7 @@ case class FieldValue(value: String) extends AnyVal {
 }
 
 object FieldValue {
-  implicit val format: Format[FieldValue] = Json.valueFormat[FieldValue]
+  implicit val formatFV: Format[FieldValue] = Json.valueFormat[FieldValue]
 
   def empty: FieldValue = FieldValue("")
 

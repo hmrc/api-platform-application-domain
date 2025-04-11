@@ -16,12 +16,17 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
 
+import java.util.UUID
+
+import play.api.libs.json._
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
 class ApiFieldMapSpec
     extends HmrcSpec
-    with ApiIdentifierFixtures {
+    with ApiIdentifierFixtures
+    with FieldsFixtures
+    with ClientIdFixtures {
 
   "ApiFieldMap" should {
     "provide an default constructor" in {
@@ -35,11 +40,42 @@ class ApiFieldMapSpec
         FieldNameData.one -> 1,
         FieldNameData.two -> 2
       )
-      val x           = Map(apiContextOne -> Map(apiVersionNbrOne -> fieldIntMap))
+
+      val x = Map(apiContextOne -> Map(apiVersionNbrOne -> fieldIntMap))
 
       ApiFieldMap.extractApi(apiIdentifierOne)(x) shouldBe fieldIntMap
       ApiFieldMap.extractApi(apiIdentifierTwo)(x) shouldBe Map.empty
       ApiFieldMap.extractApi(apiIdentifierThree)(x) shouldBe Map.empty
     }
+  }
+
+  "read from BulkSubscriptionFieldsResponse json" in {
+    implicit val writessSubscriptionFieldsId: Writes[SubscriptionFieldsId] = Json.valueWrites[SubscriptionFieldsId]
+    implicit val writesSubscriptionFields: Writes[SubscriptionFields]      = Json.writes[SubscriptionFields]
+    implicit val writesBulk: Writes[BulkSubscriptionFieldsResponse]        = Json.writes[BulkSubscriptionFieldsResponse]
+
+    val fieldsIdOne: SubscriptionFieldsId = SubscriptionFieldsId(UUID.randomUUID())
+
+    val bulk = BulkSubscriptionFieldsResponse(
+      Seq(
+        SubscriptionFields(clientIdOne, apiContextOne, apiVersionNbrOne, fieldsIdOne, fieldsMapOne),
+        SubscriptionFields(clientIdOne, apiContextOne, apiVersionNbrTwo, fieldsIdOne, fieldsMapTwo),
+        SubscriptionFields(clientIdOne, apiContextTwo, apiVersionNbrOne, fieldsIdOne, fieldsMapThree)
+      )
+    )
+
+    val response = Json.toJson(bulk)
+
+    import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.Implicits.OverrideForBulkResponse._
+
+    Json.fromJson[ApiFieldMap[FieldValue]](response) shouldBe JsSuccess(Map(
+      apiContextOne -> Map(
+        apiVersionNbrOne -> fieldsMapOne,
+        apiVersionNbrTwo -> fieldsMapTwo
+      ),
+      apiContextTwo -> Map(
+        apiVersionNbrOne -> fieldsMapThree
+      )
+    ))
   }
 }

@@ -16,12 +16,15 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain
 
+import java.{util => ju}
+
+import play.api.libs.json._
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
 package object models {
-  type ApiFieldMap[V] = Map[ApiContext, Map[ApiVersionNbr, Map[FieldName, V]]]
-
   type Fields = Map[FieldName, FieldValue]
+
+  type ApiFieldMap[V] = Map[ApiContext, Map[ApiVersionNbr, Map[FieldName, V]]]
 
   object ApiFieldMap {
     def empty[V]: ApiFieldMap[V] = Map.empty
@@ -31,4 +34,39 @@ package object models {
         .getOrElse(apiIdentifier.context, Map.empty)
         .getOrElse(apiIdentifier.versionNbr, Map.empty)
   }
+
+  private def toApiFieldMap(response: BulkSubscriptionFieldsResponse): ApiFieldMap[FieldValue] = {
+    import cats._
+    import cats.implicits._
+    type MapType = Map[ApiVersionNbr, Map[FieldName, FieldValue]]
+
+    // Shortcut combining as we know there will never be records for the same version for the same context
+    implicit def monoidVersions: Monoid[MapType] =
+      new Monoid[MapType] {
+        override def combine(x: MapType, y: MapType): MapType = x ++ y
+        override def empty: MapType                           = Map.empty
+      }
+
+    Monoid.combineAll(
+      response.subscriptions.map(s => Map(s.apiContext -> Map(s.apiVersion -> s.fields)))
+    )
+  }
+
+  private implicit val readsSubscriptionFieldsId: Reads[SubscriptionFieldsId] = Json.valueReads[SubscriptionFieldsId]
+  private implicit val readsSubscriptionFields: Reads[SubscriptionFields]     = Json.reads[SubscriptionFields]
+  private implicit val readsBulk: Reads[BulkSubscriptionFieldsResponse]       = Json.reads[BulkSubscriptionFieldsResponse]
+
+  object Implicits {
+    private val readsApiFieldMapFromBulk: Reads[ApiFieldMap[FieldValue]] = readsBulk.map(toApiFieldMap)
+
+    object OverrideForBulkResponse {
+      implicit val reads: Reads[ApiFieldMap[FieldValue]] = readsApiFieldMapFromBulk
+    }
+  }
+}
+
+package models {
+  private case class SubscriptionFieldsId(value: ju.UUID) extends AnyVal
+  private case class SubscriptionFields(clientId: ClientId, apiContext: ApiContext, apiVersion: ApiVersionNbr, fieldsId: SubscriptionFieldsId, fields: Fields)
+  private case class BulkSubscriptionFieldsResponse(subscriptions: Seq[SubscriptionFields])
 }

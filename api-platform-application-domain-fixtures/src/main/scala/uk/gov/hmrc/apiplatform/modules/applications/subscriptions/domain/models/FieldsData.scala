@@ -23,7 +23,7 @@ object FieldsData {
 }
 
 trait FieldsFixtures {
-  val fieldMapOne   = FieldsData.one
-  val fieldMapTwo   = FieldsData.two
-  val fieldMapThree = FieldsData.three
+  val fieldsMapOne   = FieldsData.one
+  val fieldsMapTwo   = FieldsData.two
+  val fieldsMapThree = FieldsData.three
 }
