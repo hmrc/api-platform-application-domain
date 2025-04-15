@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
-sealed trait DeleteRestrictionType {
-  val displayText: String = this.toString().toLowerCase().capitalize
+import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName
+
+object FieldNameData {
+  val one   = FieldName("field1")
+  val two   = FieldName("field2")
+  val three = FieldName("field3")
 }
 
-object DeleteRestrictionType {
-  case object DO_NOT_DELETE  extends DeleteRestrictionType
-  case object NO_RESTRICTION extends DeleteRestrictionType
+trait FieldNameFixtures {
+  val fieldNameOne   = FieldNameData.one
+  val fieldNameTwo   = FieldNameData.two
+  val fieldNameThree = FieldNameData.three
 }

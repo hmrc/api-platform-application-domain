@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class FieldNameAndValueSpec extends HmrcSpec {
+class FieldNameAndValueSpec extends BaseJsonFormattersSpec {
   val map      = Map(FieldNameData.one -> FieldValue("1"), FieldNameData.two -> FieldValue("2"))
   val jsonText = """{ "field1": "1", "field2": "2" }"""
 
   "JsonFormatter" should {
-    import play.api.libs.json._
-
     "Read raw map" in {
-      Json.fromJson[Map[FieldName, FieldValue]](Json.parse(jsonText)) shouldBe JsSuccess(map)
+      testFromJson(jsonText)(map)
     }
 
     "Write raw map" in {
-      Json.toJson[Map[FieldName, FieldValue]](map) shouldBe Json.parse(jsonText)
+      testToJson(map)("field1" -> "1", "field2" -> "2")
     }
 
     "fail on bad map" in {
       val jsonText = """{ "field1": "1", "": "2" }"""
-
-      Json.fromJson[Map[FieldName, FieldValue]](Json.parse(jsonText)).asOpt shouldBe None
-
+      testFailJson[Map[FieldName, FieldValue]](jsonText)
     }
   }
 }

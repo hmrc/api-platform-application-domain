@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
-object FieldValueData {
-  val one   = FieldValue("value1")
-  val two   = FieldValue("value2")
-  val three = FieldValue("value3")
+import cats.data.NonEmptyList
+
+object ValidationGroupData {
+  val one = ValidationGroup("Bang", NonEmptyList.one(ValidationRuleData.one))
 }
 
-trait FieldValueFixtures {
-  val fieldValueOne   = FieldValueData.one
-  val fieldValueTwo   = FieldValueData.two
-  val fieldValueThree = FieldValueData.three
+trait ValidationGroupFixtures extends ValidationRuleFixtures {
+  val groupOne = ValidationGroupData.one
 }

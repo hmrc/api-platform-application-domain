@@ -24,7 +24,8 @@ ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 lazy val library = Project(s"$libName-root", file("."))
   .settings(
-    publish / skip := true
+    publish / skip := true,
+    ScoverageSettings()
   )
   .aggregate(
     apiPlatformApplicationDomain, apiPlatformApplicationDomainFixtures, apiPlatformApplicationDomainTest
@@ -33,7 +34,6 @@ lazy val library = Project(s"$libName-root", file("."))
 lazy val apiPlatformApplicationDomain = Project(libName, file(libName))
   .settings(
     libraryDependencies ++= LibraryDependencies.applicationDomain,
-    ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
   .disablePlugins(JUnitXmlReportPlugin)
@@ -59,8 +59,7 @@ lazy val apiPlatformApplicationDomainTest = Project(s"$libName-test", file(s"$li
   .settings(
     publish / skip := true,
     libraryDependencies ++= LibraryDependencies.root,
-    ScoverageSettings(),
-    Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
+    Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT")
   )
   .disablePlugins(JUnitXmlReportPlugin)
 
@@ -68,5 +67,5 @@ lazy val apiPlatformApplicationDomainTest = Project(s"$libName-test", file(s"$li
   commands ++= Seq(
     Command.command("run-all-tests") { state => "test" :: state },
     Command.command("clean-and-test") { state => "clean" :: "run-all-tests" :: state },
-    Command.command("pre-commit") { state => "clean" :: "scalafmtAll" :: "scalafixAll" ::"coverage" :: "run-all-tests" :: "coverageOff" :: "coverageAggregate" :: state }
+    Command.command("pre-commit") { state => "clean" :: "scalafmtAll" :: "scalafixAll" ::"coverage" :: "run-all-tests" :: "coverageAggregate" :: "coverageOff" :: state }
   )

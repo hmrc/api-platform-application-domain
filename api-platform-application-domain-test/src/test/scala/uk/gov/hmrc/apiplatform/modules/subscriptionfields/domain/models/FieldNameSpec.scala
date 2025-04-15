@@ -14,39 +14,41 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
 import scala.util.Random
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class FieldNameSpec extends HmrcSpec {
+class FieldNameSpec extends BaseJsonFormattersSpec {
   val jsonText = """"field1""""
 
   "JsonFormatter" should {
     "Read raw json" in {
-      import play.api.libs.json._
-      Json.fromJson[FieldName](Json.parse(jsonText)) shouldBe JsSuccess(FieldName("field1"))
+      testFromJson(jsonText)(FieldName("field1"))
     }
 
     "Read bad raw json" in {
-      import play.api.libs.json._
-      Json.fromJson[FieldName](Json.parse(""" "" """)) shouldBe JsError("FieldName cannot be blank")
+      testFailJson[FieldName](""" "" """)
     }
 
     "Write raw json" in {
       import play.api.libs.json._
-      Json.toJson[FieldName](FieldNameData.one) shouldBe Json.parse(jsonText)
+      Json.toJson(FieldNameData.one) shouldBe JsString("field1")
     }
   }
 
   "FieldName" should {
+    "toString" in {
+      FieldName("bob").toString shouldBe "bob"
+    }
+
     "generate random values" in {
-      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldName.random should not be uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldName.random
+      uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName.random should not be uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName.random
     }
 
     "not allow empty name" in {
-      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldName.safeApply("") shouldBe None
+      uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName.safeApply("") shouldBe None
       intercept[RuntimeException](
         FieldName("")
       )

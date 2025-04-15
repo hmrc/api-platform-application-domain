@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
-object FieldNameData {
-  val one   = FieldName("field1")
-  val two   = FieldName("field2")
-  val three = FieldName("field3")
-}
+case class AccessRequirements(devhub: DevhubAccessRequirements)
 
-trait FieldNameFixtures {
-  val fieldNameOne   = FieldNameData.one
-  val fieldNameTwo   = FieldNameData.two
-  val fieldNameThree = FieldNameData.three
+object AccessRequirements {
+  final val Default = AccessRequirements(devhub = DevhubAccessRequirements.Default)
+
+  import play.api.libs.json._
+
+  implicit val readsAccessRequirements: Reads[AccessRequirements]   = Json.reads[AccessRequirements]
+  implicit val writesAccessRequirements: Writes[AccessRequirements] = Json.writes[AccessRequirements]
+
 }

@@ -101,5 +101,20 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
 
       error.getMessage() shouldBe "requirement failed: duplicate email in collaborator"
     }
+
+    "create returns error when too many redirect uris exist (validate)" in {
+      val error = intercept[IllegalArgumentException] {
+        CreateApplicationRequestV1(
+          name = ApplicationName("someName"),
+          access = CreationAccess.Standard,
+          description = None,
+          environment = Environment.PRODUCTION,
+          collaborators = Set(admin, "Jim@Example.com".toLaxEmail.asAdministrator(), developer, "Jim@Example.com".toLaxEmail.asDeveloper()),
+          subscriptions = None
+        )
+      }
+
+      error.getMessage() shouldBe "requirement failed: duplicate email in collaborator"
+    }
   }
 }

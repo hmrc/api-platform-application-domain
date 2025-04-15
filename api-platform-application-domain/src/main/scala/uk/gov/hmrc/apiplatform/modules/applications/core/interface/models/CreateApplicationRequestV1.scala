@@ -20,7 +20,6 @@ import scala.util.Try
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 
-import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
 
 case class CreateApplicationRequestV1(
@@ -32,22 +31,11 @@ case class CreateApplicationRequestV1(
     subscriptions: Option[Set[ApiIdentifier]]
   ) extends CreateApplicationRequest {
 
-  validate()
+  super.validate(this)
 
   lazy val accessType = access.accessType
 
   lazy val anySubscriptions: Set[ApiIdentifier] = subscriptions.getOrElse(Set.empty)
-
-  private def validate(): Unit = {
-    super.validate(this)
-    access match {
-      case a: Access.Standard =>
-        require(a.redirectUris.size <= 5, "maximum number of login redirect URIs exceeded")
-        require(a.postLogoutRedirectUris.size <= 5, "maximum number of post logout redirect URIs exceeded")
-      case _                  =>
-    }
-  }
-
 }
 
 object CreateApplicationRequestV1 {
