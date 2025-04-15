@@ -14,36 +14,39 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class FieldValueSpec extends HmrcSpec {
+class FieldValueSpec extends BaseJsonFormattersSpec {
   val jsonText = """"value1""""
 
   "JsonFormatter" should {
     "Read raw json" in {
-      import play.api.libs.json._
-      Json.fromJson[FieldValue](Json.parse(jsonText)) shouldBe JsSuccess(FieldValue("value1"))
+      testFromJson(jsonText)(FieldValue("value1"))
     }
 
     "Write raw json" in {
       import play.api.libs.json._
-      Json.toJson[FieldValue](FieldValueData.one) shouldBe Json.parse(jsonText)
+      Json.toJson[FieldValue](FieldValueData.one) shouldBe JsString("value1")
     }
 
     "generate random values" in {
-      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.random should not be uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.random
+      FieldValue.random should not be FieldValue.random
     }
   }
 
   "FieldValue" should {
+    "toString" in {
+      FieldValue("bob").toString shouldBe "bob"
+    }
+
     "create an empty value" in {
-      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.empty.value shouldBe ""
+      FieldValue.empty.value shouldBe ""
     }
 
     "test as empty value" in {
-      uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.FieldValue.empty.isEmpty shouldBe true
+      FieldValue.empty.isEmpty shouldBe true
       FieldValueData.one.isEmpty shouldBe false
     }
   }

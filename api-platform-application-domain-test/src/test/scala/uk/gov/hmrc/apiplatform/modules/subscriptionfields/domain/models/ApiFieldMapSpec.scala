@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
 import java.util.UUID
 
@@ -57,7 +57,7 @@ class ApiFieldMapSpec
     val fieldsIdOne: SubscriptionFieldsId = SubscriptionFieldsId(UUID.randomUUID())
 
     val bulk = BulkSubscriptionFieldsResponse(
-      Seq(
+      List(
         SubscriptionFields(clientIdOne, apiContextOne, apiVersionNbrOne, fieldsIdOne, fieldsMapOne),
         SubscriptionFields(clientIdOne, apiContextOne, apiVersionNbrTwo, fieldsIdOne, fieldsMapTwo),
         SubscriptionFields(clientIdOne, apiContextTwo, apiVersionNbrOne, fieldsIdOne, fieldsMapThree)
@@ -66,7 +66,7 @@ class ApiFieldMapSpec
 
     val response = Json.toJson(bulk)
 
-    import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.Implicits.OverrideForBulkResponse._
+    import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.Implicits.OverrideForBulkResponse._
 
     Json.fromJson[ApiFieldMap[FieldValue]](response) shouldBe JsSuccess(Map(
       apiContextOne -> Map(

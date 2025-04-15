@@ -24,7 +24,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, Fix
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models._
-import uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models.{FieldNameData, FieldValue}
+import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models._
 
 class ApplicationWithSubscriptionFieldsSpec extends BaseJsonFormattersSpec with ApplicationWithCollaboratorsFixtures with ApiIdentifierFixtures {
   import ApplicationWithSubscriptionFieldsSpec._

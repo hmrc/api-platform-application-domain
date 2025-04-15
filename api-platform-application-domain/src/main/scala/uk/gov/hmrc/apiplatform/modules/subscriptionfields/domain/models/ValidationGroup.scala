@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications.subscriptions.domain.models
+package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
-import scala.util.Random
+import cats.data.{NonEmptyList => NEL}
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json._
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters._
 
-case class FieldValue(value: String) extends AnyVal {
-  def isEmpty = value.isEmpty
+case class ValidationGroup(errorMessage: String, rules: NEL[ValidationRule])
 
-  override def toString(): String = value
-}
-
-object FieldValue {
-  implicit val formatFV: Format[FieldValue] = Json.valueFormat[FieldValue]
-
-  def empty: FieldValue = FieldValue("")
-
-  def random = FieldValue(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
+object ValidationGroup {
+  implicit val formatValidationGroup: OFormat[ValidationGroup] = Json.format[ValidationGroup]
 }
