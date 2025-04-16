@@ -23,4 +23,15 @@ sealed trait DeleteRestrictionType {
 object DeleteRestrictionType {
   case object DO_NOT_DELETE  extends DeleteRestrictionType
   case object NO_RESTRICTION extends DeleteRestrictionType
+
+  val values = List(DO_NOT_DELETE, NO_RESTRICTION)
+
+  def apply(text: String): Option[DeleteRestrictionType] = DeleteRestrictionType.values.find(_.toString() == text.toUpperCase)
+
+  def unsafeApply(text: String): DeleteRestrictionType = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid Delete Restriction Type"))
+
+  import play.api.libs.json.Format
+  import uk.gov.hmrc.apiplatform.modules.common.domain.services.SealedTraitJsonFormatting
+  implicit val format: Format[DeleteRestrictionType] = SealedTraitJsonFormatting.createFormatFor[DeleteRestrictionType]("Delete Restriction Type", apply)
+
 }
