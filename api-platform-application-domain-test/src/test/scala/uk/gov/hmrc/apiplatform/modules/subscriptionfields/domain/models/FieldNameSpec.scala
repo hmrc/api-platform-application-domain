@@ -21,11 +21,11 @@ import scala.util.Random
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class FieldNameSpec extends BaseJsonFormattersSpec {
-  val jsonText = """"field1""""
+  val jsonText = """"fieldA""""
 
   "JsonFormatter" should {
     "Read raw json" in {
-      testFromJson(jsonText)(FieldName("field1"))
+      testFromJson(jsonText)(FieldName("fieldA"))
     }
 
     "Read bad raw json" in {
@@ -34,7 +34,7 @@ class FieldNameSpec extends BaseJsonFormattersSpec {
 
     "Write raw json" in {
       import play.api.libs.json._
-      Json.toJson(FieldNameData.one) shouldBe JsString("field1")
+      Json.toJson(FieldNameData.one) shouldBe JsString("fieldA")
     }
   }
 
@@ -45,6 +45,17 @@ class FieldNameSpec extends BaseJsonFormattersSpec {
 
     "generate random values" in {
       uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName.random should not be uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName.random
+    }
+
+    "allow characters" in {
+      uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName.safeApply("AbcdXYz").value.value shouldBe "AbcdXYz"
+    }
+
+    "not allow numbers" in {
+      uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName.safeApply("123") shouldBe None
+      intercept[RuntimeException](
+        FieldName("123")
+      )
     }
 
     "not allow empty name" in {

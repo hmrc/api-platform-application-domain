@@ -19,9 +19,9 @@ package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldName
 
 object FieldNameData {
-  val one   = FieldName("field1")
-  val two   = FieldName("field2")
-  val three = FieldName("field3")
+  val one   = FieldName("fieldA")
+  val two   = FieldName("fieldB")
+  val three = FieldName("fieldC")
 }
 
 trait FieldNameFixtures {
