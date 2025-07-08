@@ -25,18 +25,21 @@ case class FieldName private (value: String) extends AnyVal {
 }
 
 object FieldName {
-  def apply(value: String): FieldName             = safeApply(value).getOrElse(throw new RuntimeException("FieldName cannot be blank"))
-  def safeApply(value: String): Option[FieldName] = Some(value.trim()).filterNot(_.isEmpty()).map(new FieldName(_))
+  val Regex                           = "^[a-zA-Z]+$"
+  val Error_Msg                       = "FieldName cannot be blank or contain any characters other than a-z or A-Z"
+  def apply(value: String): FieldName = safeApply(value).getOrElse(throw new RuntimeException(Error_Msg))
 
-  implicit val readsFN: Reads[FieldName]    = Reads.StringReads.flatMapResult(FieldName.safeApply(_).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f)))
+  def safeApply(value: String): Option[FieldName] = Some(value.trim()).filterNot(_.isEmpty()).filter(_.matches(Regex)).map(new FieldName(_))
+
+  implicit val readsFN: Reads[FieldName]    = Reads.StringReads.flatMapResult(FieldName.safeApply(_).fold[JsResult[FieldName]](JsError(Error_Msg))(f => JsSuccess(f)))
   implicit val writersFN: Writes[FieldName] = Writes.StringWrites.contramap(_.value)
 
-  implicit val keyReadsFieldName: KeyReads[FieldName]   = key => FieldName.safeApply(key).fold[JsResult[FieldName]](JsError("FieldName cannot be blank"))(f => JsSuccess(f))
+  implicit val keyReadsFieldName: KeyReads[FieldName]   = key => FieldName.safeApply(key).fold[JsResult[FieldName]](JsError(Error_Msg))(f => JsSuccess(f))
   implicit val keyWritesFieldName: KeyWrites[FieldName] = _.value
 
   implicit val ordering: Ordering[FieldName] = new Ordering[FieldName] {
     override def compare(x: FieldName, y: FieldName): Int = x.value.compareTo(y.value)
   }
 
-  def random = FieldName(Random.alphanumeric.take(8).mkString) // scalastyle:ignore
+  def random = FieldName(Random.alphanumeric.filter(_.isLetter).take(8).mkString) // scalastyle:ignore
 }

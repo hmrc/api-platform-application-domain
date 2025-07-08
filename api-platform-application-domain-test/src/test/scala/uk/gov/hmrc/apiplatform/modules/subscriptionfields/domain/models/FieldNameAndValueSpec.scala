@@ -20,7 +20,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class FieldNameAndValueSpec extends BaseJsonFormattersSpec {
   val map      = Map(FieldNameData.one -> FieldValue("1"), FieldNameData.two -> FieldValue("2"))
-  val jsonText = """{ "field1": "1", "field2": "2" }"""
+  val jsonText = """{ "fieldA": "1", "fieldB": "2" }"""
 
   "JsonFormatter" should {
     "Read raw map" in {
@@ -28,11 +28,11 @@ class FieldNameAndValueSpec extends BaseJsonFormattersSpec {
     }
 
     "Write raw map" in {
-      testToJson(map)("field1" -> "1", "field2" -> "2")
+      testToJson(map)("fieldA" -> "1", "fieldB" -> "2")
     }
 
     "fail on bad map" in {
-      val jsonText = """{ "field1": "1", "": "2" }"""
+      val jsonText = """{ "fieldA": "1", "": "2" }"""
       testFailJson[Map[FieldName, FieldValue]](jsonText)
     }
   }

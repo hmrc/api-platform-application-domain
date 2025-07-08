@@ -123,5 +123,5 @@ object ApplicationWithSubscriptionFieldsSpec extends ApiIdentifierFixtures with 
   )
 
   val jsonText =
-    s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"${apiIdentifierOne.context}","version":"${apiIdentifierOne.versionNbr}"}],"fieldValues":{"test/contextA":{"1.0":{"field1":"a"}}}}"""
+    s"""{"details":${CoreApplicationSpec.jsonText},"collaborators":[${CollaboratorSpec.Admin.jsonText}],"subscriptions":[{"context":"${apiIdentifierOne.context}","version":"${apiIdentifierOne.versionNbr}"}],"fieldValues":{"test/contextA":{"1.0":{"fieldA":"a"}}}}"""
 }

@@ -18,8 +18,7 @@ object LibraryDependencies {
   val testDependencies = Seq(
     "org.scalactic"           %% "scalactic"                            % "3.2.14",
     "com.vladsch.flexmark"     % "flexmark-all"                         % "0.62.2",
-    "org.mockito"             %% "mockito-scala-scalatest"              % "1.17.29",
-    "org.scalatest"           %% "scalatest"                            % "3.2.17",
+    "org.mockito"             %% "mockito-scala-scalatest"              % "2.0.0",
     "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures"  % commonDomainVersion
   )
 

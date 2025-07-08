@@ -11,7 +11,7 @@ Global / bloopExportJarClassifiers := Some(Set("sources"))
 
 val libName = "api-platform-application-domain"
 
-lazy val scala2_13 = "2.13.12"
+lazy val scala2_13 = "2.13.16"
 
 ThisBuild / majorVersion     := 0
 ThisBuild / isPublicArtefact := true

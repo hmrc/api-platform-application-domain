@@ -35,6 +35,14 @@ package object models {
         .getOrElse(apiIdentifier.versionNbr, Map.empty)
   }
 
+  type FieldErrorMessage = String
+
+  type FieldErrorMap = Map[FieldName, FieldErrorMessage]
+
+  object FieldErrorMap {
+    val empty = Map.empty[FieldName, FieldErrorMessage]
+  }
+
   private def toApiFieldDefnMap(response: BulkApiFieldDefinitionsResponse): ApiFieldMap[FieldDefinition] = {
     import cats._
     import cats.implicits._
