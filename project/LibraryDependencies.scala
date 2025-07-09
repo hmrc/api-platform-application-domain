@@ -10,7 +10,7 @@ object LibraryDependencies {
     "uk.gov.hmrc"             %% "api-platform-common-domain"     % commonDomainVersion,
     "com.github.t3hnar"       %% "scala-bcrypt"                   % "4.1",
     "com.typesafe"             % "config"                         % "1.4.2",
-    "commons-validator"        % "commons-validator"              % "1.7",
+    "commons-validator"        % "commons-validator"              % "1.9.0",
     "dev.optics"              %% "monocle-core"                   % monocleVersion,
     "dev.optics"              %% "monocle-macro"                  % monocleVersion
   )

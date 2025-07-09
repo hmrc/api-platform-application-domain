@@ -16,21 +16,43 @@
 
 package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
+import scala.collection.mutable.ArrayBuffer
+import scala.jdk.CollectionConverters._
+
+import org.apache.commons.validator.routines.{DomainValidator, UrlValidator}
+
 import play.api.libs.json._
 
-sealed trait ValidationRule
+sealed trait ValidationRule {
 
-case class RegexValidationRule(regex: String) extends ValidationRule
+  def validate(fieldValue: FieldValue): Boolean = {
+    if (fieldValue.isEmpty) true
+    else validateAgainstRule(fieldValue)
+  }
+  protected def validateAgainstRule(fieldValue: FieldValue): Boolean
+}
+
+case class RegexValidationRule(regex: String) extends ValidationRule {
+  def validateAgainstRule(fieldValue: FieldValue): Boolean = fieldValue.value.matches(regex)
+}
 
 object RegexValidationRule {
   implicit val RegexValidationRuleFormat: OFormat[RegexValidationRule] = Json.format[RegexValidationRule]
 }
 
-case object UrlValidationRule extends ValidationRule
+case object UrlValidationRule extends ValidationRule {
+  val items                     = ArrayBuffer(new DomainValidator.Item(DomainValidator.ArrayType.GENERIC_PLUS, "mdtp")).asJava
+  private val schemes           = Array("http", "https")
+  private lazy val urlValidator = new org.apache.commons.validator.routines.UrlValidator(schemes, null, UrlValidator.ALLOW_LOCAL_URLS, DomainValidator.getInstance(true, items))
+
+  def validateAgainstRule(fieldValue: FieldValue): Boolean = {
+    urlValidator.isValid(fieldValue.value)
+  }
+}
 
 object ValidationRule {
 
-  implicit val ValidationRuleReads: Reads[ValidationRule] = new Reads[ValidationRule] {
+  private val ValidationRuleReads: Reads[ValidationRule] = new Reads[ValidationRule] {
 
     def reads(json: JsValue): JsResult[ValidationRule] = json match {
       case JsObject(fields) if (fields.keys.size == 1) =>
@@ -43,11 +65,13 @@ object ValidationRule {
     }
   }
 
-  implicit val ValidationRuleWrites: Writes[ValidationRule] = new Writes[ValidationRule] {
+  private val ValidationRuleWrites: Writes[ValidationRule] = new Writes[ValidationRule] {
 
     def writes(o: ValidationRule): JsValue = o match {
       case r: RegexValidationRule => Json.obj("RegexValidationRule" -> Json.toJson(r))
       case u @ UrlValidationRule  => Json.obj("UrlValidationRule" -> Json.obj())
     }
   }
+
+  implicit val validationRuleFormat: Format[ValidationRule] = Format(ValidationRuleReads, ValidationRuleWrites)
 }

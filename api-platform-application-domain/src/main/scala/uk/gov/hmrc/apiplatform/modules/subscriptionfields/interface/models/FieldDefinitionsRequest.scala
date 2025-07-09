@@ -16,12 +16,17 @@
 
 package uk.gov.hmrc.apiplatform.modules.subscriptionfields.interface.models
 
-import play.api.libs.json.{Format, Json}
+import cats.data.NonEmptyList
 
-import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.Fields
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
 
-final case class UpsertFieldValuesRequest(fields: Fields)
+import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.FieldDefinition
 
-object UpsertFieldValuesRequest {
-  implicit val formats: Format[UpsertFieldValuesRequest] = Json.format[UpsertFieldValuesRequest]
+final case class FieldDefinitionsRequest(fieldDefinitions: NonEmptyList[FieldDefinition])
+
+object FieldDefinitionsRequest {
+  import play.api.libs.json._
+  import NonEmptyListFormatters._
+
+  implicit val FieldDefinitionsRequestJF: OFormat[FieldDefinitionsRequest] = Json.format[FieldDefinitionsRequest]
 }
