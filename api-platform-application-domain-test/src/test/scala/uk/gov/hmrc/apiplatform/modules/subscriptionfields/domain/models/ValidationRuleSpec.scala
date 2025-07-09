@@ -24,7 +24,7 @@ class ValidationRuleSpec extends BaseJsonFormattersSpec with ValidationRuleFixtu
   val regexJsonText = """{"RegexValidationRule":{"regex":".*"}}"""
   val urlJsonText   = """{"UrlValidationRule":{}}"""
 
-  "JsonFormatter" should {
+  "ValidationRule" should {
     "Read raw json" in {
       testFromJson[ValidationRule](regexJsonText)(ruleOne)
       testFromJson[ValidationRule](urlJsonText)(ruleTwo)
@@ -43,4 +43,60 @@ class ValidationRuleSpec extends BaseJsonFormattersSpec with ValidationRuleFixtu
       Json.toJson[ValidationRule](ruleTwo).toString shouldBe urlJsonText
     }
   }
+
+  val lowerCaseValue = FieldValue("bob")
+  val mixedCaseValue = FieldValue("Bob")
+
+  val lowerCaseRule: ValidationRule = RegexValidationRule("""^[a-z]+$""")
+  val mixedCaseRule: ValidationRule = RegexValidationRule("""^[a-zA-Z]+$""")
+
+  val atLeastThreeLongRule: ValidationRule = RegexValidationRule("""^.{3}.*$""")
+  val atLeastTenLongRule: ValidationRule   = RegexValidationRule("""^.{10}.*$""")
+
+  val validUrl      = FieldValue("https://www.example.com/here/and/there")
+  val localValidUrl = FieldValue("https://localhost:9000/")
+  val invalidUrls   = List("www.example.com", "ftp://example.com/abc", "https://www example.com", "https://www&example.com", "https://www,example.com").map(FieldValue(_))
+
+  "RegexValidationRule" should {
+    "return true when the value is valid - correct case" in {
+      lowerCaseRule.validate(lowerCaseValue) shouldBe true
+    }
+    "return true when the value is valid - long enough" in {
+      atLeastThreeLongRule.validate(lowerCaseValue) shouldBe true
+    }
+    "return false when the value is invalid - wrong case" in {
+      lowerCaseRule.validate(mixedCaseValue) shouldBe false
+    }
+    "return false when the value is invalid - too short" in {
+      atLeastTenLongRule.validate(mixedCaseValue) shouldBe false
+    }
+    "return true when the value is blank" in {
+      atLeastTenLongRule.validate(FieldValue("")) shouldBe true
+    }
+  }
+
+  "url validation rule" should {
+    "pass for a matching value" in {
+      UrlValidationRule.validate(validUrl) shouldBe true
+    }
+
+    "pass for localhost" in {
+      UrlValidationRule.validate(localValidUrl) shouldBe true
+    }
+
+    "return true when the value is blank" in {
+      UrlValidationRule.validate(FieldValue("")) shouldBe true
+    }
+
+    "invalid urls" in {
+      invalidUrls.map(invalidUrl => {
+        UrlValidationRule.validate(invalidUrl) shouldBe false
+      })
+    }
+
+    "handles internal mdtp domains in url" in {
+      UrlValidationRule.validate(FieldValue("https://who-cares.mdtp/pathy/mcpathface")) shouldBe true
+    }
+  }
+
 }

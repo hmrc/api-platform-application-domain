@@ -20,7 +20,7 @@ case class FieldDefinition(
     name: FieldName,
     description: String,
     hint: String = "",
-    `type`: FieldDefinitionType.FieldDefinitionType,
+    `type`: FieldDefinitionType,
     shortDescription: String,
     validation: Option[ValidationGroup],
     access: AccessRequirements = AccessRequirements.Default
@@ -34,7 +34,7 @@ object FieldDefinition {
     (JsPath \ "name").read[FieldName] and
       (JsPath \ "description").read[String] and
       ((JsPath \ "hint").read[String] or Reads.pure("")) and
-      (JsPath \ "type").read[FieldDefinitionType.Value] and
+      (JsPath \ "type").read[FieldDefinitionType] and
       ((JsPath \ "shortDescription").read[String] or Reads.pure("")) and
       (JsPath \ "validation").readNullable[ValidationGroup] and
       ((JsPath \ "access").read[AccessRequirements] or Reads.pure(AccessRequirements.Default))
@@ -51,7 +51,7 @@ object FieldDefinition {
         (JsPath \ "name").write[FieldName] and
           (JsPath \ "description").write[String] and
           (JsPath \ "hint").write[String] and
-          (JsPath \ "type").write[FieldDefinitionType.FieldDefinitionType] and
+          (JsPath \ "type").write[FieldDefinitionType] and
           (JsPath \ "shortDescription").write[String] and
           (JsPath \ "validation").writeNullable[ValidationGroup]
 

@@ -37,6 +37,8 @@ package object models {
 
   type FieldErrorMessage = String
 
+  type FieldError = (FieldName, FieldErrorMessage)
+  
   type FieldErrorMap = Map[FieldName, FieldErrorMessage]
 
   object FieldErrorMap {

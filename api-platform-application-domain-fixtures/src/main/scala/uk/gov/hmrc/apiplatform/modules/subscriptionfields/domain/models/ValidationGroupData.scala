@@ -20,8 +20,14 @@ import cats.data.NonEmptyList
 
 object ValidationGroupData {
   val one = ValidationGroup("Bang", NonEmptyList.one(ValidationRuleData.one))
+  val two = ValidationGroup("Boom", NonEmptyList.one(ValidationRuleData.two))
 }
 
 trait ValidationGroupFixtures extends ValidationRuleFixtures {
   val groupOne = ValidationGroupData.one
+  val groupTwo = ValidationGroupData.two
+
+  val groupOneJson = """{"errorMessage":"Bang","rules":[{"RegexValidationRule":{"regex":".*"}}]}"""
+  val groupTwoJson = """{"errorMessage":"Bang","rules":[{"UrlValidationRule"]}"""
+
 }

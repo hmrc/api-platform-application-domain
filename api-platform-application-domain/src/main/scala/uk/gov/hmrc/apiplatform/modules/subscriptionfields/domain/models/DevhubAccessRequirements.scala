@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
-case class DevhubAccessRequirements(
+case class DevhubAccessRequirements private (
     read: DevhubAccessRequirement,
     write: DevhubAccessRequirement
   ) {
@@ -27,10 +27,7 @@ case class DevhubAccessRequirements(
 object DevhubAccessRequirements {
   import DevhubAccessRequirement._
 
-  final val Default = DevhubAccessRequirements(
-    uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.DevhubAccessRequirement.Default,
-    uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.DevhubAccessRequirement.Default
-  )
+  final val Default = new DevhubAccessRequirements(DevhubAccessRequirement.Default, DevhubAccessRequirement.Default)
 
   // Do not allow lesser restrictions on write than on read
   // - it would make no sense to allow NoOne read but everyone write or developer write and admin read

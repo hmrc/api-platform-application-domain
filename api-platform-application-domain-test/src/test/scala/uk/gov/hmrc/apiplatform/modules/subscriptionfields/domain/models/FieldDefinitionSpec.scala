@@ -25,7 +25,7 @@ class FieldDefinitionSpec extends BaseJsonFormattersSpec with FieldDefinitionFix
                             |    "name": "${fieldDefnOne.name}",
                             |    "description": "${fieldDefnOne.description}",
                             |    "hint": "${fieldDefnOne.hint}",
-                            |    "type": "${fieldDefnOne.`type`}",
+                            |    "type": "${fieldDefnOne.`type`.label}",
                             |    "shortDescription": "${fieldDefnOne.shortDescription}"
                             |}""".stripMargin
 
@@ -33,7 +33,7 @@ class FieldDefinitionSpec extends BaseJsonFormattersSpec with FieldDefinitionFix
                             |    "name": "${fieldDefnTwo.name}",
                             |    "description": "${fieldDefnTwo.description}",
                             |    "hint": "${fieldDefnTwo.hint}",
-                            |    "type": "${fieldDefnTwo.`type`}",
+                            |    "type": "${fieldDefnTwo.`type`.label}",
                             |    "shortDescription": "${fieldDefnTwo.shortDescription}",
                             |    "access": {"devhub":{"read":"adminOnly","write":"adminOnly"}}
                             |}""".stripMargin
@@ -42,7 +42,7 @@ class FieldDefinitionSpec extends BaseJsonFormattersSpec with FieldDefinitionFix
                                |    "name": "${fieldDefnOne.name}",
                                |    "description": "${fieldDefnOne.description}",
                                |    "hint": "${fieldDefnOne.hint}",
-                               |    "type": "${fieldDefnOne.`type`}",
+                               |    "type": "${fieldDefnOne.`type`.label}",
                                |    "shortDescription": "${fieldDefnOne.shortDescription}",
                                |    "validation": {
                                |        "errorMessage": "Bang",
