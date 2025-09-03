@@ -29,7 +29,7 @@ object CoreApplicationData extends FixedClock {
 
     val one = CoreApplication(
       id = ApplicationIdData.one,
-      clientId = ClientIdData.one,
+      token = ApplicationTokenData.one,
       gatewayId = "abc123",
       name = ApplicationNameData.one,
       deployedTo = Environment.PRODUCTION,
@@ -37,7 +37,6 @@ object CoreApplicationData extends FixedClock {
       createdOn = instant,
       lastAccess = Some(instant),
       grantLength = GrantLength.EIGHTEEN_MONTHS,
-      lastAccessTokenUsage = Some(instant),
       access = AccessData.Standard.default,
       state = ApplicationStateData.production,
       rateLimitTier = RateLimitTier.BRONZE,
@@ -50,13 +49,13 @@ object CoreApplicationData extends FixedClock {
 
     val two = one.copy(
       id = ApplicationIdData.two,
-      clientId = ClientIdData.two,
+      token = ApplicationTokenData.two,
       name = ApplicationNameData.two
     )
 
     val three = one.copy(
       id = ApplicationIdData.three,
-      clientId = ClientIdData.three,
+      token = ApplicationTokenData.three,
       name = ApplicationNameData.three
     )
   }
@@ -65,7 +64,7 @@ object CoreApplicationData extends FixedClock {
 
     val one = CoreApplication(
       id = ApplicationIdData.two,
-      clientId = ClientIdData.two,
+      token = ApplicationTokenData.priv,
       gatewayId = "def567",
       name = ApplicationNameData.two,
       deployedTo = Environment.PRODUCTION,
@@ -73,7 +72,6 @@ object CoreApplicationData extends FixedClock {
       createdOn = instant,
       lastAccess = Some(instant),
       grantLength = GrantLength.EIGHTEEN_MONTHS,
-      lastAccessTokenUsage = Some(instant),
       access = AccessData.Privileged.default,
       state = ApplicationStateData.production,
       rateLimitTier = RateLimitTier.BRONZE,
@@ -89,7 +87,7 @@ object CoreApplicationData extends FixedClock {
 
     val one = CoreApplication(
       id = ApplicationIdData.three,
-      clientId = ClientIdData.three,
+      token = ApplicationTokenData.ropc,
       gatewayId = "def890",
       name = ApplicationNameData.three,
       deployedTo = Environment.PRODUCTION,
@@ -97,7 +95,6 @@ object CoreApplicationData extends FixedClock {
       createdOn = instant,
       lastAccess = Some(instant),
       grantLength = GrantLength.EIGHTEEN_MONTHS,
-      lastAccessTokenUsage = Some(instant),
       access = AccessData.Ropc.default,
       state = ApplicationStateData.production,
       rateLimitTier = RateLimitTier.BRONZE,

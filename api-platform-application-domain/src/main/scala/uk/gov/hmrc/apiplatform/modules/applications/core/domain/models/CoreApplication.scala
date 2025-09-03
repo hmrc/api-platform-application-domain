@@ -91,7 +91,7 @@ trait AppLocking {
 
 case class CoreApplication(
     id: ApplicationId,
-    clientId: ClientId,
+    token: ApplicationToken,
     gatewayId: String,
     name: ApplicationName,
     deployedTo: Environment,
@@ -99,7 +99,6 @@ case class CoreApplication(
     createdOn: Instant,
     lastAccess: Option[Instant],
     grantLength: GrantLength,
-    lastAccessTokenUsage: Option[Instant],
     access: Access,
     state: ApplicationState,
     rateLimitTier: RateLimitTier,
@@ -109,6 +108,8 @@ case class CoreApplication(
     lastActionActor: ActorType,
     deleteRestriction: DeleteRestriction
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
+
+  val clientId = token.clientId
 
   def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
 
@@ -121,49 +122,7 @@ case class CoreApplication(
 object CoreApplication {
   import play.api.libs.json._
 
-  private case class OldCoreApplication(
-      id: ApplicationId,
-      clientId: ClientId,
-      gatewayId: String,
-      name: ApplicationName,
-      deployedTo: Environment,
-      description: Option[String],
-      createdOn: Instant,
-      lastAccess: Option[Instant],
-      grantLength: GrantLength,
-      lastAccessTokenUsage: Option[Instant],
-      access: Access,
-      state: ApplicationState,
-      rateLimitTier: RateLimitTier,
-      checkInformation: Option[CheckInformation],
-      blocked: Boolean,
-      ipAllowlist: IpAllowlist,
-      lastActionActor: ActorType
-    )
-
-  private def transformOldResponse(old: OldCoreApplication): CoreApplication =
-    CoreApplication(
-      id = old.id,
-      clientId = old.clientId,
-      gatewayId = old.gatewayId,
-      name = old.name,
-      deployedTo = old.deployedTo,
-      description = old.description,
-      createdOn = old.createdOn,
-      lastAccess = old.lastAccess,
-      grantLength = old.grantLength,
-      lastAccessTokenUsage = old.lastAccessTokenUsage,
-      access = old.access,
-      state = old.state,
-      rateLimitTier = old.rateLimitTier,
-      checkInformation = old.checkInformation,
-      blocked = old.blocked,
-      ipAllowlist = old.ipAllowlist,
-      lastActionActor = old.lastActionActor,
-      deleteRestriction = DeleteRestriction.NoRestriction
-    )
-
-  val reads: Reads[CoreApplication] = Json.reads[CoreApplication].orElse(Json.reads[OldCoreApplication].map(transformOldResponse))
+  val reads: Reads[CoreApplication] = Json.reads[CoreApplication]
 
   val writes: Writes[CoreApplication] = Json.writes[CoreApplication]
 
