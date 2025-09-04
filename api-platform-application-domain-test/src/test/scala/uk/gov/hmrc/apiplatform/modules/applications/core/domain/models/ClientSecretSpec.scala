@@ -18,24 +18,31 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
-class ClientSecretResponseSpec extends BaseJsonFormattersSpec with FixedClock {
-  val anId             = ClientSecret.Id.random
-  val fakeHashedSecret = "blahblahblah"
-  val aClientSecret    = ClientSecretResponse(anId, "bob", instant, None)
+class ClientSecretSpec extends BaseJsonFormattersSpec with FixedClock {
+  import ClientSecretSpec._
 
-  "ClientSecretResponse" should {
-    val expectedJsonText = s"""{"name":"bob","createdOn":"$nowAsText","id":"${anId.value}"}"""
+  "ClientSecret" should {
+    val expectedJsonText = jsonText
 
     "convert to json" in {
-      testToJson(aClientSecret)(
-        "name"      -> "bob",
-        "createdOn" -> s"$nowAsText",
-        "id"        -> s"${anId.value}"
+      testToJson(example)(
+        "name"       -> "bob",
+        "createdOn"  -> s"$nowAsText",
+        "id"         -> s"${ClientSecretData.Id.one}",
+        "lastAccess" -> s"$nowAsText"
       )
     }
 
     "read from json" in {
-      testFromJson[ClientSecretResponse](expectedJsonText)(aClientSecret)
+      testFromJson[ClientSecret](expectedJsonText)(example)
     }
   }
+}
+
+object ClientSecretSpec extends FixedClock {
+  val fakeHashedSecret = "blahblahblah"
+
+  val example = ClientSecret(ClientSecretData.Id.one, "bob", instant, Some(instant))
+
+  val jsonText = s"""{"name":"bob","createdOn":"$nowAsText","id":"${ClientSecretData.Id.one}","lastAccess":"${nowAsText}"}"""
 }

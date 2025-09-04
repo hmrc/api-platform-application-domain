@@ -37,8 +37,8 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
       testFromJson[CoreApplication](jsonText)(example)
     }
 
-    "read from json with no delete restriction" in {
-      testFromJson[CoreApplication](jsonTextNoDeleteRestriction)(example)
+    "read from json with no last access token usage" in {
+      testFromJson[CoreApplication](jsonTextNoLastAccessTokenUsage)(example.copy(token = ApplicationTokenSpec.NoLastAccess.example))
     }
 
     val modifyPrivAccess: (Access) => Access                  = a =>
@@ -82,11 +82,11 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
 
 object CoreApplicationSpec extends FixedClock {
   val id       = ApplicationId.random
-  val clientId = ClientId.random
+  val clientId = ApplicationTokenSpec.example.clientId
 
   val example = CoreApplication(
     id,
-    clientId,
+    token = ApplicationTokenSpec.example,
     gatewayId = "",
     name = ApplicationName("App"),
     deployedTo = Environment.PRODUCTION,
@@ -94,7 +94,6 @@ object CoreApplicationSpec extends FixedClock {
     createdOn = instant,
     lastAccess = None,
     grantLength = GrantLength.EIGHTEEN_MONTHS,
-    lastAccessTokenUsage = None,
     access = Access.Standard(),
     state = ApplicationStateSpec.example,
     rateLimitTier = RateLimitTier.BRONZE,
@@ -106,8 +105,8 @@ object CoreApplicationSpec extends FixedClock {
   )
 
   val jsonText =
-    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
+    s"""{"id":"$id","token":${ApplicationTokenSpec.jsonText},"clientId":"$clientId","lastAccessTokenUsage":"$nowAsText","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 
-  val jsonTextNoDeleteRestriction =
-    s"""{"id":"$id","clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"lastActionActor":"UNKNOWN"}"""
+  val jsonTextNoLastAccessTokenUsage =
+    s"""{"id":"$id","token":${ApplicationTokenSpec.NoLastAccess.jsonText},"clientId":"$clientId","lastAccessTokenUsage":"$nowAsText","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"lastActionActor":"UNKNOWN","deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 }

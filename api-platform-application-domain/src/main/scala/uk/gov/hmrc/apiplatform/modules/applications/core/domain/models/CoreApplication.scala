@@ -109,7 +109,8 @@ case class CoreApplication(
     deleteRestriction: DeleteRestriction
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
 
-  val clientId = token.clientId
+  val clientId             = token.clientId
+  val lastAccessTokenUsage = token.lastAccessTokenUsage
 
   def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
 
@@ -124,7 +125,19 @@ object CoreApplication {
 
   val reads: Reads[CoreApplication] = Json.reads[CoreApplication]
 
-  val writes: Writes[CoreApplication] = Json.writes[CoreApplication]
+  // Duplicate the clientId and any lastAccessTokenUsage fields from new token field into the top level json in order to allow existing readers
+  // to find fields they expect before we have released this to all the readers.
+  // We cannot use the typical method of having a tolerant reader for token as we don't have values to default in to the new fields.
+  //
+  val transformer: JsObject => JsObject = (obj) => {
+    (obj \ "token" \ "lastAccessTokenUsage").toOption.fold(
+      obj + ("clientId" -> (obj \ "token" \ "clientId").get)
+    )(latu =>
+      obj + ("clientId" -> (obj \ "token" \ "clientId").get) + ("lastAccessTokenUsage" -> latu)
+    )
+  }
+
+  val writes: Writes[CoreApplication] = Json.writes[CoreApplication].transform(transformer)
 
   implicit val format: Format[CoreApplication] = Format(reads, writes)
 
