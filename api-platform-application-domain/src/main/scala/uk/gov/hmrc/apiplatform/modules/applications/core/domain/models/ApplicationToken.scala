@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,18 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
 import java.time.Instant
-import java.{util => ju}
 
-case class ClientSecret(id: ClientSecret.Id, name: String, createdOn: Instant, lastAccess: Option[Instant] = None)
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.ClientId
 
-object ClientSecret {
+case class ApplicationToken(
+    clientId: ClientId,
+    accessToken: String,
+    clientSecrets: List[ClientSecret],
+    lastAccessTokenUsage: Option[Instant]
+  )
+
+object ApplicationToken {
   import play.api.libs.json._
 
-  implicit val format: OFormat[ClientSecret] = Json.format[ClientSecret]
-
-  case class Id(value: ju.UUID) extends AnyVal {
-    override def toString(): String = value.toString()
-  }
-
-  object Id {
-    import play.api.libs.json._
-
-    def random = Id(ju.UUID.randomUUID())
-
-    implicit val format: Format[Id] = Json.valueFormat[Id]
-  }
+  implicit val format: OFormat[ApplicationToken] = Json.format[ApplicationToken]
 }

@@ -91,7 +91,7 @@ trait AppLocking {
 
 case class CoreApplication(
     id: ApplicationId,
-    clientId: ClientId,
+    token: ApplicationToken,
     gatewayId: String,
     name: ApplicationName,
     deployedTo: Environment,
@@ -99,7 +99,6 @@ case class CoreApplication(
     createdOn: Instant,
     lastAccess: Option[Instant],
     grantLength: GrantLength,
-    lastAccessTokenUsage: Option[Instant],
     access: Access,
     state: ApplicationState,
     rateLimitTier: RateLimitTier,
@@ -109,6 +108,9 @@ case class CoreApplication(
     lastActionActor: ActorType,
     deleteRestriction: DeleteRestriction
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
+
+  val clientId             = token.clientId
+  val lastAccessTokenUsage = token.lastAccessTokenUsage
 
   def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
 
@@ -121,51 +123,21 @@ case class CoreApplication(
 object CoreApplication {
   import play.api.libs.json._
 
-  private case class OldCoreApplication(
-      id: ApplicationId,
-      clientId: ClientId,
-      gatewayId: String,
-      name: ApplicationName,
-      deployedTo: Environment,
-      description: Option[String],
-      createdOn: Instant,
-      lastAccess: Option[Instant],
-      grantLength: GrantLength,
-      lastAccessTokenUsage: Option[Instant],
-      access: Access,
-      state: ApplicationState,
-      rateLimitTier: RateLimitTier,
-      checkInformation: Option[CheckInformation],
-      blocked: Boolean,
-      ipAllowlist: IpAllowlist,
-      lastActionActor: ActorType
+  val reads: Reads[CoreApplication] = Json.reads[CoreApplication]
+
+  // Duplicate the clientId and any lastAccessTokenUsage fields from new token field into the top level json in order to allow existing readers
+  // to find fields they expect before we have released this to all the readers.
+  // We cannot use the typical method of having a tolerant reader for token as we don't have values to default in to the new fields.
+  //
+  val transformer: JsObject => JsObject = (obj) => {
+    (obj \ "token" \ "lastAccessTokenUsage").toOption.fold(
+      obj + ("clientId" -> (obj \ "token" \ "clientId").get)
+    )(latu =>
+      obj + ("clientId" -> (obj \ "token" \ "clientId").get) + ("lastAccessTokenUsage" -> latu)
     )
+  }
 
-  private def transformOldResponse(old: OldCoreApplication): CoreApplication =
-    CoreApplication(
-      id = old.id,
-      clientId = old.clientId,
-      gatewayId = old.gatewayId,
-      name = old.name,
-      deployedTo = old.deployedTo,
-      description = old.description,
-      createdOn = old.createdOn,
-      lastAccess = old.lastAccess,
-      grantLength = old.grantLength,
-      lastAccessTokenUsage = old.lastAccessTokenUsage,
-      access = old.access,
-      state = old.state,
-      rateLimitTier = old.rateLimitTier,
-      checkInformation = old.checkInformation,
-      blocked = old.blocked,
-      ipAllowlist = old.ipAllowlist,
-      lastActionActor = old.lastActionActor,
-      deleteRestriction = DeleteRestriction.NoRestriction
-    )
-
-  val reads: Reads[CoreApplication] = Json.reads[CoreApplication].orElse(Json.reads[OldCoreApplication].map(transformOldResponse))
-
-  val writes: Writes[CoreApplication] = Json.writes[CoreApplication]
+  val writes: Writes[CoreApplication] = Json.writes[CoreApplication].transform(transformer)
 
   implicit val format: Format[CoreApplication] = Format(reads, writes)
 
