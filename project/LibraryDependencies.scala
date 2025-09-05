@@ -2,8 +2,8 @@ import sbt._
 
 object LibraryDependencies {
   def apply() = compileDependencies ++ testDependencies
-  
-  val commonDomainVersion = "0.18.0"
+
+  val commonDomainVersion = "0.19.0-SNAPSHOT"
   val monocleVersion = "3.1.0"
 
   val compileDependencies = Seq(
@@ -25,5 +25,5 @@ object LibraryDependencies {
   val applicationDomain = compileDependencies ++ testDependencies.map(_ % "test")
 
   val root = compileDependencies ++ testDependencies
-  
+
 }

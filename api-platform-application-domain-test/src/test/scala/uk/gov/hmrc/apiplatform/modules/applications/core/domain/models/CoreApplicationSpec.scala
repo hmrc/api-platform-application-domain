@@ -41,6 +41,10 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
       testFromJson[CoreApplication](jsonTextNoLastAccessTokenUsage)(example.copy(token = ApplicationTokenSpec.NoLastAccess.example))
     }
 
+    "read from json with linked organisationId" in {
+      testFromJson[CoreApplication](jsonTextWithLinkedOrgId)(example.copy(organisationId = Some(organisationIdOne)))
+    }
+
     val modifyPrivAccess: (Access) => Access                  = a =>
       a match {
         case p: Access.Privileged => p.copy(scopes = p.scopes + "NewScope")
@@ -80,7 +84,7 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
   }
 }
 
-object CoreApplicationSpec extends FixedClock {
+object CoreApplicationSpec extends FixedClock with OrganisationIdFixtures {
   val id       = ApplicationId.random
   val clientId = ApplicationTokenSpec.example.clientId
 
@@ -109,4 +113,7 @@ object CoreApplicationSpec extends FixedClock {
 
   val jsonTextNoLastAccessTokenUsage =
     s"""{"id":"$id","token":${ApplicationTokenSpec.NoLastAccess.jsonText},"clientId":"$clientId","lastAccessTokenUsage":"$nowAsText","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"lastActionActor":"UNKNOWN","deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
+
+  val jsonTextWithLinkedOrgId =
+    s"""{"id":"$id", "organisationId":"$organisationIdOne", "clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 }

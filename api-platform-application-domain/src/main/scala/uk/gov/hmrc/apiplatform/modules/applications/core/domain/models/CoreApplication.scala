@@ -106,7 +106,8 @@ case class CoreApplication(
     blocked: Boolean,
     ipAllowlist: IpAllowlist,
     lastActionActor: ActorType,
-    deleteRestriction: DeleteRestriction
+    deleteRestriction: DeleteRestriction,
+    organisationId: Option[OrganisationId] = None
   ) extends HasEnvironment with HasState with AppLocking with HasAccess {
 
   val clientId             = token.clientId
