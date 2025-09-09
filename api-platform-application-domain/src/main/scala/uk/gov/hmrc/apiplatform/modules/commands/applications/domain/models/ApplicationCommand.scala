@@ -141,6 +141,7 @@ object ApplicationCommands {
   case class ChangeApplicationScopes(gatekeeperUser: String, scopes: Set[String], timestamp: Instant)                   extends ScopesCommand with GatekeeperMixin
   case class ChangeApplicationAccessOverrides(gatekeeperUser: String, overrides: Set[OverrideFlag], timestamp: Instant) extends ScopesCommand with GatekeeperMixin
 
+  case class LinkToOrganisation(organisationId: OrganisationId, timestamp: Instant) extends SubmissionCommand
 }
 
 object ApplicationCommand {
@@ -212,6 +213,8 @@ object ApplicationCommand {
   implicit private val changeApplicationScopesFormat: OFormat[ChangeApplicationScopes]                   = Json.format[ChangeApplicationScopes]
   implicit private val changeApplicationAccessOverridesFormat: OFormat[ChangeApplicationAccessOverrides] = Json.format[ChangeApplicationAccessOverrides]
 
+  implicit private val linkToOrganisationFormat: OFormat[LinkToOrganisation] = Json.format[LinkToOrganisation]
+
   implicit val formatter: OFormat[ApplicationCommand] = Union.from[ApplicationCommand]("updateType")
     .and[AddCollaborator]("addCollaborator")
     .and[RemoveCollaborator]("removeCollaborator")
@@ -264,5 +267,6 @@ object ApplicationCommand {
     .and[UnblockApplication]("unblockApplication")
     .and[ChangeApplicationScopes]("changeApplicationScopes")
     .and[ChangeApplicationAccessOverrides]("changeApplicationAccessOverrides")
+    .and[LinkToOrganisation]("linkToOrganisation")
     .format
 }
