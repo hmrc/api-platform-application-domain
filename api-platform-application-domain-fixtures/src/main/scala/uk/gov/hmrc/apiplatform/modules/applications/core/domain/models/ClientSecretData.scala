@@ -38,16 +38,16 @@ object ClientSecretData extends FixedClock {
   }
 }
 
-trait ClientSecretData {
-  val ClientSecretIdOne   = ClientSecretData.Id.one
-  val ClientSecretIdTwo   = ClientSecretData.Id.two
-  val ClientSecretIdThree = ClientSecretData.Id.three
-  val ClientSecretIdPriv  = ClientSecretData.Id.priv
-  val ClientSecretIdRopc  = ClientSecretData.Id.ropc
+trait ClientSecretFixtures {
+  val clientSecretIdOne   = ClientSecretData.Id.one
+  val clientSecretIdTwo   = ClientSecretData.Id.two
+  val clientSecretIdThree = ClientSecretData.Id.three
+  val clientSecretIdPriv  = ClientSecretData.Id.priv
+  val clientSecretIdRopc  = ClientSecretData.Id.ropc
 
-  val ClientSecretOne   = ClientSecretData.one
-  val ClientSecretTwo   = ClientSecretData.two
-  val ClientSecretThree = ClientSecretData.three
-  val ClientSecretPriv  = ClientSecretData.priv
-  val ClientSecretRopc  = ClientSecretData.ropc
+  val clientSecretOne   = ClientSecretData.one
+  val clientSecretTwo   = ClientSecretData.two
+  val clientSecretThree = ClientSecretData.three
+  val clientSecretPriv  = ClientSecretData.priv
+  val clientSecretRopc  = ClientSecretData.ropc
 }

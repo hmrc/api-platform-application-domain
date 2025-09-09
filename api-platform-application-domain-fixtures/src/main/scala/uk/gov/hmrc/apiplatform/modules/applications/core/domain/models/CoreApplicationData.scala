@@ -114,6 +114,7 @@ trait CoreApplicationFixtures
     with AccessFixtures
     with ApplicationStateFixtures
     with CheckInformationFixtures
+    with ApplicationTokenFixtures
     with IpAllowListFixtures {
 
   val standardCoreApp   = CoreApplicationData.Standard.one

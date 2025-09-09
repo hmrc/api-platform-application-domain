@@ -62,6 +62,9 @@ case class ApplicationWithCollaborators(
   def withAccess(newAccess: Access): ApplicationWithCollaborators                           = this.focus(_.details.access).replace(newAccess)
   def modifyAccess(fn: Access => Access): ApplicationWithCollaborators                      = this.focus(_.details.access).modify(fn)
 
+  def withToken(newToken: ApplicationToken): ApplicationWithCollaborators                 = this.focus(_.details.token).replace(newToken)
+  def modifyToken(fn: ApplicationToken => ApplicationToken): ApplicationWithCollaborators = this.focus(_.details.token).modify(fn)
+
   def withSubscriptions(subscriptions: Set[ApiIdentifier]): ApplicationWithSubscriptions =
     ApplicationWithSubscriptions(
       this.details,

@@ -39,11 +39,16 @@ case class ApplicationWithSubscriptionFields(
 
   // Assist with nesting
   import monocle.syntax.all._
-  def modify(fn: CoreApplication => CoreApplication): ApplicationWithSubscriptionFields        = this.focus(_.details).modify(fn)
+  def modify(fn: CoreApplication => CoreApplication): ApplicationWithSubscriptionFields = this.focus(_.details).modify(fn)
+
   def withState(newState: ApplicationState): ApplicationWithSubscriptionFields                 = this.focus(_.details.state).replace(newState)
   def modifyState(fn: ApplicationState => ApplicationState): ApplicationWithSubscriptionFields = this.focus(_.details.state).modify(fn)
-  def withAccess(newAccess: Access): ApplicationWithSubscriptionFields                         = this.focus(_.details.access).replace(newAccess)
-  def modifyAccess(fn: Access => Access): ApplicationWithSubscriptionFields                    = this.focus(_.details.access).modify(fn)
+
+  def withAccess(newAccess: Access): ApplicationWithSubscriptionFields      = this.focus(_.details.access).replace(newAccess)
+  def modifyAccess(fn: Access => Access): ApplicationWithSubscriptionFields = this.focus(_.details.access).modify(fn)
+
+  def withToken(newToken: ApplicationToken): ApplicationWithSubscriptionFields                 = this.focus(_.details.token).replace(newToken)
+  def modifyToken(fn: ApplicationToken => ApplicationToken): ApplicationWithSubscriptionFields = this.focus(_.details.token).modify(fn)
 
   def modifyStdAccess(fn: Access.Standard => Access.Standard): ApplicationWithSubscriptionFields = this.access match {
     case std: Access.Standard => withAccess(fn(std))
