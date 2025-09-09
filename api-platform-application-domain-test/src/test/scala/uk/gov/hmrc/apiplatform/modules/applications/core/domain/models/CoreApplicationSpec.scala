@@ -52,6 +52,13 @@ class CoreApplicationSpec extends BaseJsonFormattersSpec with CoreApplicationFix
       }
     val modifyStdAccess: (Access.Standard) => Access.Standard = a => a.copy(overrides = Set(OverrideFlag.PersistLogin))
 
+    "modify token" in {
+      val app    = example.copy(token = applicationTokenOne)
+      val newApp = app.modifyToken(_.copy(clientId = clientIdThree))
+
+      newApp.token.clientId shouldBe clientIdThree
+    }
+
     "modify access" in {
       val app    = example.copy(access = privilegedAccess)
       val newApp = app.modifyAccess(modifyPrivAccess)

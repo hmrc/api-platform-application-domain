@@ -113,6 +113,8 @@ case class CoreApplication(
   val clientId             = token.clientId
   val lastAccessTokenUsage = token.lastAccessTokenUsage
 
+  def modifyToken(fn: ApplicationToken => ApplicationToken) = this.copy(token = fn(this.token))
+
   def modifyAccess(fn: Access => Access) = this.copy(access = fn(this.access))
 
   def modifyStdAccess(fn: Access.Standard => Access.Standard) = this.access match {
