@@ -112,7 +112,8 @@ object CoreApplicationSpec extends FixedClock with OrganisationIdFixtures {
     blocked = false,
     ipAllowlist = IpAllowlist(false, Set.empty),
     deleteRestriction = DeleteRestriction.NoRestriction,
-    lastActionActor = ActorType.UNKNOWN
+    lastActionActor = ActorType.UNKNOWN,
+    organisationId = None
   )
 
   val jsonText =

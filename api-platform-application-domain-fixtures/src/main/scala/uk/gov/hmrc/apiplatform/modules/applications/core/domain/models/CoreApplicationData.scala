@@ -44,7 +44,8 @@ object CoreApplicationData extends FixedClock {
       blocked = false,
       ipAllowlist = IpAllowListData.one,
       lastActionActor = ActorType.UNKNOWN,
-      deleteRestriction = DeleteRestriction.NoRestriction
+      deleteRestriction = DeleteRestriction.NoRestriction,
+      organisationId = None
     )
 
     val two = one.copy(
@@ -79,7 +80,8 @@ object CoreApplicationData extends FixedClock {
       blocked = false,
       ipAllowlist = IpAllowListData.one,
       lastActionActor = ActorType.UNKNOWN,
-      deleteRestriction = DeleteRestriction.NoRestriction
+      deleteRestriction = DeleteRestriction.NoRestriction,
+      organisationId = None
     )
   }
 
@@ -102,7 +104,8 @@ object CoreApplicationData extends FixedClock {
       blocked = false,
       ipAllowlist = IpAllowListData.one,
       lastActionActor = ActorType.UNKNOWN,
-      deleteRestriction = DeleteRestriction.NoRestriction
+      deleteRestriction = DeleteRestriction.NoRestriction,
+      organisationId = None
     )
   }
 }
