@@ -23,11 +23,11 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 object ClientSecretData extends FixedClock {
 
-  val one   = ClientSecret(Id.one, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
-  val two   = ClientSecret(Id.two, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
-  val three = ClientSecret(Id.three, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), None)
-  val priv  = ClientSecret(Id.priv, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
-  val ropc  = ClientSecret(Id.ropc, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val one   = ClientSecret(Id.one, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val two   = ClientSecret(Id.two, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val three = ClientSecret(Id.three, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), None)
+  val priv  = ClientSecret(Id.priv, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val ropc  = ClientSecret(Id.ropc, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
 
   object Id {
     val one   = ClientSecret.Id.random

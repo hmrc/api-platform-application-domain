@@ -116,12 +116,12 @@ object CoreApplicationSpec extends FixedClock with OrganisationIdFixtures {
     organisationId = None
   )
 
-  val jsonText =
-    s"""{"id":"$id","token":${ApplicationTokenSpec.jsonText},"clientId":"$clientId","lastAccessTokenUsage":"$nowAsText","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
+  val jsonText                       =
+    s"""{"id":"$id","token":${ApplicationTokenSpec.jsonText},"gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 
   val jsonTextNoLastAccessTokenUsage =
-    s"""{"id":"$id","token":${ApplicationTokenSpec.NoLastAccess.jsonText},"clientId":"$clientId","lastAccessTokenUsage":"$nowAsText","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"lastActionActor":"UNKNOWN","deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
+    s"""{"id":"$id","token":${ApplicationTokenSpec.NoLastAccess.jsonText},"gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"lastActionActor":"UNKNOWN","deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 
   val jsonTextWithLinkedOrgId =
-    s"""{"id":"$id", "token":${ApplicationTokenSpec.jsonText}, "organisationId":"$organisationIdOne", "clientId":"$clientId","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
+    s"""{"id":"$id", "token":${ApplicationTokenSpec.jsonText}, "organisationId":"$organisationIdOne","gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 }

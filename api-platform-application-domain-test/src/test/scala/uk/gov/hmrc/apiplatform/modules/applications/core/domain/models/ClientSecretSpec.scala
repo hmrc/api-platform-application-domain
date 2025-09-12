@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
+import java.util.UUID
+
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 class ClientSecretSpec extends BaseJsonFormattersSpec with FixedClock {
@@ -26,7 +28,7 @@ class ClientSecretSpec extends BaseJsonFormattersSpec with FixedClock {
 
     "convert to json" in {
       testToJson(example)(
-        "name"       -> "bob",
+        "name"       -> s"$clientSecretName",
         "createdOn"  -> s"$nowAsText",
         "id"         -> s"${ClientSecretData.Id.one}",
         "lastAccess" -> s"$nowAsText"
@@ -41,8 +43,9 @@ class ClientSecretSpec extends BaseJsonFormattersSpec with FixedClock {
 
 object ClientSecretSpec extends FixedClock {
   val fakeHashedSecret = "blahblahblah"
+  val clientSecretName = UUID.randomUUID.toString.takeRight(4)
 
-  val example = ClientSecret(ClientSecretData.Id.one, "bob", instant, Some(instant))
+  val example = ClientSecret(ClientSecretData.Id.one, clientSecretName, instant, Some(instant))
 
-  val jsonText = s"""{"name":"bob","createdOn":"$nowAsText","id":"${ClientSecretData.Id.one}","lastAccess":"${nowAsText}"}"""
+  val jsonText = s"""{"name":"$clientSecretName","createdOn":"$nowAsText","id":"${ClientSecretData.Id.one}","lastAccess":"${nowAsText}"}"""
 }

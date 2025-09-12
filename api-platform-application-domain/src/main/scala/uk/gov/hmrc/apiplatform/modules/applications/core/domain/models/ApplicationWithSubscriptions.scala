@@ -29,7 +29,7 @@ case class ApplicationWithSubscriptions(
   // $COVERAGE-OFF$
   def id: ApplicationId     = details.id
   def name: ApplicationName = details.name
-  def clientId: ClientId    = details.clientId
+  def clientId: ClientId    = details.token.clientId
 
   def deployedTo: Environment = details.deployedTo
   def state: ApplicationState = details.state
