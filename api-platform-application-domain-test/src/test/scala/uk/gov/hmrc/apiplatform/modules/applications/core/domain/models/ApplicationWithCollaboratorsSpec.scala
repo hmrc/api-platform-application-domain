@@ -141,6 +141,19 @@ class ApplicationWithCollaboratorsSpec extends BaseJsonFormattersSpec with Appli
 
       newApp.details.state.requestedByName shouldBe Some("Bob")
     }
+
+    "support withToken to replace it" in {
+      val newApp = example.withToken(ApplicationTokenData.two)
+
+      newApp.details.token shouldBe ApplicationTokenData.two
+    }
+
+    "support modifyToken" in {
+      val app    = example.withToken(ApplicationTokenData.one)
+      val newApp = app.modifyToken(t => t.copy(clientId = clientIdThree))
+
+      newApp.details.token.clientId shouldBe clientIdThree
+    }
   }
 }
 

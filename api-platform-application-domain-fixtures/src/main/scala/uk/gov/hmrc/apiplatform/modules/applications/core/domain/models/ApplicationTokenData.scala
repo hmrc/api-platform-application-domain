@@ -31,10 +31,10 @@ object ApplicationTokenData extends FixedClock {
   val ropc   = ApplicationToken(ropcId, "FAKETOKENROPC", List(ClientSecretData.ropc), ClientSecretData.ropc.lastAccess)
 }
 
-trait ApplicationTokenData {
-  val ApplicationTokenOne   = ApplicationTokenData.one
-  val ApplicationTokenTwo   = ApplicationTokenData.two
-  val ApplicationTokenThree = ApplicationTokenData.three
-  val ApplicationTokenPriv  = ApplicationTokenData.priv
-  val ApplicationTokenRopc  = ApplicationTokenData.ropc
+trait ApplicationTokenFixtures extends ClientSecretFixtures {
+  val applicationTokenOne   = ApplicationTokenData.one
+  val applicationTokenTwo   = ApplicationTokenData.two
+  val applicationTokenThree = ApplicationTokenData.three
+  val applicationTokenPriv  = ApplicationTokenData.priv
+  val applicationTokenRopc  = ApplicationTokenData.ropc
 }

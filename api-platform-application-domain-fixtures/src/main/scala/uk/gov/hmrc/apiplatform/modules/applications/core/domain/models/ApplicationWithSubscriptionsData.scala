@@ -35,6 +35,7 @@ trait ApplicationWithSubscriptionsFixtures extends ApplicationWithCollaboratorsF
     def withName(aName: ApplicationName): ApplicationWithSubscriptions  = app.focus(_.details.name).replace(aName)
     def withEnvironment(env: Environment): ApplicationWithSubscriptions = app.focus(_.details.deployedTo).replace(env)
     def inSandbox(): ApplicationWithSubscriptions                       = app.focus(_.details.deployedTo).replace(Environment.SANDBOX)
+    def withClientId(clientId: ClientId)                                = app.focus(_.details.token.clientId).replace(clientId)
 
     def withCollaborators(collabs: Set[Collaborator]): ApplicationWithSubscriptions = app.focus(_.collaborators).replace(collabs)
     def withCollaborators(collabs: Collaborator*): ApplicationWithSubscriptions     = withCollaborators(collabs.toSet)

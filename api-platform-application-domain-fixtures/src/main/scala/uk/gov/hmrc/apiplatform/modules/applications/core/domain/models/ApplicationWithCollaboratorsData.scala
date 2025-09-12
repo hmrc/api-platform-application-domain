@@ -61,5 +61,6 @@ trait ApplicationWithCollaboratorsFixtures extends CoreApplicationFixtures with 
     def inSandbox(): ApplicationWithCollaborators                                   = app.focus(_.details.deployedTo).replace(Environment.SANDBOX)
     def withCollaborators(collabs: Set[Collaborator]): ApplicationWithCollaborators = app.focus(_.collaborators).replace(collabs)
     def withCollaborators(collabs: Collaborator*): ApplicationWithCollaborators     = withCollaborators(collabs.toSet)
+    def withClientId(clientId: ClientId)                                            = app.focus(_.details.token.clientId).replace(clientId)
   }
 }
