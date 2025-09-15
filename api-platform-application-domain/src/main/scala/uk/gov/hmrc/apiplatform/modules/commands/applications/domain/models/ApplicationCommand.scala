@@ -57,6 +57,7 @@ sealed abstract class PolicyCommand             extends ApplicationCommand
 sealed abstract class SubmissionCommand         extends ApplicationCommand
 sealed abstract class BlockCommand              extends ApplicationCommand
 sealed abstract class ScopesCommand             extends ApplicationCommand
+sealed abstract class OrganisationCommand       extends ApplicationCommand
 
 /*
    get list of available commands
@@ -141,7 +142,7 @@ object ApplicationCommands {
   case class ChangeApplicationScopes(gatekeeperUser: String, scopes: Set[String], timestamp: Instant)                   extends ScopesCommand with GatekeeperMixin
   case class ChangeApplicationAccessOverrides(gatekeeperUser: String, overrides: Set[OverrideFlag], timestamp: Instant) extends ScopesCommand with GatekeeperMixin
 
-  case class LinkToOrganisation(organisationId: OrganisationId, timestamp: Instant) extends SubmissionCommand
+  case class LinkToOrganisation(organisationId: OrganisationId, timestamp: Instant) extends OrganisationCommand
 }
 
 object ApplicationCommand {
