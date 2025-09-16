@@ -17,16 +17,19 @@
 package uk.gov.hmrc.apiplatform.modules.commands.applications.domain.models
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.OrganisationIdFixtures
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{Actors, OrganisationIdFixtures}
 
 class LinkToOrganisationSpec extends ApplicationCommandBaseSpec with OrganisationIdFixtures {
 
   "LinkToOrganisation" should {
-    val cmd = ApplicationCommands.LinkToOrganisation(organisationIdOne, aTimestamp)
+    val cmd = ApplicationCommands.LinkToOrganisation(Actors.AppCollaborator(anActorEmail), organisationIdOne, aTimestamp)
 
     "write to json (as a command)" in {
 
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
+        "actor"          -> Json.obj(
+          "email" -> "bob@example.com"
+        ),
         "organisationId" -> s"$organisationIdOne",
         "timestamp"      -> s"$nowAsText",
         "updateType"     -> "linkToOrganisation"
@@ -35,7 +38,7 @@ class LinkToOrganisationSpec extends ApplicationCommandBaseSpec with Organisatio
 
     "read from json" in {
       val jsonText =
-        s""" {"organisationId":"$organisationIdOne","timestamp":"$nowAsText","updateType":"linkToOrganisation"} """
+        s""" {"actor":{"email":"bob@example.com"},"organisationId":"$organisationIdOne","timestamp":"$nowAsText","updateType":"linkToOrganisation"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }

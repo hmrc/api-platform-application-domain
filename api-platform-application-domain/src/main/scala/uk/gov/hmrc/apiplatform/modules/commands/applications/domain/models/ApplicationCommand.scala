@@ -142,7 +142,7 @@ object ApplicationCommands {
   case class ChangeApplicationScopes(gatekeeperUser: String, scopes: Set[String], timestamp: Instant)                   extends ScopesCommand with GatekeeperMixin
   case class ChangeApplicationAccessOverrides(gatekeeperUser: String, overrides: Set[OverrideFlag], timestamp: Instant) extends ScopesCommand with GatekeeperMixin
 
-  case class LinkToOrganisation(organisationId: OrganisationId, timestamp: Instant) extends OrganisationCommand
+  case class LinkToOrganisation(actor: Actors.AppCollaborator, organisationId: OrganisationId, timestamp: Instant) extends OrganisationCommand
 }
 
 object ApplicationCommand {
