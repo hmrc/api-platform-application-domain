@@ -117,6 +117,19 @@ class ApplicationWithSubscriptionsSpec extends BaseJsonFormattersSpec with Appli
       newApp.details.state.requestedByName shouldBe Some("Bob")
     }
 
+    "support withToken to replace it" in {
+      val newApp = NoSubs.example.withToken(ApplicationTokenData.two)
+
+      newApp.details.token shouldBe ApplicationTokenData.two
+    }
+
+    "support modifyToken" in {
+      val app    = NoSubs.example.withToken(ApplicationTokenData.one)
+      val newApp = app.modifyToken(t => t.copy(clientId = clientIdThree))
+
+      newApp.details.token.clientId shouldBe clientIdThree
+    }
+
     "orders correctly" in {
       val apps =
         List("a", "b", "c", "d", "e", "f", "g").map(ApplicationName(_)).map(n => standardApp.withId(ApplicationId.random).modify(_.copy(name = n)).withSubscriptions(Set.empty))

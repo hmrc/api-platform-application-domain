@@ -23,11 +23,11 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 object ClientSecretData extends FixedClock {
 
-  val one   = ClientSecret(Id.one, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
-  val two   = ClientSecret(Id.two, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
-  val three = ClientSecret(Id.three, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), None)
-  val priv  = ClientSecret(Id.priv, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
-  val ropc  = ClientSecret(Id.ropc, UUID.randomUUID.toString, instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val one   = ClientSecret(Id.one, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val two   = ClientSecret(Id.two, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val three = ClientSecret(Id.three, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), None)
+  val priv  = ClientSecret(Id.priv, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
+  val ropc  = ClientSecret(Id.ropc, UUID.randomUUID.toString.takeRight(4), instant.minus(5, ChronoUnit.DAYS), Some(instant))
 
   object Id {
     val one   = ClientSecret.Id.random
@@ -38,16 +38,16 @@ object ClientSecretData extends FixedClock {
   }
 }
 
-trait ClientSecretData {
-  val ClientSecretIdOne   = ClientSecretData.Id.one
-  val ClientSecretIdTwo   = ClientSecretData.Id.two
-  val ClientSecretIdThree = ClientSecretData.Id.three
-  val ClientSecretIdPriv  = ClientSecretData.Id.priv
-  val ClientSecretIdRopc  = ClientSecretData.Id.ropc
+trait ClientSecretFixtures {
+  val clientSecretIdOne   = ClientSecretData.Id.one
+  val clientSecretIdTwo   = ClientSecretData.Id.two
+  val clientSecretIdThree = ClientSecretData.Id.three
+  val clientSecretIdPriv  = ClientSecretData.Id.priv
+  val clientSecretIdRopc  = ClientSecretData.Id.ropc
 
-  val ClientSecretOne   = ClientSecretData.one
-  val ClientSecretTwo   = ClientSecretData.two
-  val ClientSecretThree = ClientSecretData.three
-  val ClientSecretPriv  = ClientSecretData.priv
-  val ClientSecretRopc  = ClientSecretData.ropc
+  val clientSecretOne   = ClientSecretData.one
+  val clientSecretTwo   = ClientSecretData.two
+  val clientSecretThree = ClientSecretData.three
+  val clientSecretPriv  = ClientSecretData.priv
+  val clientSecretRopc  = ClientSecretData.ropc
 }

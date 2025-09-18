@@ -41,7 +41,7 @@ case class ApplicationWithCollaborators(
   // $COVERAGE-OFF$
   def id: ApplicationId     = details.id
   def name: ApplicationName = details.name
-  def clientId: ClientId    = details.clientId
+  def clientId: ClientId    = details.token.clientId
 
   def deployedTo: Environment = details.deployedTo
   def state: ApplicationState = details.state
@@ -61,6 +61,9 @@ case class ApplicationWithCollaborators(
   }
   def withAccess(newAccess: Access): ApplicationWithCollaborators                           = this.focus(_.details.access).replace(newAccess)
   def modifyAccess(fn: Access => Access): ApplicationWithCollaborators                      = this.focus(_.details.access).modify(fn)
+
+  def withToken(newToken: ApplicationToken): ApplicationWithCollaborators                 = this.focus(_.details.token).replace(newToken)
+  def modifyToken(fn: ApplicationToken => ApplicationToken): ApplicationWithCollaborators = this.focus(_.details.token).modify(fn)
 
   def withSubscriptions(subscriptions: Set[ApiIdentifier]): ApplicationWithSubscriptions =
     ApplicationWithSubscriptions(

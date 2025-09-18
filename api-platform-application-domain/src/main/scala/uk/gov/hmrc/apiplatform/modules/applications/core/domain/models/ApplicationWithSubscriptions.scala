@@ -29,7 +29,7 @@ case class ApplicationWithSubscriptions(
   // $COVERAGE-OFF$
   def id: ApplicationId     = details.id
   def name: ApplicationName = details.name
-  def clientId: ClientId    = details.clientId
+  def clientId: ClientId    = details.token.clientId
 
   def deployedTo: Environment = details.deployedTo
   def state: ApplicationState = details.state
@@ -38,11 +38,16 @@ case class ApplicationWithSubscriptions(
 
   // Assist with nesting
   import monocle.syntax.all._
-  def modify(fn: CoreApplication => CoreApplication): ApplicationWithSubscriptions        = this.focus(_.details).modify(fn)
+  def modify(fn: CoreApplication => CoreApplication): ApplicationWithSubscriptions = this.focus(_.details).modify(fn)
+
   def withState(newState: ApplicationState): ApplicationWithSubscriptions                 = this.focus(_.details.state).replace(newState)
   def modifyState(fn: ApplicationState => ApplicationState): ApplicationWithSubscriptions = this.focus(_.details.state).modify(fn)
-  def withAccess(newAccess: Access): ApplicationWithSubscriptions                         = this.focus(_.details.access).replace(newAccess)
-  def modifyAccess(fn: Access => Access): ApplicationWithSubscriptions                    = this.focus(_.details.access).modify(fn)
+
+  def withAccess(newAccess: Access): ApplicationWithSubscriptions      = this.focus(_.details.access).replace(newAccess)
+  def modifyAccess(fn: Access => Access): ApplicationWithSubscriptions = this.focus(_.details.access).modify(fn)
+
+  def withToken(newToken: ApplicationToken): ApplicationWithSubscriptions                 = this.focus(_.details.token).replace(newToken)
+  def modifyToken(fn: ApplicationToken => ApplicationToken): ApplicationWithSubscriptions = this.focus(_.details.token).modify(fn)
 
   def modifyStdAccess(fn: Access.Standard => Access.Standard): ApplicationWithSubscriptions = this.access match {
     case std: Access.Standard => withAccess(fn(std))
