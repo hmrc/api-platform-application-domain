@@ -29,6 +29,8 @@ sealed trait ApplicationQuery {
 
 sealed trait SingleApplicationQuery extends ApplicationQuery {
   def wantSubscriptions: Boolean
+  def wantSubscriptionFields: Boolean
+  def wantStateHistory: Boolean
   def otherParams: List[NonUniqueFilterParam[_]]
   def specificParam: UniqueFilterParam[_]
   lazy val params: List[FilterParam[_]] = specificParam +: otherParams
@@ -59,22 +61,45 @@ object ApplicationQuery {
     case qp: T => qp
   }.headOption
 
-  case class ById protected (applicationId: ApplicationId, otherParams: List[NonUniqueFilterParam[_]], wantSubscriptions: Boolean) extends SingleApplicationQuery {
+  case class ById protected (
+      applicationId: ApplicationId,
+      otherParams: List[NonUniqueFilterParam[_]],
+      wantSubscriptions: Boolean = false,
+      wantSubscriptionFields: Boolean = false,
+      wantStateHistory: Boolean = false
+    ) extends SingleApplicationQuery {
     lazy val specificParam = ApplicationIdQP(applicationId)
   }
 
-  case class ByClientId protected (clientId: ClientId, recordUsage: Boolean, otherParams: List[NonUniqueFilterParam[_]], wantSubscriptions: Boolean)
-      extends SingleApplicationQuery {
+  case class ByClientId protected (
+      clientId: ClientId,
+      recordUsage: Boolean,
+      otherParams: List[NonUniqueFilterParam[_]],
+      wantSubscriptions: Boolean = false,
+      wantSubscriptionFields: Boolean = false,
+      wantStateHistory: Boolean = false
+    ) extends SingleApplicationQuery {
     lazy val specificParam = ClientIdQP(clientId)
   }
 
-  case class ByServerToken protected (serverToken: String, recordUsage: Boolean, otherParams: List[NonUniqueFilterParam[_]], wantSubscriptions: Boolean)
-      extends SingleApplicationQuery {
+  case class ByServerToken protected (
+      serverToken: String,
+      recordUsage: Boolean,
+      otherParams: List[NonUniqueFilterParam[_]],
+      wantSubscriptions: Boolean = false,
+      wantSubscriptionFields: Boolean = false,
+      wantStateHistory: Boolean = false
+    ) extends SingleApplicationQuery {
     lazy val specificParam = ServerTokenQP(serverToken)
   }
 
-  case class GeneralOpenEndedApplicationQuery protected (params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, wantSubscriptions: Boolean = false)
-      extends MultipleApplicationQuery
+  case class GeneralOpenEndedApplicationQuery protected (
+      params: List[NonUniqueFilterParam[_]],
+      sorting: Sorting = Sorting.NoSorting,
+      wantSubscriptions: Boolean = false,
+      wantSubscriptionFields: Boolean = false,
+      wantStateHistory: Boolean = false
+    ) extends MultipleApplicationQuery
 
   case class PaginatedApplicationQuery protected (params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, pagination: Pagination = Pagination())
       extends MultipleApplicationQuery
@@ -94,7 +119,9 @@ object ApplicationQuery {
 
   // List must be valid or outcome is undefined.
   def attemptToConstructQuery(validParams: List[Param[_]]): ApplicationQuery = {
-    val wantSubscriptions = first[Param.WantSubscriptionsQP.type](validParams, implicitly).isDefined
+    val wantSubscriptions      = first[Param.WantSubscriptionsQP.type](validParams, implicitly).isDefined
+    val wantSubscriptionFields = first[Param.WantSubscriptionFieldsQP.type](validParams, implicitly).isDefined
+    val wantStateHistory       = first[Param.WantStateHistoryQP.type](validParams, implicitly).isDefined
 
     def attemptToConstructSingleResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): Option[SingleApplicationQuery] = {
       val hasApiGatewayUserAgent = validParams.find(_ match {
@@ -107,9 +134,11 @@ object ApplicationQuery {
       }
         .headOption // There can only be one
         .flatMap {
-          case ServerTokenQP(serverToken)     => ApplicationQuery.ByServerToken(serverToken, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions).some
-          case ClientIdQP(clientId)           => ApplicationQuery.ByClientId(clientId, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions).some
-          case ApplicationIdQP(applicationId) => ApplicationQuery.ById(applicationId, nonUniqueFilterParam, wantSubscriptions).some
+          case ServerTokenQP(serverToken)     =>
+            ApplicationQuery.ByServerToken(serverToken, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
+          case ClientIdQP(clientId)           =>
+            ApplicationQuery.ByClientId(clientId, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
+          case ApplicationIdQP(applicationId) => ApplicationQuery.ById(applicationId, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
         }
     }
 
@@ -119,7 +148,7 @@ object ApplicationQuery {
 
       identifyAnyPagination(validParams)
         .fold[MultipleApplicationQuery]({
-          ApplicationQuery.GeneralOpenEndedApplicationQuery(nonUniqueFilterParam, sorting, wantSubscriptions)
+          ApplicationQuery.GeneralOpenEndedApplicationQuery(nonUniqueFilterParam, sorting, wantSubscriptions, wantSubscriptionFields, wantStateHistory)
         })(pagination => {
           ApplicationQuery.PaginatedApplicationQuery(nonUniqueFilterParam, sorting, pagination)
         })

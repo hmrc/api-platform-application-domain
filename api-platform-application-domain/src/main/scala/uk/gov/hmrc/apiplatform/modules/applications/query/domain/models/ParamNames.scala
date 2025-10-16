@@ -18,7 +18,9 @@ package uk.gov.hmrc.apiplatform.modules.applications.query.domain.models
 
 object ParamNames {
 
-  val WantSubscriptions = "wantSubscriptions"
+  val WantSubscriptions      = "wantSubscriptions"
+  val WantSubscriptionFields = "wantSubscriptionFields"
+  val WantStateHistory       = "wantStateHistory"
 
   val ServerToken   = "serverToken"
   val ClientId      = "clientId"

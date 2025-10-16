@@ -26,7 +26,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.State
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.ApplicationQuery._
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param._
-import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.{ApplicationQueries, ApplicationQuery, Pagination, ParamNames, Sorting}
+import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models._
 
 class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with ClientIdFixtures with UserIdFixtures with ApiIdentifierFixtures with ApplicationIdFixtures
     with FixedClock {
@@ -39,14 +39,88 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with Cl
     test(qry, Map.empty[String, Seq[String]] ++ pairs.map(p => p._1 -> Seq(p._2)))
   }
 
+  def testGOEAQ(params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, wantSubscriptions: Boolean = false)(pairs: (String, String)*): Unit = {
+    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions), pairs: _*)
+  }
+
+  def testGOEAQMap(params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, wantSubscriptions: Boolean = false)(map: Map[String, Seq[String]]): Unit = {
+    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions), map)
+  }
+
   def testOfNoValue(qry: ApplicationQuery, param: String): Unit = {
     QueryParamsToQueryStringMap.toQuery(qry) shouldBe Map(param -> Seq.empty)
+  }
+
+  def testGOEAQOfNoValue(params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, wantSubscriptions: Boolean = false)(param: String): Unit = {
+    QueryParamsToQueryStringMap.toQuery(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions)) shouldBe Map(param -> Seq.empty)
   }
 
   "allApplications" should {
     "convert to query" in {
       test(ApplicationQueries.allApplications(true), ParamNames.Status -> "EXCLUDING_DELETED")
       test(ApplicationQueries.allApplications(false))
+    }
+  }
+
+  "wantSubscriptions" should {
+    "convert for single query" in {
+      test(
+        ApplicationQuery.ByClientId(clientIdOne, recordUsage = false, List(ExcludeDeletedQP), wantSubscriptions = true),
+        Map(
+          ParamNames.ClientId          -> Seq(clientIdOne.value),
+          ParamNames.WantSubscriptions -> Seq.empty
+        )
+      )
+    }
+    "convert for general query" in {
+      test(
+        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), wantSubscriptions = true),
+        Map(
+          ParamNames.UserId            -> Seq(userIdOne.toString()),
+          ParamNames.WantSubscriptions -> Seq.empty
+        )
+      )
+    }
+  }
+
+  "wantSubscriptionFields" should {
+    "convert for single query" in {
+      test(
+        ApplicationQuery.ByClientId(clientIdOne, recordUsage = false, List(ExcludeDeletedQP), wantSubscriptionFields = true),
+        Map(
+          ParamNames.ClientId               -> Seq(clientIdOne.value),
+          ParamNames.WantSubscriptionFields -> Seq.empty
+        )
+      )
+    }
+    "convert for general query" in {
+      test(
+        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), wantSubscriptionFields = true),
+        Map(
+          ParamNames.UserId                 -> Seq(userIdOne.toString()),
+          ParamNames.WantSubscriptionFields -> Seq.empty
+        )
+      )
+    }
+  }
+  "wantStateHistory" should {
+    "convert for single query" in {
+      test(
+        ApplicationQuery.ByClientId(clientIdOne, recordUsage = false, List(ExcludeDeletedQP), wantStateHistory = true),
+        Map(
+          ParamNames.ClientId         -> Seq(clientIdOne.value),
+          ParamNames.WantStateHistory -> Seq.empty
+        )
+      )
+    }
+    "convert for general query" in {
+      test(
+        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), wantStateHistory = true),
+        Map(
+          ParamNames.UserId           -> Seq(userIdOne.toString()),
+          ParamNames.WantStateHistory -> Seq.empty
+        )
+      )
     }
   }
 
@@ -69,20 +143,39 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with Cl
   }
 
   "applicationsByUserId" should {
-    "convert to query" in {
+    "convert to user query" in {
       test(
-        ApplicationQueries.applicationsByUserId(userIdOne, true),
+        ApplicationQueries.applicationsByUserId(userIdOne, includeDeleted = true),
         Map(
-          ParamNames.UserId            -> Seq(s"$userIdOne"),
-          ParamNames.WantSubscriptions -> Seq.empty
+          ParamNames.UserId -> Seq(s"$userIdOne")
         )
       )
+    }
+    "convert to user query excluding deleted wanting subs" in {
       test(
-        ApplicationQueries.applicationsByUserId(userIdOne, false),
+        ApplicationQueries.applicationsByUserId(userIdOne, wantSubscriptions = true),
         Map(
           ParamNames.UserId            -> Seq(s"$userIdOne"),
           ParamNames.Status            -> Seq("EXCLUDING_DELETED"),
           ParamNames.WantSubscriptions -> Seq.empty
+        )
+      )
+    }
+    "convert to user query explicitly excluding deleted and denying subs" in {
+      test(
+        ApplicationQueries.applicationsByUserId(userIdOne, includeDeleted = false, wantSubscriptions = false),
+        Map(
+          ParamNames.UserId -> Seq(s"$userIdOne"),
+          ParamNames.Status -> Seq("EXCLUDING_DELETED")
+        )
+      )
+    }
+    "convert to user query excluding deleted" in {
+      test(
+        ApplicationQueries.applicationsByUserId(userIdOne),
+        Map(
+          ParamNames.UserId -> Seq(s"$userIdOne"),
+          ParamNames.Status -> Seq("EXCLUDING_DELETED")
         )
       )
     }
@@ -91,10 +184,21 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with Cl
   "applicationsByUserIdAndEnvironment" should {
     "convert to query" in {
       test(
-        ApplicationQueries.applicationsByUserIdAndEnvironment(userIdOne, Environment.SANDBOX),
+        ApplicationQueries.applicationsByUserIdAndEnvironment(userIdOne, Environment.SANDBOX, false),
         ParamNames.UserId      -> s"$userIdOne",
         ParamNames.Environment -> "SANDBOX",
         ParamNames.Status      -> "EXCLUDING_DELETED"
+      )
+    }
+    "convert to query wanting subscriptions" in {
+      test(
+        ApplicationQueries.applicationsByUserIdAndEnvironment(userIdOne, Environment.PRODUCTION, true),
+        Map(
+          ParamNames.UserId            -> Seq(s"$userIdOne"),
+          ParamNames.Environment       -> Seq("PRODUCTION"),
+          ParamNames.Status            -> Seq("EXCLUDING_DELETED"),
+          ParamNames.WantSubscriptions -> Seq.empty
+        )
       )
     }
   }
@@ -108,9 +212,11 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with Cl
   "applicationsByStates" should {
     "convert to query" in {
       test(
-        GeneralOpenEndedApplicationQuery(List(
-          MatchManyStatesQP(NonEmptyList.one(State.PRE_PRODUCTION) ++ List(State.PRODUCTION, State.PENDING_GATEKEEPER_APPROVAL))
-        )),
+        GeneralOpenEndedApplicationQuery(
+          List(
+            MatchManyStatesQP(NonEmptyList.one(State.PRE_PRODUCTION) ++ List(State.PRODUCTION, State.PENDING_GATEKEEPER_APPROVAL))
+          )
+        ),
         Map(
           ParamNames.Status -> Seq("PRE_PRODUCTION", "PRODUCTION", "PENDING_GATEKEEPER_CHECK")
         )
@@ -136,114 +242,131 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with Cl
 
   "QueryParamsToQueryBuilder" should {
     "convert ById to query" should {
-      test(ApplicationQuery.ById(applicationIdOne, Nil, false), ParamNames.ApplicationId -> s"$applicationIdOne")
+      test(ApplicationQuery.ById(applicationIdOne, Nil, false, false, false), ParamNames.ApplicationId -> s"$applicationIdOne")
 
       test(
-        ApplicationQuery.ById(applicationIdOne, Nil, true),
+        ApplicationQuery.ById(applicationIdOne, Nil, true, true, true),
+        Map(
+          ParamNames.ApplicationId          -> Seq(s"$applicationIdOne"),
+          ParamNames.WantSubscriptions      -> Seq.empty,
+          ParamNames.WantSubscriptionFields -> Seq.empty,
+          ParamNames.WantStateHistory       -> Seq.empty
+        )
+      )
+      test(
+        ApplicationQuery.ById(applicationIdOne, Nil, true, false, false),
         Map(
           ParamNames.ApplicationId     -> Seq(s"$applicationIdOne"),
           ParamNames.WantSubscriptions -> Seq.empty
         )
       )
+      test(
+        ApplicationQuery.ById(applicationIdOne, Nil, false, true, false),
+        Map(
+          ParamNames.ApplicationId          -> Seq(s"$applicationIdOne"),
+          ParamNames.WantSubscriptionFields -> Seq.empty
+        )
+      )
     }
     "convert ByClientId to query" should {
-      test(ApplicationQuery.ByClientId(clientIdOne, false, Nil, false), ParamNames.ClientId -> s"$clientIdOne")
+      test(ApplicationQuery.ByClientId(clientIdOne, false, Nil, false, false, false), ParamNames.ClientId -> s"$clientIdOne")
       test(
-        ApplicationQuery.ByClientId(clientIdOne, false, Nil, true),
+        ApplicationQuery.ByClientId(clientIdOne, false, Nil, true, true, true),
         Map(
-          ParamNames.ClientId          -> Seq(s"$clientIdOne"),
-          ParamNames.WantSubscriptions -> Seq.empty
+          ParamNames.ClientId               -> Seq(s"$clientIdOne"),
+          ParamNames.WantSubscriptions      -> Seq.empty,
+          ParamNames.WantSubscriptionFields -> Seq.empty,
+          ParamNames.WantStateHistory       -> Seq.empty
         )
       )
     }
     "convert ServerToken to query" should {
-      test(ApplicationQuery.ByServerToken("bob", false, Nil, false), ParamNames.ServerToken -> "bob")
+      test(ApplicationQuery.ByServerToken("bob", false, Nil, false, false, false), ParamNames.ServerToken -> "bob")
       test(
-        ApplicationQuery.ByServerToken("bob", false, Nil, true),
+        ApplicationQuery.ByServerToken("bob", false, Nil, true, true, true),
         Map(
-          ParamNames.ServerToken       -> Seq("bob"),
-          ParamNames.WantSubscriptions -> Seq.empty
+          ParamNames.ServerToken            -> Seq("bob"),
+          ParamNames.WantSubscriptions      -> Seq.empty,
+          ParamNames.WantSubscriptionFields -> Seq.empty,
+          ParamNames.WantStateHistory       -> Seq.empty
         )
       )
     }
 
     "convert GenericUserAgentQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(GenericUserAgentQP("bob"))))
+      testGOEAQ(List(GenericUserAgentQP("bob")))()
     }
     "convert NoSubscriptionsQP to query" in {
-      testOfNoValue(GeneralOpenEndedApplicationQuery(List(NoSubscriptionsQP)), ParamNames.NoSubscriptions)
+      testGOEAQOfNoValue(List(NoSubscriptionsQP))(ParamNames.NoSubscriptions)
     }
     "convert HasSubscriptionsQP to query" in {
-      testOfNoValue(GeneralOpenEndedApplicationQuery(List(HasSubscriptionsQP)), ParamNames.HasSubscriptions)
+      testGOEAQOfNoValue(List(HasSubscriptionsQP))(ParamNames.HasSubscriptions)
     }
     "convert ApiContextQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(ApiContextQP(apiContextOne))), ParamNames.ApiContext -> s"$apiContextOne")
+      testGOEAQ(List(ApiContextQP(apiContextOne)))(ParamNames.ApiContext -> s"$apiContextOne")
     }
     "convert ApiVersionNbrQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(ApiVersionNbrQP(apiVersionNbrOne))), ParamNames.ApiVersionNbr -> s"$apiVersionNbrOne")
+      testGOEAQ(List(ApiVersionNbrQP(apiVersionNbrOne)))(ParamNames.ApiVersionNbr -> s"$apiVersionNbrOne")
     }
     "convert LastUsedAfterQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(LastUsedAfterQP(instant))), ParamNames.LastUsedAfter -> nowAsText)
+      testGOEAQ(List(LastUsedAfterQP(instant)))(ParamNames.LastUsedAfter -> nowAsText)
     }
     "convert LastUsedBeforeQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(LastUsedBeforeQP(instant))), ParamNames.LastUsedBefore -> nowAsText)
+      testGOEAQ(List(LastUsedBeforeQP(instant)))(ParamNames.LastUsedBefore -> nowAsText)
     }
     "convert UserIdQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne))), ParamNames.UserId -> s"$userIdOne")
+      testGOEAQ(List(UserIdQP(userIdOne)))(ParamNames.UserId -> s"$userIdOne")
     }
     "convert EnvironmentQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(EnvironmentQP(Environment.SANDBOX))), ParamNames.Environment -> "SANDBOX")
+      testGOEAQ(List(EnvironmentQP(Environment.SANDBOX)))(ParamNames.Environment -> "SANDBOX")
     }
     "convert IncludeDeletedQP to query" in {
-      testOfNoValue(GeneralOpenEndedApplicationQuery(List(IncludeDeletedQP)), ParamNames.IncludeDeleted)
+      testGOEAQOfNoValue(List(IncludeDeletedQP))(ParamNames.IncludeDeleted)
     }
     "convert NoRestrictionQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(NoRestrictionQP)), ParamNames.DeleteRestriction -> "NO_RESTRICTION")
+      testGOEAQ(List(NoRestrictionQP))(ParamNames.DeleteRestriction -> "NO_RESTRICTION")
     }
     "convert DoNotDeleteQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(DoNotDeleteQP)), ParamNames.DeleteRestriction -> "DO_NOT_DELETE")
+      testGOEAQ(List(DoNotDeleteQP))(ParamNames.DeleteRestriction -> "DO_NOT_DELETE")
     }
     "convert ActiveStateQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(ActiveStateQP)), ParamNames.Status -> "ACTIVE")
+      testGOEAQ(List(ActiveStateQP))(ParamNames.Status -> "ACTIVE")
     }
     "convert ExcludeDeletedQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(ExcludeDeletedQP)), ParamNames.Status -> "EXCLUDING_DELETED")
+      testGOEAQ(List(ExcludeDeletedQP))(ParamNames.Status -> "EXCLUDING_DELETED")
     }
     "convert BlockedStateQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(BlockedStateQP)), ParamNames.Status -> "BLOCKED")
+      testGOEAQ(List(BlockedStateQP))(ParamNames.Status -> "BLOCKED")
     }
     "convert NoStateFilteringQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(NoStateFilteringQP)), ParamNames.Status -> "ANY")
+      testGOEAQ(List(NoStateFilteringQP))(ParamNames.Status -> "ANY")
     }
     "convert MatchAccessTypeQP(value) to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(MatchAccessTypeQP(AccessType.STANDARD))), ParamNames.AccessType -> "STANDARD")
+      testGOEAQ(List(MatchAccessTypeQP(AccessType.STANDARD)))(ParamNames.AccessType -> "STANDARD")
     }
     "convert MatchOneStateQP(value) to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(MatchOneStateQP(State.PRODUCTION))), ParamNames.Status -> "PRODUCTION")
+      testGOEAQ(List(MatchOneStateQP(State.PRODUCTION)))(ParamNames.Status -> "PRODUCTION")
     }
     "convert MatchOneStateQP(PENDING_RI) to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(MatchOneStateQP(State.PENDING_REQUESTER_VERIFICATION))), ParamNames.Status -> "PENDING_SUBMITTER_VERIFICATION")
+      testGOEAQ(List(MatchOneStateQP(State.PENDING_REQUESTER_VERIFICATION)))(ParamNames.Status -> "PENDING_SUBMITTER_VERIFICATION")
     }
     "convert MatchManyStatesQP(value) to query" in {
-      test(
-        GeneralOpenEndedApplicationQuery(List(MatchManyStatesQP(NonEmptyList.of(State.PRODUCTION, State.TESTING)))),
-        Map(ParamNames.Status -> Seq("PRODUCTION", "CREATED"))
-      )
+      testGOEAQMap(List(MatchManyStatesQP(NonEmptyList.of(State.PRODUCTION, State.TESTING))))(Map(ParamNames.Status -> Seq("PRODUCTION", "CREATED")))
     }
     "convert AppStateBeforeDateQP(value) to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(AppStateBeforeDateQP(instant))), ParamNames.StatusDateBefore -> nowAsText)
+      testGOEAQ(List(AppStateBeforeDateQP(instant)))(ParamNames.StatusDateBefore -> nowAsText)
     }
     "convert SearchTextQP(value) to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(SearchTextQP("bob"))), ParamNames.Search -> "bob")
+      testGOEAQ(List(SearchTextQP("bob")))(ParamNames.Search -> "bob")
     }
     "convert NameQP(value) to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(NameQP("bob"))), ParamNames.Name -> "bob")
+      testGOEAQ(List(NameQP("bob")))(ParamNames.Name -> "bob")
     }
     "convert VerificationCodeQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(VerificationCodeQP("bob"))), ParamNames.VerificationCode -> "bob")
+      testGOEAQ(List(VerificationCodeQP("bob")))(ParamNames.VerificationCode -> "bob")
     }
     "convert AnyAccessTypeQP to query" in {
-      test(GeneralOpenEndedApplicationQuery(List(AnyAccessTypeQP)), ParamNames.AccessType -> "ANY")
+      testGOEAQ(List(AnyAccessTypeQP))(ParamNames.AccessType -> "ANY")
     }
     "convert UserIdQP with pagination to query" in {
       test(PaginatedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NoSorting, Pagination()), ParamNames.UserId -> s"$userIdOne", ParamNames.PageNbr -> "1")

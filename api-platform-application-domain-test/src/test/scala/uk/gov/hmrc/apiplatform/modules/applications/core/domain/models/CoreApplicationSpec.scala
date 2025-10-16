@@ -116,7 +116,7 @@ object CoreApplicationSpec extends FixedClock with OrganisationIdFixtures {
     organisationId = None
   )
 
-  val jsonText                       =
+  val jsonText =
     s"""{"id":"$id","token":${ApplicationTokenSpec.jsonText},"gatewayId":"","name":"App","deployedTo":"PRODUCTION","createdOn":"$nowAsText","grantLength":"P547D","access":${AccessSpec.emptyStandard},"state":${ApplicationStateSpec.jsonText},"rateLimitTier":"BRONZE","blocked":false,"ipAllowlist":{"required":false,"allowlist":[]},"deleteRestriction":{"deleteRestrictionType":"NO_RESTRICTION"},"lastActionActor":"UNKNOWN"}"""
 
   val jsonTextNoLastAccessTokenUsage =
