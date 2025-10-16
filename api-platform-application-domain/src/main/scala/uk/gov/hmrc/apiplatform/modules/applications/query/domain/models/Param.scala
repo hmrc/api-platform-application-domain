@@ -41,7 +41,9 @@ sealed trait PaginationParam[+P] extends Param[P] { def order: Int }
 sealed trait SortingParam[+P] extends Param[P]
 
 object Param {
-  case object WantSubscriptionsQP extends FilterParam[Unit]
+  case object WantSubscriptionsQP      extends FilterParam[Unit]
+  case object WantSubscriptionFieldsQP extends FilterParam[Unit]
+  case object WantStateHistoryQP       extends FilterParam[Unit]
 
   sealed trait UserAgentParam[T]               extends NonUniqueFilterParam[T]
   case class GenericUserAgentQP(value: String) extends UserAgentParam[String]

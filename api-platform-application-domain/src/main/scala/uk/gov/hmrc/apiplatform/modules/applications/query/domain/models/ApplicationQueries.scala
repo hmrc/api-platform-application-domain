@@ -33,25 +33,29 @@ object ApplicationQueries {
     params = if (excludeDeleted) ExcludeDeletedQP :: Nil else Nil
   )
 
-  def applicationByClientId(clientId: ClientId) = ApplicationQuery.ByClientId(clientId, recordUsage = false, List(ExcludeDeletedQP), wantSubscriptions = false)
+  def applicationByClientId(clientId: ClientId) =
+    ApplicationQuery.ByClientId(clientId, recordUsage = false, List(ExcludeDeletedQP))
 
-  def applicationByServerToken(serverToken: String) = ApplicationQuery.ByServerToken(serverToken, recordUsage = false, List(ExcludeDeletedQP), wantSubscriptions = false)
+  def applicationByServerToken(serverToken: String) =
+    ApplicationQuery.ByServerToken(serverToken, recordUsage = false, List(ExcludeDeletedQP))
 
   lazy val standardNonTestingApps = ApplicationQuery.GeneralOpenEndedApplicationQuery(
-    sorting = Sorting.NoSorting,
     params = List(
       MatchAccessTypeQP(AccessType.STANDARD),
       MatchManyStatesQP(NonEmptyList.fromListUnsafe((State.values - State.TESTING - State.DELETED).toList))
-    )
+    ),
+    sorting = Sorting.NoSorting,
+    wantSubscriptions = false
   )
 
   def applicationsByName(name: String) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
-    sorting = Sorting.NoSorting,
     params = List(
       NameQP(name),
       EnvironmentQP(Environment.PRODUCTION),
       ExcludeDeletedQP
-    )
+    ),
+    sorting = Sorting.NoSorting,
+    wantSubscriptions = false
   )
 
   def applicationsByVerifiableUplift(verificationCode: String) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
@@ -61,17 +65,19 @@ object ApplicationQueries {
     )
   )
 
-  def applicationsByUserId(userId: UserId, includeDeleted: Boolean) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+  def applicationsByUserId(userId: UserId, includeDeleted: Boolean = false, wantSubscriptions: Boolean = false) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
     params = UserIdQP(userId) :: List(ExcludeDeletedQP).filterNot(_ => includeDeleted),
-    wantSubscriptions = true
+    wantSubscriptions = wantSubscriptions
   )
+
+  def applicationsByUserIdAndEnvironment(userId: UserId, environment: Environment, wantSubscriptions: Boolean = true) =
+    ApplicationQuery.GeneralOpenEndedApplicationQuery(
+      params = UserIdQP(userId) :: ExcludeDeletedQP :: EnvironmentQP(environment) :: Nil,
+      wantSubscriptions = wantSubscriptions
+    )
 
   def applicationsByStateAndDate(state: State, beforeDate: Instant) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
     params = MatchOneStateQP(state) :: AppStateBeforeDateQP(beforeDate) :: Nil
-  )
-
-  def applicationsByUserIdAndEnvironment(userId: UserId, environment: Environment) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
-    params = UserIdQP(userId) :: ExcludeDeletedQP :: EnvironmentQP(environment) :: Nil
   )
 
   def applicationsByApiContext(apiContext: ApiContext) = ApplicationQuery.GeneralOpenEndedApplicationQuery(

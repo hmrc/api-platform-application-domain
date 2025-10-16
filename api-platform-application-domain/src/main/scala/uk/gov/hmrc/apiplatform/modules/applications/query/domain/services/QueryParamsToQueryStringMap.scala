@@ -36,14 +36,22 @@ object QueryParamsToQueryStringMap {
 
   private def toQuery(qry: SingleApplicationQuery): Map[String, Seq[String]] = {
     qry match {
-      case ById(id, other, wantSubscriptions)                => Map(ParamNames.ApplicationId -> Seq(id.toString)) ++ paramForWantSubs(wantSubscriptions)
-      case ByClientId(clientId, _, other, wantSubscriptions) => Map(ParamNames.ClientId -> Seq(clientId.value)) ++ paramForWantSubs(wantSubscriptions)
-      case ByServerToken(token, _, other, wantSubscriptions) => Map(ParamNames.ServerToken -> Seq(token)) ++ paramForWantSubs(wantSubscriptions)
+      case ById(id, other, wantSubscriptions, wantSubscriptionFields, wantStateHistory)                =>
+        Map(ParamNames.ApplicationId -> Seq(id.toString)) ++
+          paramForWantSubs(wantSubscriptions) ++ paramForWantSubsFields(wantSubscriptionFields) ++ paramForWantStateHistory(wantStateHistory)
+      case ByClientId(clientId, _, other, wantSubscriptions, wantSubscriptionFields, wantStateHistory) =>
+        Map(ParamNames.ClientId -> Seq(clientId.value)) ++
+          paramForWantSubs(wantSubscriptions) ++ paramForWantSubsFields(wantSubscriptionFields) ++ paramForWantStateHistory(wantStateHistory)
+      case ByServerToken(token, _, other, wantSubscriptions, wantSubscriptionFields, wantStateHistory) =>
+        Map(ParamNames.ServerToken -> Seq(token)) ++
+          paramForWantSubs(wantSubscriptions) ++ paramForWantSubsFields(wantSubscriptionFields) ++ paramForWantStateHistory(wantStateHistory)
     }
   }
 
   private def toQuery(qry: GeneralOpenEndedApplicationQuery): Map[String, Seq[String]] = {
-    paramsFor(qry.params) ++ paramForSorting(qry.sorting) ++ paramForWantSubs(qry.wantSubscriptions)
+    paramsFor(qry.params) ++ paramForSorting(qry.sorting) ++ paramForWantSubs(qry.wantSubscriptions) ++ paramForWantSubsFields(
+      qry.wantSubscriptionFields
+    ) ++ paramForWantStateHistory(qry.wantStateHistory)
   }
 
   private def toQuery(qry: PaginatedApplicationQuery): Map[String, Seq[String]] = {
@@ -62,6 +70,20 @@ object QueryParamsToQueryStringMap {
   def paramForWantSubs(wantSubscriptions: Boolean): Map[String, Seq[String]] = {
     if (wantSubscriptions)
       Map(ParamNames.WantSubscriptions -> Seq.empty)
+    else
+      Map.empty
+  }
+
+  def paramForWantSubsFields(wantSubscriptionFields: Boolean): Map[String, Seq[String]] = {
+    if (wantSubscriptionFields)
+      Map(ParamNames.WantSubscriptionFields -> Seq.empty)
+    else
+      Map.empty
+  }
+
+  def paramForWantStateHistory(wantStateHistory: Boolean): Map[String, Seq[String]] = {
+    if (wantStateHistory)
+      Map(ParamNames.WantStateHistory -> Seq.empty)
     else
       Map.empty
   }
