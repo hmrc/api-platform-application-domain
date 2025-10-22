@@ -264,6 +264,21 @@ object QueryParamValidator {
     }
   }
 
+  object UserIdsValidator extends QueryParamValidator {
+    val paramName = ParamNames.UserIds
+
+    def validate(values: Seq[String]): ErrorsOr[UserIdsQP] = {
+      def validateEach(vs: List[String]): List[ErrorsOr[List[UserId]]] = {
+        vs.map(v => UserIdExpected(paramName)(v).map(List(_)))
+      }
+
+      AtLeastOneValue(paramName)(values).andThen { vs =>
+        validateEach(vs.toList).combineAll
+      }
+        .map { UserIdsQP(_) }
+    }
+  }
+
   object AccessTypeValidator extends QueryParamValidator {
 
     def parseText(value: String): ErrorsOr[Option[AccessType]] = {
@@ -390,6 +405,7 @@ object QueryParamValidator {
     QueryParamValidator.SortValidator,
     QueryParamValidator.SearchTextValidator,
     QueryParamValidator.UserIdValidator,
+    QueryParamValidator.UserIdsValidator,
     QueryParamValidator.VerificationCodeValidator,
     QueryParamValidator.WantSubscriptionsValidator,
     // TODO - once implemented

@@ -39,7 +39,8 @@ object ParamNames {
   val LastUsedAfter  = "lastUsedAfter"
   val LastUsedBefore = "lastUsedBefore"
 
-  val UserId = "userId"
+  val UserId  = "userId"
+  val UserIds = "userIds"
 
   val Environment = "environment"
 

@@ -368,6 +368,10 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with Cl
     "convert AnyAccessTypeQP to query" in {
       testGOEAQ(List(AnyAccessTypeQP))(ParamNames.AccessType -> "ANY")
     }
+    "convert UserIdsQP to query" in {
+      val users = List(userIdOne, userIdTwo)
+      testGOEAQ(List(UserIdsQP(users)))(ParamNames.UserIds -> users.map(_.toString).mkString(","))
+    }
     "convert UserIdQP with pagination to query" in {
       test(PaginatedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NoSorting, Pagination()), ParamNames.UserId -> s"$userIdOne", ParamNames.PageNbr -> "1")
     }
