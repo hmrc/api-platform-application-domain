@@ -67,7 +67,8 @@ object Param {
   case class LastUsedAfterQP(value: Instant)  extends NonUniqueFilterParam[Instant]
   case class LastUsedBeforeQP(value: Instant) extends NonUniqueFilterParam[Instant]
 
-  case class UserIdQP(value: UserId) extends NonUniqueFilterParam[UserId]
+  case class UserIdQP(value: UserId)         extends NonUniqueFilterParam[UserId]
+  case class UserIdsQP(values: List[UserId]) extends NonUniqueFilterParam[UserId]
 
   case class EnvironmentQP(value: Environment) extends NonUniqueFilterParam[Environment]
 

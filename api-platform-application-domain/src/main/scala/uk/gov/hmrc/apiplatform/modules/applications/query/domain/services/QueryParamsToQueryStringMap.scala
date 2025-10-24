@@ -124,6 +124,7 @@ object QueryParamsToQueryStringMap {
       case LastUsedAfterQP(value)      => (ParamNames.LastUsedAfter     -> Seq(paramValueForInstant(value))).some
       case LastUsedBeforeQP(value)     => (ParamNames.LastUsedBefore    -> Seq(paramValueForInstant(value))).some
       case UserIdQP(value)             => (ParamNames.UserId            -> Seq(value.toString())).some
+      case UserIdsQP(list)             => (ParamNames.UserIds           -> Seq(list.mkString(","))).some
       case EnvironmentQP(value)        => (ParamNames.Environment       -> Seq(value.toString())).some
       case IncludeDeletedQP            => (ParamNames.IncludeDeleted    -> Seq.empty).some
       case NoRestrictionQP             => (ParamNames.DeleteRestriction -> Seq("NO_RESTRICTION")).some

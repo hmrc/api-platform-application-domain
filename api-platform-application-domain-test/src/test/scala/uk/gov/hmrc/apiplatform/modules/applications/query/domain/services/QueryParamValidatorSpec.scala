@@ -283,6 +283,14 @@ class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaborators
     "multiple errors stack" in {
       test(Map("environment" -> Seq("BLAH BLAH"), "userId" -> Seq("ABC"))) shouldBe Invalid(NonEmptyList.of("BLAH BLAH is not a valid environment", "ABC is not a valid user id"))
     }
+
+    "extract valid multi params - userids" in {
+      test(Map("userids" -> Seq(userIdOne.toString, userIdTwo.toString))) shouldBe List(UserIdsQP(List(userIdOne, userIdTwo))).validNel
+
+      inside(test(Map("userIds" -> Seq(userIdOne.toString, "BANG"))).toEither) {
+        case Left(nel) => nel should (new ErrorIncludes("BANG is not a valid user id"))
+      }
+    }
   }
 
   private class ErrorIncludes(tagLine: String) extends Matcher[NonEmptyList[ErrorMessage]] {
