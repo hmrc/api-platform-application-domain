@@ -25,6 +25,8 @@ import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models._
 
 sealed trait ApplicationQuery {
   def params: List[FilterParam[_]]
+
+  def asLogText: String
 }
 
 sealed trait SingleApplicationQuery extends ApplicationQuery {
@@ -34,6 +36,13 @@ sealed trait SingleApplicationQuery extends ApplicationQuery {
   def otherParams: List[NonUniqueFilterParam[_]]
   def specificParam: UniqueFilterParam[_]
   lazy val params: List[FilterParam[_]] = specificParam +: otherParams
+
+  def asLogText: String = {
+
+    val allParams: List[Param[_]] = specificParam +: otherParams
+    s"SingleApplicationQuery(${allParams.map(Param.asLogText(_)).mkString(",")}${if (wantSubscriptions) ", wantSubscriptions " else ""}${if (wantSubscriptionFields) ", wantSubscriptionFields"
+      else ""}${if (wantStateHistory) ", wantStateHistory" else ""})"
+  }
 }
 
 sealed trait MultipleApplicationQuery extends ApplicationQuery {
@@ -99,10 +108,21 @@ object ApplicationQuery {
       wantSubscriptions: Boolean = false,
       wantSubscriptionFields: Boolean = false,
       wantStateHistory: Boolean = false
-    ) extends MultipleApplicationQuery
+    ) extends MultipleApplicationQuery {
+
+    def asLogText: String = {
+      s"GeneralOpenEndedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=$sorting${if (wantSubscriptions) ", wantSubscriptions" else ""}${if (wantSubscriptionFields) ", wantSubscriptionFields"
+        else ""}${if (wantStateHistory) ", wantStateHistory" else ""})"
+    }
+  }
 
   case class PaginatedApplicationQuery protected (params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, pagination: Pagination = Pagination())
-      extends MultipleApplicationQuery
+      extends MultipleApplicationQuery {
+
+    def asLogText: String = {
+      s"PaginatedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=$sorting, pageNbr=${pagination.pageNbr}, pageSize=${pagination.pageSize})"
+    }
+  }
 
   import cats.syntax.option._
 
