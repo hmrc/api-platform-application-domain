@@ -95,4 +95,45 @@ object Param {
   sealed trait AccessTypeParam[T]                 extends NonUniqueFilterParam[T]
   case class MatchAccessTypeQP(value: AccessType) extends AccessTypeParam[AccessType]
   case object AnyAccessTypeQP                     extends AccessTypeParam[Unit]
+
+  // $COVERAGE-OFF$
+  def asLogText(p: Param[_]): String = p match {
+    case WantSubscriptionsQP                            => "WantSubscriptionsQP"
+    case WantSubscriptionFieldsQP                       => "WantSubscriptionFieldsQP"
+    case WantStateHistoryQP                             => "WantStateHistoryQP"
+    case GenericUserAgentQP(value)                      => s"GenericUserAgentQP($value)"
+    case ApiGatewayUserAgentQP                          => "ApiGatewayUserAgentQP"
+    case ServerTokenQP(_)                               => "ServerTokenQP(???)"
+    case ClientIdQP(_)                                  => "ClientIdQP(???)"
+    case ApplicationIdQP(_)                             => "ApplicationIdQP(???)"
+    case PageSizeQP(value: Int)                         => s"PageSizeQP($value)"
+    case PageNbrQP(value: Int)                          => s"PageNbrQP($value)"
+    case SortQP(value: Sorting)                         => s"SortQP($value)"
+    case NoSubscriptionsQP                              => "NoSubscriptionsQP"
+    case HasSubscriptionsQP                             => "HasSubscriptionsQP"
+    case ApiContextQP(value: ApiContext)                => s"ApiContextQP($value)"
+    case ApiVersionNbrQP(value: ApiVersionNbr)          => s"ApiVersionNbrQP($value)"
+    case LastUsedAfterQP(value: Instant)                => s"LastUsedAfterQP($value)"
+    case LastUsedBeforeQP(value: Instant)               => s"LastUsedBeforeQP($value)"
+    case UserIdQP(value: UserId)                        => "UserIdQP(???)"
+    case UserIdsQP(values: List[UserId])                => "UserIdsQP(???,...)"
+    case EnvironmentQP(value: Environment)              => s"EnvironmentQP($value)"
+    case IncludeDeletedQP                               => s"IncludeDeletedQP"
+    case NoRestrictionQP                                => s"NoRestrictionQP"
+    case DoNotDeleteQP                                  => s"DoNotDeleteQP"
+    case MatchOneStateQP(state: State)                  => s"MatchOneStateQP($state)"
+    case MatchManyStatesQP(states: NonEmptyList[State]) => s"MatchManyStatesQP(${states.toList.mkString(",")})"
+    case ActiveStateQP                                  => "ActiveStateQP"
+    case ExcludeDeletedQP                               => "ExcludeDeletedQP"
+    case BlockedStateQP                                 => "BlockedStateQP"
+    case NoStateFilteringQP                             => "NoStateFilteringQP"
+    case AppStateBeforeDateQP(value: Instant)           => s"AppStateBeforeDateQP($value)"
+    case SearchTextQP(value: String)                    => "SearchTextQP(???)"
+    case NameQP(value: String)                          => s"NameQP($value)"
+    case VerificationCodeQP(value: String)              => "VerificationCodeQP(???)"
+
+    case MatchAccessTypeQP(value: AccessType) => s"MatchAccessTypeQP($value)"
+    case AnyAccessTypeQP                      => s"AnyAccessTypeQP"
+  }
+  // $COVERAGE-ON$
 }

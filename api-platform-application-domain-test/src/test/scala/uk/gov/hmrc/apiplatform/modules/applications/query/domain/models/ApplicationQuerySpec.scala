@@ -66,81 +66,178 @@ class ApplicationQuerySpec extends HmrcSpec with ApplicationWithCollaboratorsFix
   }
 
   "attemptToConstructQuery" should {
-    val test = (ps: List[Param[_]]) => ApplicationQuery.attemptToConstructQuery(ps)
+    def test(ps: List[Param[_]])(expectedQry: ApplicationQuery)(expectedLog: String): Unit = {
+      val actualQry = ApplicationQuery.attemptToConstructQuery(ps)
+      actualQry shouldBe expectedQry
+      actualQry.asLogText shouldBe expectedLog
+    }
 
     "work when given a correct applicationId" in {
-      test(List(ApplicationIdQP(applicationIdOne))) shouldBe ApplicationQuery.ById(applicationIdOne, List.empty)
+      test(
+        List(ApplicationIdQP(applicationIdOne))
+      )(
+        ApplicationQuery.ById(applicationIdOne, List.empty)
+      )(
+        "SingleApplicationQuery(ApplicationIdQP(???))"
+      )
     }
 
     "work when given a correct clientId" in {
-      test(List(ClientIdQP(clientIdOne))) shouldBe ApplicationQuery.ByClientId(clientIdOne, false, List.empty)
+      test(
+        List(ClientIdQP(clientIdOne))
+      )(
+        ApplicationQuery.ByClientId(clientIdOne, false, List.empty)
+      )(
+        "SingleApplicationQuery(ClientIdQP(???))"
+      )
     }
 
     "work when given a server token" in {
-      test(List(ServerTokenQP("bob"))) shouldBe ApplicationQuery.ByServerToken("bob", false, List.empty)
+      test(
+        List(ServerTokenQP("bob"))
+      )(
+        ApplicationQuery.ByServerToken("bob", false, List.empty)
+      )(
+        "SingleApplicationQuery(ServerTokenQP(???))"
+      )
     }
 
     "work when given a correct clientId and User Agent" in {
-      test(List(ClientIdQP(clientIdOne), ApiGatewayUserAgentQP)) shouldBe ApplicationQuery.ByClientId(
+      test(List(ClientIdQP(clientIdOne), ApiGatewayUserAgentQP))(ApplicationQuery.ByClientId(
         clientIdOne,
         true,
-        List(uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.ApiGatewayUserAgentQP),
+        List(ApiGatewayUserAgentQP),
         false,
         false,
         false
+      ))(
+        "SingleApplicationQuery(ClientIdQP(???),ApiGatewayUserAgentQP)"
       )
-      test(List(ClientIdQP(clientIdOne), GenericUserAgentQP("Bob"))) shouldBe ApplicationQuery.ByClientId(clientIdOne, false, List(GenericUserAgentQP("Bob")))
+      test(
+        List(ClientIdQP(clientIdOne), GenericUserAgentQP("Bob"))
+      )(
+        ApplicationQuery.ByClientId(clientIdOne, false, List(GenericUserAgentQP("Bob")))
+      )(
+        "SingleApplicationQuery(ClientIdQP(???),GenericUserAgentQP(Bob))"
+      )
     }
 
     "work when given a correct serverToken" in {
-      test(List(ServerTokenQP("abc"))) shouldBe ApplicationQuery.ByServerToken("abc", false, List.empty)
+      test(
+        List(ServerTokenQP("abc"))
+      )(
+        ApplicationQuery.ByServerToken("abc", false, List.empty)
+      )(
+        "SingleApplicationQuery(ServerTokenQP(???))"
+      )
     }
 
     "work when given a correct serverToken and User Agent" in {
-      test(List(ServerTokenQP("abc"), uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.ApiGatewayUserAgentQP)) shouldBe ApplicationQuery.ByServerToken(
-        "abc",
-        true,
-        List(uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.ApiGatewayUserAgentQP)
+      test(
+        List(ServerTokenQP("abc"), ApiGatewayUserAgentQP)
+      )(
+        ApplicationQuery.ByServerToken(
+          "abc",
+          true,
+          List(ApiGatewayUserAgentQP)
+        )
+      )(
+        "SingleApplicationQuery(ServerTokenQP(???),ApiGatewayUserAgentQP)"
       )
-      test(List(ServerTokenQP("abc"), uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.GenericUserAgentQP("Bob"))) shouldBe ApplicationQuery.ByServerToken(
-        "abc",
-        false,
-        List(uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.GenericUserAgentQP("Bob"))
+      test(
+        List(ServerTokenQP("abc"), GenericUserAgentQP("Bob"))
+      )(
+        ApplicationQuery.ByServerToken(
+          "abc",
+          false,
+          List(GenericUserAgentQP("Bob"))
+        )
+      )(
+        "SingleApplicationQuery(ServerTokenQP(???),GenericUserAgentQP(Bob))"
       )
     }
 
     "work when given a correct applicationId and some irrelevant header" in {
-      test(List(ApplicationIdQP(applicationIdOne), uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.GenericUserAgentQP("XYZ"))) shouldBe ApplicationQuery.ById(
-        applicationIdOne,
-        List(uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.GenericUserAgentQP("XYZ"))
+      test(
+        List(ApplicationIdQP(applicationIdOne), GenericUserAgentQP("XYZ"))
+      )(
+        ApplicationQuery.ById(
+          applicationIdOne,
+          List(GenericUserAgentQP("XYZ"))
+        )
+      )(
+        "SingleApplicationQuery(ApplicationIdQP(???),GenericUserAgentQP(XYZ))"
+      )
+    }
+    "work when given sorting and userId" in {
+      test(
+        List(UserIdQP(userIdOne), SortQP(Sorting.NameAscending))
+      )(
+        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NameAscending)
+      )(
+        "GeneralOpenEndedApplicationQuery(UserIdQP(???), sort=NameAscending)"
       )
     }
 
-    "work when given sorting and userId" in {
-      test(List(UserIdQP(userIdOne), SortQP(Sorting.NameAscending))) shouldBe GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NameAscending)
+    "work when given sorting and userId and all wants" in {
+      test(
+        List(UserIdQP(userIdOne), SortQP(Sorting.NameAscending), WantSubscriptionsQP, WantSubscriptionFieldsQP, WantStateHistoryQP)
+      )(
+        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NameAscending, true, true, true)
+      )(
+        "GeneralOpenEndedApplicationQuery(UserIdQP(???), sort=NameAscending, wantSubscriptions, wantSubscriptionFields, wantStateHistory)"
+      )
+    }
+
+    "work when given sorting and userId and one wants" in {
+      test(
+        List(UserIdQP(userIdOne), SortQP(Sorting.NameAscending), WantStateHistoryQP)
+      )(
+        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NameAscending, false, false, true)
+      )(
+        "GeneralOpenEndedApplicationQuery(UserIdQP(???), sort=NameAscending, wantStateHistory)"
+      )
     }
 
     "work when given pagination, sorting and userId" in {
-      test(List(UserIdQP(userIdOne), PageNbrQP(2), PageSizeQP(10), SortQP(Sorting.NameAscending))) shouldBe PaginatedApplicationQuery(
-        List(UserIdQP(userIdOne)),
-        Sorting.NameAscending,
-        Pagination(10, 2)
+      test(
+        List(UserIdQP(userIdOne), PageNbrQP(2), PageSizeQP(10), SortQP(Sorting.NameAscending))
+      )(
+        PaginatedApplicationQuery(
+          List(UserIdQP(userIdOne)),
+          Sorting.NameAscending,
+          Pagination(10, 2)
+        )
+      )(
+        "PaginatedApplicationQuery(UserIdQP(???), sort=NameAscending, pageNbr=2, pageSize=10)"
       )
     }
 
     "work when given page size, sorting and userId" in {
-      test(List(UserIdQP(userIdOne), PageSizeQP(10), SortQP(Sorting.NameAscending))) shouldBe PaginatedApplicationQuery(
-        List(UserIdQP(userIdOne)),
-        Sorting.NameAscending,
-        Pagination(10, Pagination.Defaults.PageNbr)
+      test(
+        List(UserIdQP(userIdOne), PageSizeQP(10), SortQP(Sorting.NameAscending))
+      )(
+        PaginatedApplicationQuery(
+          List(UserIdQP(userIdOne)),
+          Sorting.NameAscending,
+          Pagination(10, Pagination.Defaults.PageNbr)
+        )
+      )(
+        "PaginatedApplicationQuery(UserIdQP(???), sort=NameAscending, pageNbr=1, pageSize=10)"
       )
     }
 
     "work when given page nbr, sorting and userId" in {
-      test(List(UserIdQP(userIdOne), PageNbrQP(2), SortQP(Sorting.NameAscending))) shouldBe PaginatedApplicationQuery(
-        List(UserIdQP(userIdOne)),
-        Sorting.NameAscending,
-        Pagination(Pagination.Defaults.PageSize, 2)
+      test(
+        List(UserIdQP(userIdOne), PageNbrQP(2), SortQP(Sorting.NameAscending))
+      )(
+        PaginatedApplicationQuery(
+          List(UserIdQP(userIdOne)),
+          Sorting.NameAscending,
+          Pagination(Pagination.Defaults.PageSize, 2)
+        )
+      )(
+        "PaginatedApplicationQuery(UserIdQP(???), sort=NameAscending, pageNbr=2, pageSize=50)"
       )
     }
   }
