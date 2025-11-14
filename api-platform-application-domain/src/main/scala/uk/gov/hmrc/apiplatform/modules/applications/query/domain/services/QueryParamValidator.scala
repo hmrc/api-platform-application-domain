@@ -18,7 +18,9 @@ package uk.gov.hmrc.apiplatform.modules.applications.query.domain.services
 
 import java.time.Instant
 import java.time.format.DateTimeFormatter
+import java.{util => ju}
 import scala.util.Try
+import scala.util.control.Exception.allCatch
 
 import cats.data.Validated.{Invalid, Valid}
 import cats.data.{NonEmptyList, ValidatedNel}
@@ -279,6 +281,20 @@ object QueryParamValidator {
     }
   }
 
+  private object OrganisationIdExpected {
+
+    def apply(paramName: String)(value: String): ErrorsOr[OrganisationId] =
+      allCatch.opt(OrganisationId(ju.UUID.fromString(value))).toValidNel(s"$value is not a valid organisation id")
+  }
+
+  object OrganisationIdValidator extends QueryParamValidator {
+    val paramName = ParamNames.OrganisationId
+
+    def validate(values: Seq[String]): ErrorsOr[OrganisationIdQP] = {
+      SingleValueExpected(paramName)(values) andThen OrganisationIdExpected(paramName) map { OrganisationIdQP(_) }
+    }
+  }
+
   object AccessTypeValidator extends QueryParamValidator {
 
     def parseText(value: String): ErrorsOr[Option[AccessType]] = {
@@ -407,6 +423,7 @@ object QueryParamValidator {
     QueryParamValidator.UserIdValidator,
     QueryParamValidator.UserIdsValidator,
     QueryParamValidator.VerificationCodeValidator,
+    QueryParamValidator.OrganisationIdValidator,
     QueryParamValidator.WantSubscriptionsValidator,
     QueryParamValidator.WantSubscriptionFieldsValidator,
     QueryParamValidator.WantStateHistoryValidator

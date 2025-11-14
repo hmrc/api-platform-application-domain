@@ -137,6 +137,7 @@ object QueryParamsToQueryStringMap {
       case SearchTextQP(value)         => (ParamNames.Search            -> Seq(value)).some
       case NameQP(value)               => (ParamNames.Name              -> Seq(value)).some
       case VerificationCodeQP(value)   => (ParamNames.VerificationCode  -> Seq(value)).some
+      case OrganisationIdQP(value)     => (ParamNames.OrganisationId    -> Seq(value.toString())).some
       case MatchAccessTypeQP(value)    => (ParamNames.AccessType        -> Seq(value.toString)).some
       case AnyAccessTypeQP             => (ParamNames.AccessType        -> Seq("ANY")).some
     }).collect {

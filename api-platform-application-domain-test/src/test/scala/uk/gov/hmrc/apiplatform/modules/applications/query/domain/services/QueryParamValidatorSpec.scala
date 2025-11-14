@@ -32,7 +32,8 @@ import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param._
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.query.{ErrorMessage, ErrorsOr}
 
-class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaboratorsFixtures with EitherValues with FixedClock {
+class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaboratorsFixtures with EitherValues with FixedClock
+    with OrganisationIdFixtures {
 
   val appOneParam   = "applicationId"   -> Seq(applicationIdOne.toString)
   val pageSizeParam = "pageSize"        -> Seq("10")
@@ -264,6 +265,11 @@ class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaborators
         inside(test(Map("userId" -> Seq("123"))).toEither) {
           case Left(nel) => nel should (new ErrorIncludes("123 is not a valid user id"))
         }
+      }
+
+      "extract valid params regardless of case - organisationId" in {
+        test(Map("ORGANISATIONID" -> Seq(organisationIdOne.toString()))) shouldBe List(OrganisationIdQP(organisationIdOne)).validNel
+        test(Map("organisationId" -> Seq(organisationIdOne.toString()))) shouldBe List(OrganisationIdQP(organisationIdOne)).validNel
       }
     }
 
