@@ -19,7 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.query.domain.services
 import cats.data.NonEmptyList
 import org.scalatest.EitherValues
 
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiIdentifierFixtures, ApplicationIdFixtures, ClientIdFixtures, Environment, UserIdFixtures}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models._
 import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
@@ -28,7 +28,13 @@ import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Applicat
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param._
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models._
 
-class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with ClientIdFixtures with UserIdFixtures with ApiIdentifierFixtures with ApplicationIdFixtures
+class QueryParamsToQueryStringMapSpec extends HmrcSpec
+    with EitherValues
+    with ClientIdFixtures
+    with UserIdFixtures
+    with ApiIdentifierFixtures
+    with ApplicationIdFixtures
+    with OrganisationIdFixtures
     with FixedClock {
 
   def test(qry: ApplicationQuery, map: Map[String, Seq[String]]): Unit = {
@@ -308,6 +314,9 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec with EitherValues with Cl
     }
     "convert UserIdQP to query" in {
       testGOEAQ(List(UserIdQP(userIdOne)))(ParamNames.UserId -> s"$userIdOne")
+    }
+    "convert OrganisationIdQP to query" in {
+      testGOEAQ(List(OrganisationIdQP(organisationIdOne)))(ParamNames.OrganisationId -> s"$organisationIdOne")
     }
     "convert EnvironmentQP to query" in {
       testGOEAQ(List(EnvironmentQP(Environment.SANDBOX)))(ParamNames.Environment -> "SANDBOX")

@@ -57,4 +57,6 @@ object ParamNames {
 
   val AccessType = "accessType"
 
+  val OrganisationId = "organisationId"
+
 }

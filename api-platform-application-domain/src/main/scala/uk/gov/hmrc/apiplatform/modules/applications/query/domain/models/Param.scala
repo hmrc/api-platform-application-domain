@@ -96,6 +96,8 @@ object Param {
   case class MatchAccessTypeQP(value: AccessType) extends AccessTypeParam[AccessType]
   case object AnyAccessTypeQP                     extends AccessTypeParam[Unit]
 
+  case class OrganisationIdQP(value: OrganisationId) extends NonUniqueFilterParam[OrganisationId]
+
   // $COVERAGE-OFF$
   def asLogText(p: Param[_]): String = p match {
     case WantSubscriptionsQP                            => "WantSubscriptionsQP"
@@ -131,6 +133,7 @@ object Param {
     case SearchTextQP(value: String)                    => "SearchTextQP(???)"
     case NameQP(value: String)                          => s"NameQP($value)"
     case VerificationCodeQP(value: String)              => "VerificationCodeQP(???)"
+    case OrganisationIdQP(value: OrganisationId)        => s"OrganisationIdQP($value)"
 
     case MatchAccessTypeQP(value: AccessType) => s"MatchAccessTypeQP($value)"
     case AnyAccessTypeQP                      => s"AnyAccessTypeQP"
