@@ -179,6 +179,16 @@ class ApplicationQuerySpec extends HmrcSpec with ApplicationWithCollaboratorsFix
       )
     }
 
+    "work when given sorting and adminuserId" in {
+      test(
+        List(AdminUserIdQP(userIdOne), SortQP(Sorting.NameAscending))
+      )(
+        GeneralOpenEndedApplicationQuery(List(AdminUserIdQP(userIdOne)), Sorting.NameAscending)
+      )(
+        "GeneralOpenEndedApplicationQuery(AdminUserIdQP(???), sort=NameAscending)"
+      )
+    }
+
     "work when given sorting and userId and all wants" in {
       test(
         List(UserIdQP(userIdOne), SortQP(Sorting.NameAscending), WantSubscriptionsQP, WantSubscriptionFieldsQP, WantStateHistoryQP)

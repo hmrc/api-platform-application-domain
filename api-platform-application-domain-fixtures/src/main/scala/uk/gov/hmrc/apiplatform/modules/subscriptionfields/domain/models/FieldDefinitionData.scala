@@ -27,9 +27,30 @@ object FieldDefinitionData {
     validation = None,
     access = AccessRequirementsData.anyone
   )
+
+  val two = FieldDefinition(
+    name = FieldNameData.two,
+    description = "blah",
+    hint = "a hint",
+    `type` = FieldDefinitionType.STRING,
+    shortDescription = "short",
+    validation = None,
+    access = AccessRequirementsData.admin
+  )
+
+  val three = FieldDefinition(
+    name = FieldNameData.three,
+    description = "blah",
+    hint = "a hint",
+    `type` = FieldDefinitionType.STRING,
+    shortDescription = "short",
+    validation = None,
+    access = AccessRequirementsData.anyone
+  )
 }
 
 trait FieldDefinitionFixtures extends AccessRequirementsFixtures with ValidationGroupFixtures {
-  val fieldDefnOne = FieldDefinitionData.one
-  val fieldDefnTwo = FieldDefinitionData.one.copy(access = accessRequirementAdmin)
+  val fieldDefnOne   = FieldDefinitionData.one
+  val fieldDefnTwo   = FieldDefinitionData.two
+  val fieldDefnThree = FieldDefinitionData.three
 }

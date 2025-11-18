@@ -80,9 +80,9 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
     }
     "convert for general query" in {
       test(
-        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), wantSubscriptions = true),
+        GeneralOpenEndedApplicationQuery(List(AdminUserIdQP(userIdOne)), wantSubscriptions = true),
         Map(
-          ParamNames.UserId            -> Seq(userIdOne.toString()),
+          ParamNames.AdminUserId       -> Seq(userIdOne.toString()),
           ParamNames.WantSubscriptions -> Seq.empty
         )
       )
@@ -314,6 +314,9 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
     }
     "convert UserIdQP to query" in {
       testGOEAQ(List(UserIdQP(userIdOne)))(ParamNames.UserId -> s"$userIdOne")
+    }
+    "convert AdminUserIdQP to query" in {
+      testGOEAQ(List(AdminUserIdQP(userIdOne)))(ParamNames.AdminUserId -> s"$userIdOne")
     }
     "convert OrganisationIdQP to query" in {
       testGOEAQ(List(OrganisationIdQP(organisationIdOne)))(ParamNames.OrganisationId -> s"$organisationIdOne")

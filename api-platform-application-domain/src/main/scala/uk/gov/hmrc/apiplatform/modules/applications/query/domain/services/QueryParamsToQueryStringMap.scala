@@ -113,8 +113,8 @@ object QueryParamsToQueryStringMap {
     import cats.syntax.option._
 
     params.map(_ match {
-      case _: UserAgentParam[_] => None
-
+      case _: UserAgentParam[_]        => None
+      //
       case NoSubscriptionsQP           => (ParamNames.NoSubscriptions   -> Seq.empty).some
       case HasSubscriptionsQP          => (ParamNames.HasSubscriptions  -> Seq.empty).some
       case ApiContextQP(value)         => (ParamNames.ApiContext        -> Seq(value.toString())).some
@@ -122,6 +122,7 @@ object QueryParamsToQueryStringMap {
       case LastUsedAfterQP(value)      => (ParamNames.LastUsedAfter     -> Seq(paramValueForInstant(value))).some
       case LastUsedBeforeQP(value)     => (ParamNames.LastUsedBefore    -> Seq(paramValueForInstant(value))).some
       case UserIdQP(value)             => (ParamNames.UserId            -> Seq(value.toString())).some
+      case AdminUserIdQP(value)        => (ParamNames.AdminUserId       -> Seq(value.toString())).some
       case UserIdsQP(list)             => (ParamNames.UserIds           -> Seq(list.mkString(","))).some
       case EnvironmentQP(value)        => (ParamNames.Environment       -> Seq(value.toString())).some
       case IncludeDeletedQP            => (ParamNames.IncludeDeleted    -> Seq.empty).some

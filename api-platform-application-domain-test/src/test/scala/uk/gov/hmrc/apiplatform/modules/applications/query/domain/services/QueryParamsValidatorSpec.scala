@@ -32,7 +32,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param._
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.query.{ErrorMessage, ErrorsOr}
 
-class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaboratorsFixtures with EitherValues with FixedClock
+class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaboratorsFixtures with EitherValues with FixedClock
     with OrganisationIdFixtures {
 
   val appOneParam   = "applicationId"   -> Seq(applicationIdOne.toString)
@@ -41,7 +41,7 @@ class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaborators
   val invalidItem   = Map("someheadername" -> Seq("bob"))
 
   "parseParams" when {
-    val test = QueryParamValidator.parseParams _
+    val test = QueryParamsValidator.parseParams _
 
     def shouldFail[T](testThis: ErrorsOr[T]): Assertion = {
       inside(testThis) {
@@ -52,54 +52,64 @@ class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaborators
 
     "expecteds" should {
       "no-value-expected passes" in {
-        QueryParamValidator.NoValueExpected("param")(Seq()) shouldBe ().validNel
+        QueryParamsValidator.NoValueExpected("param")(Seq()) shouldBe ().validNel
       }
       "no-value-expected fails" in {
-        shouldFail(QueryParamValidator.NoValueExpected("param")(Seq("1")))
+        shouldFail(QueryParamsValidator.NoValueExpected("param")(Seq("1")))
+      }
+
+      "at least-one-value-expected passes" in {
+        QueryParamsValidator.AtLeastOneValue("param")(Seq("1")) shouldBe List("1").validNel
+      }
+      "at least-one-value-expected passes with several values" in {
+        QueryParamsValidator.AtLeastOneValue("param")(Seq("1", "2", "3")) shouldBe List("1", "2", "3").validNel
+      }
+      "at least-one-value-expected fails with no values" in {
+        shouldFail(QueryParamsValidator.AtLeastOneValue("param")(Seq()))
       }
 
       "single-value-expected passes" in {
-        QueryParamValidator.SingleValueExpected("param")(Seq("1")) shouldBe "1".validNel
+        QueryParamsValidator.SingleValueExpected("param")(Seq("1")) shouldBe "1".validNel
       }
       "single-value-expected fails" in {
-        shouldFail(QueryParamValidator.SingleValueExpected("param")(Seq("1", "2")))
-        shouldFail(QueryParamValidator.SingleValueExpected("param")(Seq()))
+        shouldFail(QueryParamsValidator.SingleValueExpected("param")(Seq("1", "2")))
+        shouldFail(QueryParamsValidator.SingleValueExpected("param")(Seq()))
       }
 
       "boolean-expected passes" in {
-        QueryParamValidator.BooleanValueExpected("param")("true") shouldBe true.validNel
-        QueryParamValidator.BooleanValueExpected("param")("false") shouldBe false.validNel
+        QueryParamsValidator.BooleanValueExpected("param")("true") shouldBe true.validNel
+        QueryParamsValidator.BooleanValueExpected("param")("false") shouldBe false.validNel
       }
       "boolean-expected fails" in {
-        shouldFail(QueryParamValidator.BooleanValueExpected("param")("not-a-boolean"))
+        shouldFail(QueryParamsValidator.BooleanValueExpected("param")("not-a-boolean"))
       }
 
       "integer-expected passes" in {
-        QueryParamValidator.IntValueExpected("param")("1") shouldBe 1.validNel
-        QueryParamValidator.IntValueExpected("param")("4") shouldBe 4.validNel
-        QueryParamValidator.IntValueExpected("param")("-5") shouldBe -5.validNel
+        QueryParamsValidator.IntValueExpected("param")("1") shouldBe 1.validNel
+        QueryParamsValidator.IntValueExpected("param")("4") shouldBe 4.validNel
+        QueryParamsValidator.IntValueExpected("param")("-5") shouldBe -5.validNel
       }
       "integer-expected fails" in {
-        shouldFail(QueryParamValidator.IntValueExpected("param")("not-an-int"))
-        shouldFail(QueryParamValidator.IntValueExpected("param")("1.5"))
+        shouldFail(QueryParamsValidator.IntValueExpected("param")("not-an-int"))
+        shouldFail(QueryParamsValidator.IntValueExpected("param")("1.5"))
       }
 
       "positive-integer-expected passes" in {
-        QueryParamValidator.IntValueExpected("param")("1") shouldBe 1.validNel
-        QueryParamValidator.IntValueExpected("param")("4") shouldBe 4.validNel
-        QueryParamValidator.IntValueExpected("param")("0") shouldBe 0.validNel
+        QueryParamsValidator.IntValueExpected("param")("1") shouldBe 1.validNel
+        QueryParamsValidator.IntValueExpected("param")("4") shouldBe 4.validNel
+        QueryParamsValidator.IntValueExpected("param")("0") shouldBe 0.validNel
       }
       "positive-integer-expected fails" in {
-        shouldFail(QueryParamValidator.PositiveIntValueExpected("param")("-5"))
-        shouldFail(QueryParamValidator.PositiveIntValueExpected("param")("not-an-int"))
-        shouldFail(QueryParamValidator.PositiveIntValueExpected("param")("1.5"))
+        shouldFail(QueryParamsValidator.PositiveIntValueExpected("param")("-5"))
+        shouldFail(QueryParamsValidator.PositiveIntValueExpected("param")("not-an-int"))
+        shouldFail(QueryParamsValidator.PositiveIntValueExpected("param")("1.5"))
       }
 
       "instant-value-expected passes" in {
-        QueryParamValidator.InstantValueExpected("param")(nowAsText) shouldBe instant.validNel
+        QueryParamsValidator.InstantValueExpected("param")(nowAsText) shouldBe instant.validNel
       }
       "instant-value-expected fails" in {
-        shouldFail(QueryParamValidator.InstantValueExpected("param")("not-an-instant"))
+        shouldFail(QueryParamsValidator.InstantValueExpected("param")("not-an-instant"))
       }
     }
 
@@ -267,10 +277,52 @@ class QueryParamValidatorSpec extends HmrcSpec with ApplicationWithCollaborators
         }
       }
 
+      // -----
+
+      "extract valid params regardless of case - admin userId" in {
+        test(Map("ADMINUSERID" -> Seq(userIdOne.toString()))) shouldBe List(AdminUserIdQP(userIdOne)).validNel
+        test(Map("adminUserId" -> Seq(userIdOne.toString()))) shouldBe List(AdminUserIdQP(userIdOne)).validNel
+      }
+
+      "error on params with multiple admin userId values" in {
+        inside(test(Map("adminUserId" -> Seq(userIdOne.toString(), userIdTwo.toString()))).toEither) {
+          case Left(nel) => nel should (reportErrorForAllowsOnlyOneValue("adminUserId"))
+        }
+      }
+
+      "error on param with invalid admin userId value" in {
+        inside(test(Map("adminUserId" -> Seq("123"))).toEither) {
+          case Left(nel) => nel should (new ErrorIncludes("123 is not a valid user id"))
+        }
+      }
+
+      // -----
+
       "extract valid params regardless of case - organisationId" in {
         test(Map("ORGANISATIONID" -> Seq(organisationIdOne.toString()))) shouldBe List(OrganisationIdQP(organisationIdOne)).validNel
         test(Map("organisationId" -> Seq(organisationIdOne.toString()))) shouldBe List(OrganisationIdQP(organisationIdOne)).validNel
       }
+    }
+
+    // -----
+
+    "extract valid params - wantSubscription" in {
+      test(Map("wantSubscriptions" -> Seq())) shouldBe List(WantSubscriptionsQP).validNel
+    }
+    "fail wantSubscription with a value" in {
+      shouldFail(test(Map("wantSubscriptions" -> Seq("1"))))
+    }
+    "extract valid params - wantSubscriptionFields" in {
+      test(Map("wantSubscriptionFields" -> Seq())) shouldBe List(WantSubscriptionFieldsQP).validNel
+    }
+    "fail wantSubscriptionFields with a value" in {
+      shouldFail(test(Map("wantSubscriptionFields" -> Seq("1"))))
+    }
+    "extract valid params - wantStateHistory" in {
+      test(Map("wantStateHistory" -> Seq())) shouldBe List(WantStateHistoryQP).validNel
+    }
+    "fail wantStateHistory with a value" in {
+      shouldFail(test(Map("wantStateHistory" -> Seq("1"))))
     }
 
     // -----
