@@ -33,12 +33,12 @@ import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param._
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.query.{ErrorMessage, ErrorsOr}
 
-sealed trait QueryParamValidator {
+sealed trait QueryParamsValidator {
   def paramName: String
   def validate(values: Seq[String]): ErrorsOr[Param[_]]
 }
 
-object QueryParamValidator {
+object QueryParamsValidator {
 
   object NoValueExpected {
 
@@ -106,7 +106,7 @@ object QueryParamValidator {
     def apply(paramName: String)(value: String): ErrorsOr[ApplicationId] = ApplicationId(value).toValidNel(s"$value is not a valid application id")
   }
 
-  object ApplicationIdValidator extends QueryParamValidator {
+  object ApplicationIdValidator extends QueryParamsValidator {
     val paramName = ParamNames.ApplicationId
 
     def validate(values: Seq[String]): ErrorsOr[ApplicationIdQP] = {
@@ -114,7 +114,7 @@ object QueryParamValidator {
     }
   }
 
-  object ClientIdValidator extends QueryParamValidator {
+  object ClientIdValidator extends QueryParamsValidator {
     val paramName = ParamNames.ClientId
 
     def validate(values: Seq[String]): ErrorsOr[ClientIdQP] = {
@@ -122,7 +122,7 @@ object QueryParamValidator {
     }
   }
 
-  object ApiContextValidator extends QueryParamValidator {
+  object ApiContextValidator extends QueryParamsValidator {
     val paramName = ParamNames.ApiContext
 
     def validate(values: Seq[String]): ErrorsOr[ApiContextQP] = {
@@ -130,7 +130,7 @@ object QueryParamValidator {
     }
   }
 
-  object ApiVersionNbrValidator extends QueryParamValidator {
+  object ApiVersionNbrValidator extends QueryParamsValidator {
     val paramName = ParamNames.ApiVersionNbr
 
     def validate(values: Seq[String]): ErrorsOr[ApiVersionNbrQP] = {
@@ -138,7 +138,7 @@ object QueryParamValidator {
     }
   }
 
-  object HasSubscriptionsValidator extends QueryParamValidator {
+  object HasSubscriptionsValidator extends QueryParamsValidator {
     val paramName = ParamNames.HasSubscriptions
 
     def validate(values: Seq[String]): ErrorsOr[HasSubscriptionsQP.type] = {
@@ -146,7 +146,7 @@ object QueryParamValidator {
     }
   }
 
-  object NoSubscriptionsValidator extends QueryParamValidator {
+  object NoSubscriptionsValidator extends QueryParamsValidator {
     val paramName = ParamNames.NoSubscriptions
 
     def validate(values: Seq[String]): ErrorsOr[NoSubscriptionsQP.type] = {
@@ -154,7 +154,7 @@ object QueryParamValidator {
     }
   }
 
-  object WantSubscriptionsValidator extends QueryParamValidator {
+  object WantSubscriptionsValidator extends QueryParamsValidator {
     val paramName = ParamNames.WantSubscriptions
 
     def validate(values: Seq[String]): ErrorsOr[WantSubscriptionsQP.type] = {
@@ -162,7 +162,7 @@ object QueryParamValidator {
     }
   }
 
-  object WantSubscriptionFieldsValidator extends QueryParamValidator {
+  object WantSubscriptionFieldsValidator extends QueryParamsValidator {
     val paramName = ParamNames.WantSubscriptionFields
 
     def validate(values: Seq[String]): ErrorsOr[WantSubscriptionFieldsQP.type] = {
@@ -170,7 +170,7 @@ object QueryParamValidator {
     }
   }
 
-  object WantStateHistoryValidator extends QueryParamValidator {
+  object WantStateHistoryValidator extends QueryParamsValidator {
     val paramName = ParamNames.WantStateHistory
 
     def validate(values: Seq[String]): ErrorsOr[WantStateHistoryQP.type] = {
@@ -178,7 +178,7 @@ object QueryParamValidator {
     }
   }
 
-  object PageSizeValidator extends QueryParamValidator {
+  object PageSizeValidator extends QueryParamsValidator {
     val paramName = ParamNames.PageSize
 
     def validate(values: Seq[String]): ErrorsOr[PageSizeQP] = {
@@ -186,7 +186,7 @@ object QueryParamValidator {
     }
   }
 
-  object PageNbrValidator extends QueryParamValidator {
+  object PageNbrValidator extends QueryParamsValidator {
     val paramName = ParamNames.PageNbr
 
     def validate(values: Seq[String]): ErrorsOr[PageNbrQP] = {
@@ -226,7 +226,7 @@ object QueryParamValidator {
     def apply(values: Seq[String]): ErrorsOr[AppStateParam[_]] = applyMany(values).toValidNel(s"$values contains invalid parameters")
   }
 
-  object StatusValidator extends QueryParamValidator {
+  object StatusValidator extends QueryParamsValidator {
     val paramName = ParamNames.Status
 
     def validate(values: Seq[String]): ErrorsOr[AppStateParam[_]] = {
@@ -234,7 +234,7 @@ object QueryParamValidator {
     }
   }
 
-  object StatusBeforeDate extends QueryParamValidator {
+  object StatusBeforeDate extends QueryParamsValidator {
     val paramName = ParamNames.StatusDateBefore
 
     def validate(values: Seq[String]): ErrorsOr[Param[_]] = {
@@ -246,7 +246,7 @@ object QueryParamValidator {
     def apply(value: String): ErrorsOr[Sorting] = Sorting(value).toValidNel(s"$value is not a valid sort")
   }
 
-  object SortValidator extends QueryParamValidator {
+  object SortValidator extends QueryParamsValidator {
     val paramName = ParamNames.Sort
 
     def validate(values: Seq[String]): ErrorsOr[SortQP] = {
@@ -258,7 +258,7 @@ object QueryParamValidator {
     def apply(paramName: String)(value: String): ErrorsOr[UserId] = UserId.apply(value).toValidNel(s"$value is not a valid user id")
   }
 
-  object UserIdValidator extends QueryParamValidator {
+  object UserIdValidator extends QueryParamsValidator {
     val paramName = ParamNames.UserId
 
     def validate(values: Seq[String]): ErrorsOr[UserIdQP] = {
@@ -266,7 +266,15 @@ object QueryParamValidator {
     }
   }
 
-  object UserIdsValidator extends QueryParamValidator {
+  object AdminUserIdValidator extends QueryParamsValidator {
+    val paramName = ParamNames.AdminUserId
+
+    def validate(values: Seq[String]): ErrorsOr[AdminUserIdQP] = {
+      SingleValueExpected(paramName)(values) andThen UserIdExpected(paramName) map { AdminUserIdQP(_) }
+    }
+  }
+
+  object UserIdsValidator extends QueryParamsValidator {
     val paramName = ParamNames.UserIds
 
     def validate(values: Seq[String]): ErrorsOr[UserIdsQP] = {
@@ -287,7 +295,7 @@ object QueryParamValidator {
       allCatch.opt(OrganisationId(ju.UUID.fromString(value))).toValidNel(s"$value is not a valid organisation id")
   }
 
-  object OrganisationIdValidator extends QueryParamValidator {
+  object OrganisationIdValidator extends QueryParamsValidator {
     val paramName = ParamNames.OrganisationId
 
     def validate(values: Seq[String]): ErrorsOr[OrganisationIdQP] = {
@@ -295,7 +303,7 @@ object QueryParamValidator {
     }
   }
 
-  object AccessTypeValidator extends QueryParamValidator {
+  object AccessTypeValidator extends QueryParamsValidator {
 
     def parseText(value: String): ErrorsOr[Option[AccessType]] = {
       value match {
@@ -314,7 +322,7 @@ object QueryParamValidator {
     }
   }
 
-  object SearchTextValidator extends QueryParamValidator {
+  object SearchTextValidator extends QueryParamsValidator {
     val paramName = ParamNames.Search
 
     def validate(values: Seq[String]): ErrorsOr[SearchTextQP] = {
@@ -322,7 +330,7 @@ object QueryParamValidator {
     }
   }
 
-  object NameValidator extends QueryParamValidator {
+  object NameValidator extends QueryParamsValidator {
     val paramName = ParamNames.Name
 
     def validate(values: Seq[String]): ErrorsOr[NameQP] = {
@@ -330,7 +338,7 @@ object QueryParamValidator {
     }
   }
 
-  object VerificationCodeValidator extends QueryParamValidator {
+  object VerificationCodeValidator extends QueryParamsValidator {
     val paramName = ParamNames.VerificationCode
 
     def validate(values: Seq[String]): ErrorsOr[VerificationCodeQP] = {
@@ -338,7 +346,7 @@ object QueryParamValidator {
     }
   }
 
-  object IncludeDeletedValidator extends QueryParamValidator {
+  object IncludeDeletedValidator extends QueryParamsValidator {
     val paramName = ParamNames.IncludeDeleted
 
     def validate(values: Seq[String]): ErrorsOr[IncludeDeletedQP.type] = {
@@ -358,7 +366,7 @@ object QueryParamValidator {
     }
   }
 
-  object DeleteRestrictionValidator extends QueryParamValidator {
+  object DeleteRestrictionValidator extends QueryParamsValidator {
     val paramName = ParamNames.DeleteRestriction
 
     def validate(values: Seq[String]): ErrorsOr[DeleteRestrictionQP] =
@@ -376,7 +384,7 @@ object QueryParamValidator {
 
   }
 
-  object EnvironmentValidator extends QueryParamValidator {
+  object EnvironmentValidator extends QueryParamsValidator {
     val paramName = ParamNames.Environment
 
     def validate(values: Seq[String]): ErrorsOr[EnvironmentQP] = {
@@ -384,7 +392,7 @@ object QueryParamValidator {
     }
   }
 
-  object LastUseBeforeValidator extends QueryParamValidator {
+  object LastUseBeforeValidator extends QueryParamsValidator {
     val paramName = ParamNames.LastUsedBefore
 
     def validate(values: Seq[String]): ErrorsOr[LastUsedBeforeQP] = {
@@ -392,7 +400,7 @@ object QueryParamValidator {
     }
   }
 
-  object LastUseAfterValidator extends QueryParamValidator {
+  object LastUseAfterValidator extends QueryParamsValidator {
     val paramName = ParamNames.LastUsedAfter
 
     def validate(values: Seq[String]): ErrorsOr[LastUsedAfterQP] = {
@@ -400,36 +408,37 @@ object QueryParamValidator {
     }
   }
 
-  private val paramValidators: List[QueryParamValidator] = List(
-    QueryParamValidator.AccessTypeValidator,
-    QueryParamValidator.ApiContextValidator,
-    QueryParamValidator.ApiVersionNbrValidator,
-    QueryParamValidator.ApplicationIdValidator,
-    QueryParamValidator.ClientIdValidator,
-    QueryParamValidator.DeleteRestrictionValidator,
-    QueryParamValidator.EnvironmentValidator,
-    QueryParamValidator.HasSubscriptionsValidator,
-    QueryParamValidator.IncludeDeletedValidator,
-    QueryParamValidator.LastUseBeforeValidator,
-    QueryParamValidator.LastUseAfterValidator,
-    QueryParamValidator.NameValidator,
-    QueryParamValidator.NoSubscriptionsValidator,
-    QueryParamValidator.PageSizeValidator,
-    QueryParamValidator.PageNbrValidator,
-    QueryParamValidator.StatusBeforeDate,
-    QueryParamValidator.StatusValidator,
-    QueryParamValidator.SortValidator,
-    QueryParamValidator.SearchTextValidator,
-    QueryParamValidator.UserIdValidator,
-    QueryParamValidator.UserIdsValidator,
-    QueryParamValidator.VerificationCodeValidator,
-    QueryParamValidator.OrganisationIdValidator,
-    QueryParamValidator.WantSubscriptionsValidator,
-    QueryParamValidator.WantSubscriptionFieldsValidator,
-    QueryParamValidator.WantStateHistoryValidator
+  private val paramValidators: List[QueryParamsValidator] = List(
+    QueryParamsValidator.AccessTypeValidator,
+    QueryParamsValidator.ApiContextValidator,
+    QueryParamsValidator.ApiVersionNbrValidator,
+    QueryParamsValidator.ApplicationIdValidator,
+    QueryParamsValidator.ClientIdValidator,
+    QueryParamsValidator.DeleteRestrictionValidator,
+    QueryParamsValidator.EnvironmentValidator,
+    QueryParamsValidator.HasSubscriptionsValidator,
+    QueryParamsValidator.IncludeDeletedValidator,
+    QueryParamsValidator.LastUseBeforeValidator,
+    QueryParamsValidator.LastUseAfterValidator,
+    QueryParamsValidator.NameValidator,
+    QueryParamsValidator.NoSubscriptionsValidator,
+    QueryParamsValidator.PageSizeValidator,
+    QueryParamsValidator.PageNbrValidator,
+    QueryParamsValidator.StatusBeforeDate,
+    QueryParamsValidator.StatusValidator,
+    QueryParamsValidator.SortValidator,
+    QueryParamsValidator.SearchTextValidator,
+    QueryParamsValidator.UserIdValidator,
+    QueryParamsValidator.AdminUserIdValidator,
+    QueryParamsValidator.UserIdsValidator,
+    QueryParamsValidator.VerificationCodeValidator,
+    QueryParamsValidator.OrganisationIdValidator,
+    QueryParamsValidator.WantSubscriptionsValidator,
+    QueryParamsValidator.WantSubscriptionFieldsValidator,
+    QueryParamsValidator.WantStateHistoryValidator
   )
 
-  private val validatorLookup: Map[String, QueryParamValidator] = paramValidators.map(pv => pv.paramName.toLowerCase -> pv).toMap
+  private val validatorLookup: Map[String, QueryParamsValidator] = paramValidators.map(pv => pv.paramName.toLowerCase -> pv).toMap
 
   def parseParams(rawQueryParams: Map[String, Seq[String]]): ErrorsOr[List[Param[_]]] = {
     val paramValidations = rawQueryParams.map {

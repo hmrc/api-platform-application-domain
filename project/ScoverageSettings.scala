@@ -6,7 +6,7 @@ object ScoverageSettings {
       "<empty>",
       """uk\.gov\.hmrc\.BuildInfo""",
     ).mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 97.75,
+    ScoverageKeys.coverageMinimumStmtTotal := 97.80,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )

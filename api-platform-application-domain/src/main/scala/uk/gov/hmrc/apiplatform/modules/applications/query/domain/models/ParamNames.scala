@@ -21,42 +21,41 @@ object ParamNames {
   val WantSubscriptions      = "wantSubscriptions"
   val WantSubscriptionFields = "wantSubscriptionFields"
   val WantStateHistory       = "wantStateHistory"
-
-  val ServerToken   = "serverToken"
-  val ClientId      = "clientId"
-  val ApplicationId = "applicationId"
-
-  val PageNbr  = "pageNbr"
-  val PageSize = "pageSize"
-
-  val Sort = "sort"
-
-  val NoSubscriptions  = "noSubscriptions"
-  val HasSubscriptions = "oneOrMoreSubscriptions"
-  val ApiContext       = "context"
-  val ApiVersionNbr    = "versionNbr"
-
-  val LastUsedAfter  = "lastUsedAfter"
-  val LastUsedBefore = "lastUsedBefore"
-
-  val UserId  = "userId"
-  val UserIds = "userIds"
-
-  val Environment = "environment"
-
-  val IncludeDeleted = "includeDeleted"
-
-  val DeleteRestriction = "deleteRestriction"
-
-  val Status           = "status"
-  val StatusDateBefore = "statusDate"
-
-  val Search           = "search"
-  val Name             = "name"
-  val VerificationCode = "verificationCode"
-
-  val AccessType = "accessType"
-
-  val OrganisationId = "organisationId"
-
+  //
+  val ServerToken            = "serverToken"
+  val ClientId               = "clientId"
+  val ApplicationId          = "applicationId"
+  //
+  val PageNbr                = "pageNbr"
+  val PageSize               = "pageSize"
+  //
+  val Sort                   = "sort"
+  //
+  val NoSubscriptions        = "noSubscriptions"
+  val HasSubscriptions       = "oneOrMoreSubscriptions"
+  val ApiContext             = "context"
+  val ApiVersionNbr          = "versionNbr"
+  //
+  val LastUsedAfter          = "lastUsedAfter"
+  val LastUsedBefore         = "lastUsedBefore"
+  //
+  val UserId                 = "userId"
+  val AdminUserId            = "adminUserId"
+  val UserIds                = "userIds"
+  //
+  val Environment            = "environment"
+  //
+  val IncludeDeleted         = "includeDeleted"
+  val DeleteRestriction      = "deleteRestriction"
+  //
+  val Status                 = "status"
+  val StatusDateBefore       = "statusDate"
+  //
+  val Search                 = "search"
+  val Name                   = "name"
+  val VerificationCode       = "verificationCode"
+  //
+  val AccessType             = "accessType"
+  //
+  val OrganisationId         = "organisationId"
 }

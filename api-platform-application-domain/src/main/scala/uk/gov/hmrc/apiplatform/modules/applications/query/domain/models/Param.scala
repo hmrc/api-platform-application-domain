@@ -41,43 +41,44 @@ sealed trait PaginationParam[+P] extends Param[P] { def order: Int }
 sealed trait SortingParam[+P] extends Param[P]
 
 object Param {
-  case object WantSubscriptionsQP      extends FilterParam[Unit]
-  case object WantSubscriptionFieldsQP extends FilterParam[Unit]
-  case object WantStateHistoryQP       extends FilterParam[Unit]
-
-  sealed trait UserAgentParam[T]               extends NonUniqueFilterParam[T]
-  case class GenericUserAgentQP(value: String) extends UserAgentParam[String]
-  case object ApiGatewayUserAgentQP            extends UserAgentParam[Unit]
-
-  case class ServerTokenQP(value: String)          extends UniqueFilterParam[String]
-  case class ClientIdQP(value: ClientId)           extends UniqueFilterParam[ClientId]
-  case class ApplicationIdQP(value: ApplicationId) extends UniqueFilterParam[ApplicationId]
-
-  case class PageSizeQP(value: Int) extends PaginationParam[Int] { val order = 1 }
-  case class PageNbrQP(value: Int)  extends PaginationParam[Int] { val order = 2 }
-
-  case class SortQP(value: Sorting) extends SortingParam[Sorting]
-
-  sealed trait SubscriptionFilterParam[T]          extends NonUniqueFilterParam[T]                { def order: Int }
-  case object NoSubscriptionsQP                    extends SubscriptionFilterParam[Unit]          { val order = 1  }
-  case object HasSubscriptionsQP                   extends SubscriptionFilterParam[Unit]          { val order = 2  }
-  case class ApiContextQP(value: ApiContext)       extends SubscriptionFilterParam[ApiContext]    { val order = 3  }
-  case class ApiVersionNbrQP(value: ApiVersionNbr) extends SubscriptionFilterParam[ApiVersionNbr] { val order = 4  }
-
-  case class LastUsedAfterQP(value: Instant)  extends NonUniqueFilterParam[Instant]
-  case class LastUsedBeforeQP(value: Instant) extends NonUniqueFilterParam[Instant]
-
-  case class UserIdQP(value: UserId)         extends NonUniqueFilterParam[UserId]
-  case class UserIdsQP(values: List[UserId]) extends NonUniqueFilterParam[UserId]
-
-  case class EnvironmentQP(value: Environment) extends NonUniqueFilterParam[Environment]
-
-  case object IncludeDeletedQP extends NonUniqueFilterParam[Environment]
-
-  sealed trait DeleteRestrictionQP extends NonUniqueFilterParam[Unit]
-  case object NoRestrictionQP      extends DeleteRestrictionQP
-  case object DoNotDeleteQP        extends DeleteRestrictionQP
-
+  case object WantSubscriptionsQP                           extends FilterParam[Unit]
+  case object WantSubscriptionFieldsQP                      extends FilterParam[Unit]
+  case object WantStateHistoryQP                            extends FilterParam[Unit]
+  //
+  sealed trait UserAgentParam[T]                            extends NonUniqueFilterParam[T]
+  case class GenericUserAgentQP(value: String)              extends UserAgentParam[String]
+  case object ApiGatewayUserAgentQP                         extends UserAgentParam[Unit]
+  //
+  case class ServerTokenQP(value: String)                   extends UniqueFilterParam[String]
+  case class ClientIdQP(value: ClientId)                    extends UniqueFilterParam[ClientId]
+  case class ApplicationIdQP(value: ApplicationId)          extends UniqueFilterParam[ApplicationId]
+  //
+  case class PageSizeQP(value: Int)                         extends PaginationParam[Int]                   { val order = 1  }
+  case class PageNbrQP(value: Int)                          extends PaginationParam[Int]                   { val order = 2  }
+  //
+  case class SortQP(value: Sorting)                         extends SortingParam[Sorting]
+  //
+  sealed trait SubscriptionFilterParam[T]                   extends NonUniqueFilterParam[T]                { def order: Int }
+  case object NoSubscriptionsQP                             extends SubscriptionFilterParam[Unit]          { val order = 1  }
+  case object HasSubscriptionsQP                            extends SubscriptionFilterParam[Unit]          { val order = 2  }
+  case class ApiContextQP(value: ApiContext)                extends SubscriptionFilterParam[ApiContext]    { val order = 3  }
+  case class ApiVersionNbrQP(value: ApiVersionNbr)          extends SubscriptionFilterParam[ApiVersionNbr] { val order = 4  }
+  //
+  case class LastUsedAfterQP(value: Instant)                extends NonUniqueFilterParam[Instant]
+  case class LastUsedBeforeQP(value: Instant)               extends NonUniqueFilterParam[Instant]
+  //
+  case class UserIdQP(value: UserId)                        extends NonUniqueFilterParam[UserId]
+  case class AdminUserIdQP(value: UserId)                   extends NonUniqueFilterParam[UserId]
+  case class UserIdsQP(values: List[UserId])                extends NonUniqueFilterParam[UserId]
+  //
+  case class EnvironmentQP(value: Environment)              extends NonUniqueFilterParam[Environment]
+  //
+  case object IncludeDeletedQP                              extends NonUniqueFilterParam[Environment]
+  //
+  sealed trait DeleteRestrictionQP                          extends NonUniqueFilterParam[Unit]
+  case object NoRestrictionQP                               extends DeleteRestrictionQP
+  case object DoNotDeleteQP                                 extends DeleteRestrictionQP
+  //
   sealed trait AppStateParam[T]                             extends NonUniqueFilterParam[T]
   case class MatchOneStateQP(state: State)                  extends AppStateParam[State]
   case class MatchManyStatesQP(states: NonEmptyList[State]) extends AppStateParam[NonEmptyList[State]]
@@ -85,18 +86,18 @@ object Param {
   case object ExcludeDeletedQP                              extends AppStateParam[Unit] // TODO - dupe of ExcludeDeletedQP
   case object BlockedStateQP                                extends AppStateParam[Unit]
   case object NoStateFilteringQP                            extends AppStateParam[Unit]
-
-  case class AppStateBeforeDateQP(value: Instant) extends NonUniqueFilterParam[Instant]
-
-  case class SearchTextQP(value: String)       extends NonUniqueFilterParam[String]
-  case class NameQP(value: String)             extends NonUniqueFilterParam[String]
-  case class VerificationCodeQP(value: String) extends NonUniqueFilterParam[String]
-
-  sealed trait AccessTypeParam[T]                 extends NonUniqueFilterParam[T]
-  case class MatchAccessTypeQP(value: AccessType) extends AccessTypeParam[AccessType]
-  case object AnyAccessTypeQP                     extends AccessTypeParam[Unit]
-
-  case class OrganisationIdQP(value: OrganisationId) extends NonUniqueFilterParam[OrganisationId]
+  //
+  case class AppStateBeforeDateQP(value: Instant)           extends NonUniqueFilterParam[Instant]
+  //
+  case class SearchTextQP(value: String)                    extends NonUniqueFilterParam[String]
+  case class NameQP(value: String)                          extends NonUniqueFilterParam[String]
+  case class VerificationCodeQP(value: String)              extends NonUniqueFilterParam[String]
+  //
+  sealed trait AccessTypeParam[T]                           extends NonUniqueFilterParam[T]
+  case class MatchAccessTypeQP(value: AccessType)           extends AccessTypeParam[AccessType]
+  case object AnyAccessTypeQP                               extends AccessTypeParam[Unit]
+  //
+  case class OrganisationIdQP(value: OrganisationId)        extends NonUniqueFilterParam[OrganisationId]
 
   // $COVERAGE-OFF$
   def asLogText(p: Param[_]): String = p match {
@@ -118,6 +119,7 @@ object Param {
     case LastUsedAfterQP(value: Instant)                => s"LastUsedAfterQP($value)"
     case LastUsedBeforeQP(value: Instant)               => s"LastUsedBeforeQP($value)"
     case UserIdQP(value: UserId)                        => "UserIdQP(???)"
+    case AdminUserIdQP(value: UserId)                   => "AdminUserIdQP(???)"
     case UserIdsQP(values: List[UserId])                => "UserIdsQP(???,...)"
     case EnvironmentQP(value: Environment)              => s"EnvironmentQP($value)"
     case IncludeDeletedQP                               => s"IncludeDeletedQP"
@@ -134,9 +136,9 @@ object Param {
     case NameQP(value: String)                          => s"NameQP($value)"
     case VerificationCodeQP(value: String)              => "VerificationCodeQP(???)"
     case OrganisationIdQP(value: OrganisationId)        => s"OrganisationIdQP($value)"
-
-    case MatchAccessTypeQP(value: AccessType) => s"MatchAccessTypeQP($value)"
-    case AnyAccessTypeQP                      => s"AnyAccessTypeQP"
+    //
+    case MatchAccessTypeQP(value: AccessType)           => s"MatchAccessTypeQP($value)"
+    case AnyAccessTypeQP                                => s"AnyAccessTypeQP"
   }
   // $COVERAGE-ON$
 }
