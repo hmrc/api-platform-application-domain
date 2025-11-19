@@ -45,19 +45,39 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
     test(qry, Map.empty[String, Seq[String]] ++ pairs.map(p => p._1 -> Seq(p._2)))
   }
 
-  def testGOEAQ(params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, wantSubscriptions: Boolean = false)(pairs: (String, String)*): Unit = {
-    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions), pairs: _*)
+  def testGOEAQ(
+      params: List[NonUniqueFilterParam[_]],
+      sorting: Sorting = Sorting.NoSorting,
+      wantSubscriptions: Boolean = false,
+      limit: Option[Int] = None
+    )(
+      pairs: (String, String)*
+    ): Unit = {
+    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions, limit = limit), pairs: _*)
   }
 
-  def testGOEAQMap(params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, wantSubscriptions: Boolean = false)(map: Map[String, Seq[String]]): Unit = {
-    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions), map)
+  def testGOEAQMap(
+      params: List[NonUniqueFilterParam[_]],
+      sorting: Sorting = Sorting.NoSorting,
+      wantSubscriptions: Boolean = false,
+      limit: Option[Int] = None
+    )(
+      map: Map[String, Seq[String]]
+    ): Unit = {
+    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions, limit = limit), map)
   }
 
   def testOfNoValue(qry: ApplicationQuery, param: String): Unit = {
     QueryParamsToQueryStringMap.toQuery(qry) shouldBe Map(param -> Seq.empty)
   }
 
-  def testGOEAQOfNoValue(params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, wantSubscriptions: Boolean = false)(param: String): Unit = {
+  def testGOEAQOfNoValue(
+      params: List[NonUniqueFilterParam[_]],
+      sorting: Sorting = Sorting.NoSorting,
+      wantSubscriptions: Boolean = false
+    )(
+      param: String
+    ): Unit = {
     QueryParamsToQueryStringMap.toQuery(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions)) shouldBe Map(param -> Seq.empty)
   }
 
@@ -381,6 +401,15 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
     }
   }
 
+  "paramForLimit" should {
+    "convert LimitQP to query" in {
+      testGOEAQ(Nil, limit = Some(50))(ParamNames.Limit -> "50")
+    }
+    "convert no LimitQP to query" in {
+      testGOEAQ(Nil, limit = None)()
+    }
+  }
+  
   "paramForSorting" should {
     "convert to blank on no sort" in {
       QueryParamsToQueryStringMap.paramForSorting(Sorting.NoSorting) shouldBe Map.empty

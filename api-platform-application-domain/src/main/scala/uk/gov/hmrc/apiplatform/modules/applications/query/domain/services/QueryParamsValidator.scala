@@ -408,6 +408,14 @@ object QueryParamsValidator {
     }
   }
 
+  object LimitValidator extends QueryParamsValidator {
+    val paramName = ParamNames.Limit
+
+    def validate(values: Seq[String]): ErrorsOr[LimitQP] = {
+      SingleValueExpected(paramName)(values) andThen PositiveIntValueExpected(paramName) map { v => LimitQP(v) }
+    }
+  }
+
   private val paramValidators: List[QueryParamsValidator] = List(
     QueryParamsValidator.AccessTypeValidator,
     QueryParamsValidator.ApiContextValidator,
@@ -435,7 +443,8 @@ object QueryParamsValidator {
     QueryParamsValidator.OrganisationIdValidator,
     QueryParamsValidator.WantSubscriptionsValidator,
     QueryParamsValidator.WantSubscriptionFieldsValidator,
-    QueryParamsValidator.WantStateHistoryValidator
+    QueryParamsValidator.WantStateHistoryValidator,
+    QueryParamsValidator.LimitValidator
   )
 
   private val validatorLookup: Map[String, QueryParamsValidator] = paramValidators.map(pv => pv.paramName.toLowerCase -> pv).toMap

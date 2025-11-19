@@ -306,6 +306,9 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
 
     // -----
 
+    "extract valid params - limit" in {
+      test(Map("limit" -> Seq("50"))) shouldBe List(LimitQP(50)).validNel
+    }
     "extract valid params - wantSubscription" in {
       test(Map("wantSubscriptions" -> Seq())) shouldBe List(WantSubscriptionsQP).validNel
     }

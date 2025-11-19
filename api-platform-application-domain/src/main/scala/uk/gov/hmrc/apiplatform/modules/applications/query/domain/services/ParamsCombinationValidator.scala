@@ -123,10 +123,17 @@ object ParamsCombinationValidator {
     }
   }
 
+  def checkLimit(resultInPagination: Boolean, resultInSingleApp: Boolean, limitRequested: Boolean): ErrorsOr[Unit] =
+    if (limitRequested && (resultInPagination || resultInSingleApp))
+      "Cannot request limit on single query or paginated query".invalidNel
+    else
+      ().validNel
+
   def validateParamCombinations(implicit allParams: List[Param[_]]): ErrorsOr[Unit] = {
     val wantSubcriptions      = first[WantSubscriptionsQP.type].headOption.isDefined
     val wantSubcriptionFields = first[WantSubscriptionFieldsQP.type].headOption.isDefined
     val wantStateHistory      = first[WantStateHistoryQP.type].headOption.isDefined
+    val limitRequested        = first[LimitQP].headOption.isDefined
 
     val otherFilterParams  = allParams.collect {
       case fp: NonUniqueFilterParam[_] => fp
@@ -156,6 +163,7 @@ object ParamsCombinationValidator {
       .combine(checkVerificationCodeUsesDeleteExclusion(otherFilterParams))
       .combine(checkUserCombinations(otherFilterParams))
       .combine(checkWants(wantSubcriptions, wantSubcriptionFields, wantStateHistory, resultInPagination, resultInSingleApp))
+      .combine(checkLimit(resultInPagination, resultInSingleApp, limitRequested))
       .combine(checkAppStateFilters(otherFilterParams))
   }
 }

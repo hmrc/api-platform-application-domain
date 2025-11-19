@@ -223,4 +223,17 @@ class ParamsCombinationValidatorSpec
       testBadCombo(blockedState :: dateBefore :: Nil)
     }
   }
+
+  "checkLimit" should {
+    val test: (List[Param[_]]) => ErrorsOr[Unit] = (ps) => ParamsCombinationValidator.validateParamCombinations(ps)
+    "pass when used with an open ended query" in {
+      test(List(LimitQP(50), BlockedStateQP)) shouldBe Pass
+    }
+    "fail when used with a single app query" in {
+      test(List(LimitQP(50), ClientIdQP(clientIdOne))) should not be Pass
+    }
+    "fail when used with a paginated query" in {
+      test(List(LimitQP(50), PageNbrQP(1))) should not be Pass
+    }
+  }
 }
