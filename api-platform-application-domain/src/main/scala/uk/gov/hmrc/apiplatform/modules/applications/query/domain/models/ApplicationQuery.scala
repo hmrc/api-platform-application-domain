@@ -106,7 +106,8 @@ object ApplicationQuery {
       params: List[NonUniqueFilterParam[_]],
       sorting: Sorting = Sorting.NoSorting,
       wantSubscriptions: Boolean = false,
-      wantStateHistory: Boolean = false
+      wantStateHistory: Boolean = false,
+      limit: Option[Int] = None
     ) extends MultipleApplicationQuery {
 
     def asLogText: String = {
@@ -164,10 +165,11 @@ object ApplicationQuery {
     def attemptToConstructMultiResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): MultipleApplicationQuery = {
 
       val sorting = first[SortQP](validParams, implicitly).map(_.value).getOrElse(Sorting.NoSorting)
+      val limit = first[LimitQP](validParams, implicitly).map(_.value)
 
       identifyAnyPagination(validParams)
         .fold[MultipleApplicationQuery]({
-          ApplicationQuery.GeneralOpenEndedApplicationQuery(nonUniqueFilterParam, sorting, wantSubscriptions, wantStateHistory)
+          ApplicationQuery.GeneralOpenEndedApplicationQuery(nonUniqueFilterParam, sorting, wantSubscriptions, wantStateHistory, limit)
         })(pagination => {
           ApplicationQuery.PaginatedApplicationQuery(nonUniqueFilterParam, sorting, pagination)
         })

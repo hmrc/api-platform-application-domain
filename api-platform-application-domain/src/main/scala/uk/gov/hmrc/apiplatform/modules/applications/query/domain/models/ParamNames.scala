@@ -22,6 +22,8 @@ object ParamNames {
   val WantSubscriptionFields = "wantSubscriptionFields"
   val WantStateHistory       = "wantStateHistory"
   //
+  val Limit                  = "limit"
+  //
   val ServerToken            = "serverToken"
   val ClientId               = "clientId"
   val ApplicationId          = "applicationId"
