@@ -282,7 +282,7 @@ object QueryParamsValidator {
         vs.map(v => UserIdExpected(paramName)(v).map(List(_)))
       }
 
-      AtLeastOneValue(paramName)(values).andThen { vs =>
+      AtLeastOneValue(paramName)(values.flatMap(v => v.split(","))).andThen { vs =>
         validateEach(vs.toList).combineAll
       }
         .map { UserIdsQP(_) }
