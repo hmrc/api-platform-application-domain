@@ -17,7 +17,7 @@ val scala3 = "3.3.7"
 inThisBuild(
   List(
     majorVersion := 1,
-    scalaVersion := scala3,
+    scalaVersion := scala2_13,
     isPublicArtefact := true,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
@@ -29,10 +29,10 @@ lazy val sharedScalacOptions =
   Seq("-encoding", "UTF-8", "-Wunused:imports,privates,locals")
 
 lazy val scala2Options = sharedScalacOptions ++
-  Seq("-Xsource:3", "-explaintypes")
+  Seq("-explaintypes")
 
 lazy val scala3Options = sharedScalacOptions ++
-  Seq("-Xunchecked-java-output-version:8", "-explain")
+  Seq("-explain")
 
 lazy val commonSettings = Seq(
   scalafixConfig := {
