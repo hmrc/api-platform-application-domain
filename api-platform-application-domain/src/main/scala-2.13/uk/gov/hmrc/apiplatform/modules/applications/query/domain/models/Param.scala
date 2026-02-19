@@ -114,6 +114,7 @@ object Param {
     case ApplicationIdQP(_)                             => "ApplicationIdQP(???)"
     case PageSizeQP(value: Int)                         => s"PageSizeQP($value)"
     case PageNbrQP(value: Int)                          => s"PageNbrQP($value)"
+    case LimitQP(value: Int)                            => s"LimitQP($value)"
     case SortQP(value: Sorting)                         => s"SortQP($value)"
     case NoSubscriptionsQP                              => "NoSubscriptionsQP"
     case HasSubscriptionsQP                             => "HasSubscriptionsQP"

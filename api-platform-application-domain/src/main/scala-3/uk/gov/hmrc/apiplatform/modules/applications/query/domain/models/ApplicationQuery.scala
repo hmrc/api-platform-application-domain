@@ -1,0 +1,190 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.apiplatform.modules.applications.query.domain.models
+
+import scala.reflect.ClassTag
+
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.*
+
+import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.*
+import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.*
+
+sealed trait ApplicationQuery {
+  def params: List[FilterParam[_]]
+
+  def asLogText: String
+}
+
+sealed trait SingleApplicationQuery extends ApplicationQuery {
+  def wantSubscriptions: Boolean
+  def wantSubscriptionFields: Boolean
+  def wantStateHistory: Boolean
+  def otherParams: List[NonUniqueFilterParam[_]]
+  def specificParam: UniqueFilterParam[_]
+  lazy val params: List[FilterParam[_]] = specificParam +: otherParams
+
+  def asLogText: String = {
+
+    val allParams: List[Param[_]] = specificParam +: otherParams
+    s"SingleApplicationQuery(${allParams.map(Param.asLogText(_)).mkString(",")}${if (wantSubscriptions) ", wantSubscriptions " else ""}${
+        if (wantSubscriptionFields) ", wantSubscriptionFields"
+        else ""
+      }${if (wantStateHistory) ", wantStateHistory" else ""})"
+  }
+}
+
+sealed trait MultipleApplicationQuery extends ApplicationQuery {
+  def sorting: Sorting
+  def params: List[FilterParam[_]]
+  lazy val hasAnySubscriptionFilter: Boolean      = ApplicationQuery.hasAnySubscriptionFilter(params)
+  lazy val hasSpecificSubscriptionFilter: Boolean = ApplicationQuery.hasSpecificSubscriptionFilter(params)
+}
+
+object ApplicationQuery {
+
+  def hasAnySubscriptionFilter(params: List[Param[_]]): Boolean =
+    params.find(_ match {
+      case _: SubscriptionFilterParam[_] => true
+      case _                             => false
+    }).isDefined
+
+  def hasSpecificSubscriptionFilter(params: List[Param[_]]): Boolean =
+    params.find(_ match {
+      case ApiVersionNbrQP(_) => true
+      case _                  => false
+    }).isDefined
+
+  def first[T <: Param[_]](implicit params: List[Param[_]], ct: ClassTag[T]): Option[T] = params.collect {
+    case qp: T => qp
+  }.headOption
+
+  case class ById /*protected*/ (
+      applicationId: ApplicationId,
+      otherParams: List[NonUniqueFilterParam[_]],
+      wantSubscriptions: Boolean = false,
+      wantSubscriptionFields: Boolean = false,
+      wantStateHistory: Boolean = false
+    ) extends SingleApplicationQuery {
+    lazy val specificParam = ApplicationIdQP(applicationId)
+  }
+
+  case class ByClientId /*protected*/ (
+      clientId: ClientId,
+      recordUsage: Boolean,
+      otherParams: List[NonUniqueFilterParam[_]],
+      wantSubscriptions: Boolean = false,
+      wantSubscriptionFields: Boolean = false,
+      wantStateHistory: Boolean = false
+    ) extends SingleApplicationQuery {
+    lazy val specificParam = ClientIdQP(clientId)
+  }
+
+  case class ByServerToken /*protected*/ (
+      serverToken: String,
+      recordUsage: Boolean,
+      otherParams: List[NonUniqueFilterParam[_]],
+      wantSubscriptions: Boolean = false,
+      wantSubscriptionFields: Boolean = false,
+      wantStateHistory: Boolean = false
+    ) extends SingleApplicationQuery {
+    lazy val specificParam = ServerTokenQP(serverToken)
+  }
+
+  case class GeneralOpenEndedApplicationQuery(
+      params: List[NonUniqueFilterParam[_]],
+      sorting: Sorting = Sorting.NoSorting,
+      wantSubscriptions: Boolean = false,
+      wantStateHistory: Boolean = false,
+      limit: Option[Int] = None
+    ) extends MultipleApplicationQuery {
+
+    def asLogText: String = {
+      s"GeneralOpenEndedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=$sorting${if (wantSubscriptions) ", wantSubscriptions" else ""}${
+          if (wantStateHistory) ", wantStateHistory"
+          else ""
+        })"
+    }
+  }
+
+  case class PaginatedApplicationQuery /*protected*/ (params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, pagination: Pagination = Pagination())
+      extends MultipleApplicationQuery {
+
+    def asLogText: String = {
+      s"PaginatedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=$sorting, pageNbr=${pagination.pageNbr}, pageSize=${pagination.pageSize})"
+    }
+  }
+
+  import cats.syntax.option.*
+
+  def identifyAnyPagination(allParams: List[Param[_]]): Option[Pagination] = {
+    allParams.collect {
+      case pp: PaginationParam[_] => pp
+    } sortBy (_.order) match {
+      case PageSizeQP(size) :: PageNbrQP(nbr) :: Nil => Pagination(size, nbr).some
+      case PageSizeQP(size) :: Nil                   => Pagination(pageSize = size).some
+      case PageNbrQP(nbr) :: Nil                     => Pagination(pageNbr = nbr).some
+      case _                                         => None
+    }
+  }
+
+  // List must be valid or outcome is undefined.
+  def attemptToConstructQuery(validParams: List[Param[_]]): ApplicationQuery = {
+    val wantSubscriptions      = first[Param.WantSubscriptionsQP.type](validParams, implicitly).isDefined
+    val wantSubscriptionFields = first[Param.WantSubscriptionFieldsQP.type](validParams, implicitly).isDefined
+    val wantStateHistory       = first[Param.WantStateHistoryQP.type](validParams, implicitly).isDefined
+
+    def attemptToConstructSingleResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): Option[SingleApplicationQuery] = {
+      val hasApiGatewayUserAgent = validParams.find(_ match {
+        case ApiGatewayUserAgentQP => true
+        case _                     => false
+      }).isDefined
+
+      validParams.collect {
+        case fp: UniqueFilterParam[_] => fp
+      }
+        .headOption // There can only be one
+        .flatMap {
+          case ServerTokenQP(serverToken)     =>
+            ApplicationQuery.ByServerToken(serverToken, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
+          case ClientIdQP(clientId)           =>
+            ApplicationQuery.ByClientId(clientId, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
+          case ApplicationIdQP(applicationId) => ApplicationQuery.ById(applicationId, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
+        }
+    }
+
+    def attemptToConstructMultiResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): MultipleApplicationQuery = {
+
+      val sorting = first[SortQP](validParams, implicitly).map(_.value).getOrElse(Sorting.NoSorting)
+      val limit   = first[LimitQP](validParams, implicitly).map(_.value)
+
+      identifyAnyPagination(validParams)
+        .fold[MultipleApplicationQuery]({
+          ApplicationQuery.GeneralOpenEndedApplicationQuery(nonUniqueFilterParam, sorting, wantSubscriptions, wantStateHistory, limit)
+        })(pagination => {
+          ApplicationQuery.PaginatedApplicationQuery(nonUniqueFilterParam, sorting, pagination)
+        })
+    }
+
+    val nonUniqueFilterParam = validParams.collect {
+      case fp: NonUniqueFilterParam[_] => fp
+    }
+
+    attemptToConstructSingleResultQuery(nonUniqueFilterParam).fold[ApplicationQuery](
+      attemptToConstructMultiResultQuery(nonUniqueFilterParam)
+    )(identity)
+  }
+}

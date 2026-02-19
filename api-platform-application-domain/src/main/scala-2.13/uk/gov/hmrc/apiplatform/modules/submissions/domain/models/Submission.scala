@@ -48,22 +48,6 @@ object QuestionnaireState {
   }
 }
 
-case class QuestionnaireProgress(state: QuestionnaireState, questionsToAsk: List[Question.Id])
-
-case class QuestionIdsOfInterest(
-    applicationNameId: Question.Id,
-    privacyPolicyId: Question.Id,
-    privacyPolicyUrlId: Question.Id,
-    termsAndConditionsId: Question.Id,
-    termsAndConditionsUrlId: Question.Id,
-    organisationUrlId: Question.Id,
-    responsibleIndividualIsRequesterId: Question.Id,
-    responsibleIndividualNameId: Question.Id,
-    responsibleIndividualEmailId: Question.Id,
-    identifyYourOrganisationId: Question.Id,
-    serverLocationsId: Question.Id
-  )
-
 object Submission extends EnvReads with NonEmptyListFormatters {
   type AnswersToQuestions = Map[Question.Id, ActualAnswer]
 

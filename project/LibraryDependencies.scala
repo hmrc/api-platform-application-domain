@@ -18,8 +18,8 @@ object LibraryDependencies {
     "dev.optics"              %% "monocle-macro"                  % monocleVersion
     ) ++ (
       CrossVersion.partialVersion(scalaVersion) match {
-        case Some((2,_)) => Seq("com.github.t3hnar"       %% "scala-bcrypt"                   % "4.1")
-        case _           => Seq.empty   // pending some rewrite
+        case Some((2,_)) => Seq("com.github.t3hnar"       %% "scala-bcrypt" % "4.3.0")
+        case _           => Seq("de.svenkubiak"            % "jBCrypt"      % "0.4.3")
       }
     )
 
@@ -31,7 +31,7 @@ object LibraryDependencies {
     ) ++ (
       CrossVersion.partialVersion(scalaVersion) match {
         case Some((2,_)) => Seq("org.mockito" %% "mockito-scala-scalatest" % "2.0.0")
-        case _           => Seq.empty   // scalatest brings in scalatest-mockito transiently
+        case _           => Seq("org.scalatestplus" %% "mockito-5-18" % "3.2.19.0")
       }
     )
 }

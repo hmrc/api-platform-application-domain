@@ -17,7 +17,7 @@ val scala3 = "3.3.7"
 inThisBuild(
   List(
     majorVersion := 1,
-    scalaVersion := scala2_13,
+    scalaVersion := scala3,
     isPublicArtefact := true,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
@@ -35,6 +35,8 @@ lazy val scala3Options = sharedScalacOptions ++
   Seq("-explain")
 
 lazy val commonSettings = Seq(
+  excludeFilter.in(headerSources) := HiddenFileFilter || "**/bcrypt.scala",
+
   scalafixConfig := {
     val base = (ThisBuild / baseDirectory).value
     val file =
