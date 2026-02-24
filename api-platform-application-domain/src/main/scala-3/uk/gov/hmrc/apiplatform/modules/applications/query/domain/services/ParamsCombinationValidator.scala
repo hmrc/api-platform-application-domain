@@ -27,7 +27,7 @@ import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.*
 object ParamsCombinationValidator {
   import cats.implicits.*
 
-  def first[T <: Param[_]](implicit params: List[Param[_]], ct: ClassTag[T]): Option[T] = params.collect {
+  def first[T <: Param[_]](using params: List[Param[_]], ct: ClassTag[T]): Option[T] = params.collect {
     case qp: T => qp
   }.headOption
 
@@ -83,7 +83,8 @@ object ParamsCombinationValidator {
     }
   }
 
-  def checkVerificationCodeUsesDeleteExclusion(implicit otherFilterParams: List[NonUniqueFilterParam[_]]): ErrorsOr[Unit] = {
+  def checkVerificationCodeUsesDeleteExclusion(otherFilterParams: List[NonUniqueFilterParam[_]]): ErrorsOr[Unit] = {
+    given List[NonUniqueFilterParam[_]] = otherFilterParams
     (first[VerificationCodeQP], first[ExcludeDeletedQP.type]) match {
       case (None, _)                                             => ().validNel
       case (Some(VerificationCodeQP(_)), Some(ExcludeDeletedQP)) => ().validNel
@@ -100,9 +101,9 @@ object ParamsCombinationValidator {
       ().validNel
     }
 
-  def checkAppStateFilters(implicit otherFilterParams: List[NonUniqueFilterParam[Any]]): ErrorsOr[Unit] = {
-    val stateFilter = first[MatchOneStateQP]
-    val dateFilter  = first[AppStateBeforeDateQP]
+  def checkAppStateFilters(otherFilterParams: List[NonUniqueFilterParam[Any]]): ErrorsOr[Unit] = {
+    val stateFilter = first[MatchOneStateQP](using otherFilterParams)
+    val dateFilter  = first[AppStateBeforeDateQP](using otherFilterParams)
 
     (stateFilter, dateFilter) match {
       case (_, None) => ().validNel
@@ -113,7 +114,9 @@ object ParamsCombinationValidator {
     }
   }
 
-  def checkUserCombinations(implicit otherFilterParams: List[NonUniqueFilterParam[Any]]): ErrorsOr[Unit] = {
+  def checkUserCombinations(otherFilterParams: List[NonUniqueFilterParam[Any]]): ErrorsOr[Unit] = {
+    given List[NonUniqueFilterParam[_]] = otherFilterParams
+
     (first[UserIdQP], first[AdminUserIdQP], first[UserIdsQP]) match {
       case (None, None, None)    => ().validNel
       case (Some(_), None, None) => ().validNel
@@ -129,7 +132,7 @@ object ParamsCombinationValidator {
     else
       ().validNel
 
-  def validateParamCombinations(implicit allParams: List[Param[_]]): ErrorsOr[Unit] = {
+  def validateParamCombinations(using allParams: List[Param[_]]): ErrorsOr[Unit] = {
     val wantSubcriptions      = first[WantSubscriptionsQP.type].headOption.isDefined
     val wantSubcriptionFields = first[WantSubscriptionFieldsQP.type].headOption.isDefined
     val wantStateHistory      = first[WantStateHistoryQP.type].headOption.isDefined

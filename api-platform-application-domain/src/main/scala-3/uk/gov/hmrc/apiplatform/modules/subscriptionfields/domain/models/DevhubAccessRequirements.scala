@@ -45,15 +45,15 @@ object DevhubAccessRequirements {
   import play.api.libs.functional.syntax.*
   import play.api.libs.json.*
 
-  def ignoreDefaultField[T](value: T, default: T, jsonFieldName: String)(implicit w: Writes[T]) =
+  def ignoreDefaultField[T](value: T, default: T, jsonFieldName: String)(using w: Writes[T]) =
     if (value == default) None else Some((jsonFieldName, Json.toJsFieldJsValueWrapper(value)))
 
-  implicit val readsDevhubAccessRequirements: Reads[DevhubAccessRequirements] = (
+  given Reads[DevhubAccessRequirements] = (
     ((JsPath \ "read").read[DevhubAccessRequirement] or Reads.pure(uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.DevhubAccessRequirement.Default)) and
       ((JsPath \ "write").read[DevhubAccessRequirement] or Reads.pure(uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.DevhubAccessRequirement.Default))
   )(DevhubAccessRequirements.apply _)
 
-  implicit val writesDevhubAccessRequirements: OWrites[DevhubAccessRequirements] = new OWrites[DevhubAccessRequirements] {
+  given OWrites[DevhubAccessRequirements] = new OWrites[DevhubAccessRequirements] {
 
     def writes(requirements: DevhubAccessRequirements) = {
       Json.obj(

@@ -70,9 +70,9 @@ object TextValidation {
 
   import uk.gov.hmrc.play.json.Union
 
-  implicit val formatMatchRegex: OFormat[MatchRegex] = Json.format[MatchRegex]
+  given OFormat[MatchRegex] = Json.format[MatchRegex]
 
-  implicit val formatTextValidation: OFormat[TextValidation] = Union.from[TextValidation]("validationType")
+  given OFormat[TextValidation] = Union.from[TextValidation]("validationType")
     .andType("url", () => Url)
     .and[MatchRegex]("regex")
     .andType("email", () => Email)

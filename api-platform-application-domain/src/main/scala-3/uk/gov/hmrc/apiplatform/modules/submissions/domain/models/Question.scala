@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.submissions.domain.models
 
 import scala.collection.immutable.{ListMap, ListSet}
 
-import play.api.libs.json.{Format, Json, OFormat}
+import play.api.libs.json.{Format, Json, OFormat, *}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.ListMapJsonFormatters.given
 
 enum Mark {
@@ -28,7 +28,7 @@ enum Mark {
 object Mark {
   import cats.Monoid
 
-  implicit val markMonoid: Monoid[Mark] = new Monoid[Mark] {
+  given Monoid[Mark] = new Monoid[Mark] {
     def empty: Mark = Pass
 
     def combine(x: Mark, y: Mark): Mark = (x, y) match {
@@ -72,7 +72,7 @@ object ErrorInfo {
   def apply(summary: String): ErrorInfo                  = new ErrorInfo(summary, None)
   def apply(summary: String, message: String): ErrorInfo = if (summary == message) apply(summary) else new ErrorInfo(summary, Some(message))
 
-  implicit val format: OFormat[ErrorInfo] = Json.format[ErrorInfo]
+  given OFormat[ErrorInfo] = Json.format[ErrorInfo]
 }
 
 trait ErrorMessaging {
@@ -84,7 +84,7 @@ trait ErrorMessaging {
 case class Wording(value: String) extends AnyVal
 
 object Wording {
-  implicit val format: Format[Wording] = Json.valueFormat[Wording]
+  given Format[Wording] = Json.valueFormat[Wording]
 }
 
 object Question {
@@ -93,13 +93,15 @@ object Question {
   object Id {
     def random = Id(java.util.UUID.randomUUID.toString)
 
-    implicit val format: Format[Id] = Json.valueFormat[Id]
+    given KeyReads[Question.Id]  = KeyReads(key => JsSuccess(Question.Id(key)))
+    given KeyWrites[Question.Id] = KeyWrites(_.value)
+    given Format[Id]             = Json.valueFormat[Id]
   }
 
   case class Label(value: String) extends AnyVal
 
   object Label {
-    implicit val format: Format[Label] = Json.valueFormat[Label]
+    given Format[Label] = Json.valueFormat[Label]
   }
 
   case class TextQuestion(
@@ -181,39 +183,36 @@ object Question {
   import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jsonFormatWording: Format[Wording] = Json.valueFormat[Wording]
+  given Format[Wording] = Json.valueFormat[Wording]
 
-  implicit val markWrites: Writes[Mark] = Writes {
+  given Writes[Mark] = Writes {
     case Mark.Fail => JsString("fail")
     case Mark.Warn => JsString("warn")
     case Mark.Pass => JsString("pass")
   }
 
-  implicit val markReads: Reads[Mark] = Reads {
+  given Reads[Mark] = Reads {
     case JsString("fail") => JsSuccess(Mark.Fail)
     case JsString("warn") => JsSuccess(Mark.Warn)
     case JsString("pass") => JsSuccess(Mark.Pass)
     case _                => JsError("Failed to parse Mark value")
   }
 
-  implicit val keyReadsQuestionId: KeyReads[Question.Id]   = KeyReads(key => JsSuccess(Question.Id(key)))
-  implicit val keyWritesQuestionId: KeyWrites[Question.Id] = KeyWrites(_.value)
+  given KeyReads[PossibleAnswer]  = KeyReads(key => JsSuccess(PossibleAnswer(key)))
+  given KeyWrites[PossibleAnswer] = KeyWrites(_.value)
 
-  implicit val keyReadsPossibleAnswer: KeyReads[PossibleAnswer]   = KeyReads(key => JsSuccess(PossibleAnswer(key)))
-  implicit val keyWritesPossibleAnswer: KeyWrites[PossibleAnswer] = KeyWrites(_.value)
-
-  implicit val jsonListMapKV: Reads[ListMap[PossibleAnswer, Mark]] = listMapReads[PossibleAnswer, Mark]
+  given Reads[ListMap[PossibleAnswer, Mark]] = listMapReads[PossibleAnswer, Mark]
 
   import Statement.*
 
-  implicit val jsonFormatPossibleAnswer: Format[PossibleAnswer]            = Json.valueFormat[PossibleAnswer]
-  implicit val jsonFormatTextQuestion: OFormat[TextQuestion]               = Json.format[TextQuestion]
-  implicit val jsonFormatYesNoQuestion: OFormat[YesNoQuestion]             = Json.format[YesNoQuestion]
-  implicit val jsonFormatChooseOneOfQuestion: OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
-  implicit val jsonFormatMultiChoiceQuestion: OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
-  implicit val jsonFormatAcknowledgementOnly: OFormat[AcknowledgementOnly] = Json.format[AcknowledgementOnly]
+  given Format[PossibleAnswer]       = Json.valueFormat[PossibleAnswer]
+  given OFormat[TextQuestion]        = Json.format[TextQuestion]
+  given OFormat[YesNoQuestion]       = Json.format[YesNoQuestion]
+  given OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
+  given OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
+  given OFormat[AcknowledgementOnly] = Json.format[AcknowledgementOnly]
 
-  implicit val jsonFormatQuestion: Format[Question] = Union.from[Question]("questionType")
+  given Format[Question] = Union.from[Question]("questionType")
     .and[MultiChoiceQuestion]("multi")
     .and[YesNoQuestion]("yesNo")
     .and[ChooseOneOfQuestion]("choose")

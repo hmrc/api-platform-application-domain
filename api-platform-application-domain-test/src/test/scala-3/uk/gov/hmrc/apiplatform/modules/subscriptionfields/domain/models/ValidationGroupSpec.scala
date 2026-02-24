@@ -23,7 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class ValidationGroupSpec extends BaseJsonFormattersSpec with ValidationGroupFixtures {
 
-  private def objectAsJsonString[A](a: A)(implicit t: Writes[A]) = Json.asciiStringify(Json.toJson(a))
+  private def objectAsJsonString[A](a: A)(using t: Writes[A]) = Json.asciiStringify(Json.toJson(a))
 
   "ValidationGroup" should {
 

@@ -20,5 +20,5 @@ case class TotpId(production: String)
 
 object TotpId {
   import play.api.libs.json.*
-  implicit val format: OFormat[TotpId] = Json.format[TotpId]
+  given OFormat[TotpId] = Json.format[TotpId]
 }

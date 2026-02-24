@@ -73,7 +73,7 @@ case class ApplicationWithSubscriptions(
 object ApplicationWithSubscriptions {
   import play.api.libs.json.*
 
-  implicit val nameOrdering: Ordering[ApplicationWithSubscriptions] = Ordering.by[ApplicationWithSubscriptions, ApplicationName](_.details.name)
+  given Ordering[ApplicationWithSubscriptions] = Ordering.by[ApplicationWithSubscriptions, ApplicationName](_.details.name)
 
-  implicit val format: Format[ApplicationWithSubscriptions] = Json.format[ApplicationWithSubscriptions]
+  given Format[ApplicationWithSubscriptions] = Json.format[ApplicationWithSubscriptions]
 }

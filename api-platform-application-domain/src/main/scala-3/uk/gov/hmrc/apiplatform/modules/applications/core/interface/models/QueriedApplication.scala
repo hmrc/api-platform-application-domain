@@ -47,7 +47,7 @@ final case class QueriedApplication(
 }
 
 object QueriedApplication {
-  implicit val format: OFormat[QueriedApplication] = Json.format[QueriedApplication]
+  given OFormat[QueriedApplication] = Json.format[QueriedApplication]
 
   // These are just moving from one shape to another
   // $COVERAGE-OFF$

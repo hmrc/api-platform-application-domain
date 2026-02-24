@@ -37,7 +37,7 @@ case class RegexValidationRule(regex: String) extends ValidationRule {
 }
 
 object RegexValidationRule {
-  implicit val RegexValidationRuleFormat: OFormat[RegexValidationRule] = Json.format[RegexValidationRule]
+  given OFormat[RegexValidationRule] = Json.format[RegexValidationRule]
 }
 
 case object UrlValidationRule extends ValidationRule {
@@ -73,5 +73,5 @@ object ValidationRule {
     }
   }
 
-  implicit val validationRuleFormat: Format[ValidationRule] = Format(ValidationRuleReads, ValidationRuleWrites)
+  given Format[ValidationRule] = Format(ValidationRuleReads, ValidationRuleWrites)
 }

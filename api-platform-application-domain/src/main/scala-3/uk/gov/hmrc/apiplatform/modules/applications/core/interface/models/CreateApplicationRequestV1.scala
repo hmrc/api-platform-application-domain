@@ -47,7 +47,8 @@ object CreateApplicationRequestV1 {
     Try(car.validate(car)).fold(err => JsError(err.getMessage), _ => JsSuccess(car))
   }
 
-  private val reads: Reads[CreateApplicationRequestV1]     = Json.reads[CreateApplicationRequestV1].flatMapResult(handleValidation(_))
-  private val writes: Writes[CreateApplicationRequestV1]   = Json.writes[CreateApplicationRequestV1]
-  implicit val format1: Format[CreateApplicationRequestV1] = Format(reads, writes)
+  private val reads: Reads[CreateApplicationRequestV1]   = Json.reads[CreateApplicationRequestV1].flatMapResult(handleValidation(_))
+  private val writes: Writes[CreateApplicationRequestV1] = Json.writes[CreateApplicationRequestV1]
+
+  given format1: Format[CreateApplicationRequestV1] = Format(reads, writes)
 }

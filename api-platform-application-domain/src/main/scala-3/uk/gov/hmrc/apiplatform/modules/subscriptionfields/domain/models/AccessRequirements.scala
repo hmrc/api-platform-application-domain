@@ -23,7 +23,7 @@ object AccessRequirements {
 
   import play.api.libs.json.*
 
-  implicit val readsAccessRequirements: Reads[AccessRequirements]   = Json.reads[AccessRequirements]
-  implicit val writesAccessRequirements: Writes[AccessRequirements] = Json.writes[AccessRequirements]
+  given Reads[AccessRequirements]  = Json.reads[AccessRequirements]
+  given Writes[AccessRequirements] = Json.writes[AccessRequirements]
 
 }

@@ -100,5 +100,5 @@ case class ApplicationState(
 object ApplicationState {
   import play.api.libs.json.*
 
-  implicit val formatApplicationState: OFormat[ApplicationState] = Json.format[ApplicationState]
+  given OFormat[ApplicationState] = Json.format[ApplicationState]
 }

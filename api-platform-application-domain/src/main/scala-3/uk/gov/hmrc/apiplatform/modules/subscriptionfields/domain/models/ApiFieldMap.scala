@@ -78,20 +78,20 @@ private def toApiFieldValueMap(response: BulkSubscriptionFieldsResponse): ApiFie
   )
 }
 
-private implicit val readsSubscriptionFieldsId: Reads[SubscriptionFieldsId] = Json.valueReads[SubscriptionFieldsId]
-private implicit val readsSubscriptionFields: Reads[SubscriptionFields]     = Json.reads[SubscriptionFields]
-private implicit val readsBulkFields: Reads[BulkSubscriptionFieldsResponse] = Json.reads[BulkSubscriptionFieldsResponse]
+private given Reads[SubscriptionFieldsId]                          = Json.valueReads[SubscriptionFieldsId]
+private given Reads[SubscriptionFields]                            = Json.reads[SubscriptionFields]
+private val readsBulkFields: Reads[BulkSubscriptionFieldsResponse] = Json.reads[BulkSubscriptionFieldsResponse]
 
-private implicit val readsApiFieldDefns: Reads[ApiFieldDefinitions]         = Json.reads[ApiFieldDefinitions]
-private implicit val readsBulkDefns: Reads[BulkApiFieldDefinitionsResponse] = Json.reads[BulkApiFieldDefinitionsResponse]
+private given Reads[ApiFieldDefinitions]                           = Json.reads[ApiFieldDefinitions]
+private val readsBulkDefns: Reads[BulkApiFieldDefinitionsResponse] = Json.reads[BulkApiFieldDefinitionsResponse]
 
 object Implicits {
   private val readsApiFieldMapFromBulk: Reads[ApiFieldMap[FieldValue]]           = readsBulkFields.map(toApiFieldValueMap)
   private val readsApiFieldMapDefnsFromBulk: Reads[ApiFieldMap[FieldDefinition]] = readsBulkDefns.map(toApiFieldDefnMap)
 
   object OverrideForBulkResponse {
-    implicit val reads: Reads[ApiFieldMap[FieldValue]]          = readsApiFieldMapFromBulk
-    implicit val readsDefn: Reads[ApiFieldMap[FieldDefinition]] = readsApiFieldMapDefnsFromBulk
+    given reads: Reads[ApiFieldMap[FieldValue]]          = readsApiFieldMapFromBulk
+    given readsDefn: Reads[ApiFieldMap[FieldDefinition]] = readsApiFieldMapDefnsFromBulk
   }
 }
 

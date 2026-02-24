@@ -43,11 +43,11 @@ object DeleteRestriction {
   import uk.gov.hmrc.play.json.Union
   import Actor.given
 
-  private implicit val formatDoNotDelete: OFormat[DoNotDelete] = Json.format[DoNotDelete]
+  private given OFormat[DoNotDelete] = Json.format[DoNotDelete]
 
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.asScreamingSnakeCase
 
-  implicit val format: OFormat[DeleteRestriction] = Union.from[DeleteRestriction]("deleteRestrictionType")
+  given OFormat[DeleteRestriction] = Union.from[DeleteRestriction]("deleteRestrictionType")
     .and[DoNotDelete](DeleteRestrictionType.DoNotDelete.asScreamingSnakeCase)
     .andType(DeleteRestrictionType.NoRestriction.asScreamingSnakeCase, () => NoRestriction)
     .format

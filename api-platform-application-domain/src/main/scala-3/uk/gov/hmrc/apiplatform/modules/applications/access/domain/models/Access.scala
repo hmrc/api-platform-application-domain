@@ -87,12 +87,12 @@ object Access {
   import uk.gov.hmrc.play.json.Union
   // import PostLogoutRedirectUri.given
 
-  private implicit val formatPrivileged: OFormat[Privileged] = Json.format[Privileged]
-  private implicit val formatRopc: OFormat[Ropc]             = Json.format[Ropc]
+  private given OFormat[Privileged] = Json.format[Privileged]
+  private given OFormat[Ropc]       = Json.format[Ropc]
 
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.asScreamingSnakeCase
 
-  implicit val format: OFormat[Access] = Union.from[Access]("accessType")
+  given OFormat[Access] = Union.from[Access]("accessType")
     .and[Standard](AccessType.Standard.asScreamingSnakeCase)
     .and[Privileged](AccessType.Privileged.asScreamingSnakeCase)
     .and[Ropc](AccessType.Ropc.asScreamingSnakeCase)

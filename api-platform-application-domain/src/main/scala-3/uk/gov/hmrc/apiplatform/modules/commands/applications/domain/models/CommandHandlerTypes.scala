@@ -34,21 +34,21 @@ trait CommandHandlerTypes[S] {
       import cats.syntax.either.*
       import cats.syntax.applicative.*
 
-      def asSuccess(implicit ec: ExecutionContext): AppCmdResult = successValue.asRight[Failures].pure[Future]
+      def asSuccess(using ec: ExecutionContext): AppCmdResult = successValue.asRight[Failures].pure[Future]
     }
 
     implicit class FailureSyntax(failureValue: CommandFailure) {
       import cats.syntax.either.*
       import cats.syntax.applicative.*
 
-      def asFailure(implicit ec: ExecutionContext): AppCmdResult = failureValue.leftNel[Success].pure[Future]
+      def asFailure(using ec: ExecutionContext): AppCmdResult = failureValue.leftNel[Success].pure[Future]
     }
 
     implicit class FailuresSyntax(failureValues: Failures) {
       import cats.syntax.either.*
       import cats.syntax.applicative.*
 
-      def asFailure(implicit ec: ExecutionContext): AppCmdResult = failureValues.asLeft[Success].pure[Future]
+      def asFailure(using ec: ExecutionContext): AppCmdResult = failureValues.asLeft[Success].pure[Future]
     }
   }
 }

@@ -66,7 +66,7 @@ class ApiFieldMapSpec
 
     val response = Json.toJson(bulk)
 
-    import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.Implicits.OverrideForBulkResponse.*
+    import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.Implicits.OverrideForBulkResponse.given
 
     Json.fromJson[ApiFieldMap[FieldValue]](response) shouldBe JsSuccess(Map(
       apiContextOne -> Map(

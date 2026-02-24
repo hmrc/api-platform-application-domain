@@ -68,7 +68,7 @@ object ApplicationQuery {
       case _                  => false
     }).isDefined
 
-  def first[T <: Param[_]](implicit params: List[Param[_]], ct: ClassTag[T]): Option[T] = params.collect {
+  def first[T <: Param[_]](using params: List[Param[_]], ct: ClassTag[T]): Option[T] = params.collect {
     case qp: T => qp
   }.headOption
 
@@ -143,9 +143,9 @@ object ApplicationQuery {
 
   // List must be valid or outcome is undefined.
   def attemptToConstructQuery(validParams: List[Param[_]]): ApplicationQuery = {
-    val wantSubscriptions      = first[Param.WantSubscriptionsQP.type](validParams, implicitly).isDefined
-    val wantSubscriptionFields = first[Param.WantSubscriptionFieldsQP.type](validParams, implicitly).isDefined
-    val wantStateHistory       = first[Param.WantStateHistoryQP.type](validParams, implicitly).isDefined
+    val wantSubscriptions      = first[Param.WantSubscriptionsQP.type](using validParams).isDefined
+    val wantSubscriptionFields = first[Param.WantSubscriptionFieldsQP.type](using validParams).isDefined
+    val wantStateHistory       = first[Param.WantStateHistoryQP.type](using validParams).isDefined
 
     def attemptToConstructSingleResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): Option[SingleApplicationQuery] = {
       val hasApiGatewayUserAgent = validParams.find(_ match {
@@ -168,8 +168,8 @@ object ApplicationQuery {
 
     def attemptToConstructMultiResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): MultipleApplicationQuery = {
 
-      val sorting = first[SortQP](validParams, implicitly).map(_.value).getOrElse(Sorting.NoSorting)
-      val limit   = first[LimitQP](validParams, implicitly).map(_.value)
+      val sorting = first[SortQP](using validParams).map(_.value).getOrElse(Sorting.NoSorting)
+      val limit   = first[LimitQP](using validParams).map(_.value)
 
       identifyAnyPagination(validParams)
         .fold[MultipleApplicationQuery]({

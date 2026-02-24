@@ -24,5 +24,5 @@ case class IpAllowlist(
 object IpAllowlist {
   import play.api.libs.json.*
 
-  implicit val format: OFormat[IpAllowlist] = Json.format[IpAllowlist]
+  given OFormat[IpAllowlist] = Json.format[IpAllowlist]
 }

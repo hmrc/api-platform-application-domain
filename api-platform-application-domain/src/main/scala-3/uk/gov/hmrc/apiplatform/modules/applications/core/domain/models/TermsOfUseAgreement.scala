@@ -25,5 +25,5 @@ case class TermsOfUseAgreement(emailAddress: LaxEmailAddress, timeStamp: Instant
 object TermsOfUseAgreement {
   import play.api.libs.json.*
 
-  implicit val format: OFormat[TermsOfUseAgreement] = Json.format[TermsOfUseAgreement]
+  given OFormat[TermsOfUseAgreement] = Json.format[TermsOfUseAgreement]
 }

@@ -22,23 +22,23 @@ import play.api.libs.json.*
 
 trait BaseJsonFormattersSpec extends HmrcSpec with Matchers {
 
-  def testToJson[T](in: T)(fields: (String, String)*)(implicit wrt: Writes[T]) = {
+  def testToJson[T](in: T)(fields: (String, String)*)(using wrt: Writes[T]) = {
     val f: Seq[(String, JsValue)] = fields.map { case (k, v) => (k -> JsString(v)) }
     Json.toJson(in) shouldBe JsObject(f)
   }
 
-  def testToJsonValues[T](in: T)(fields: (String, JsValue)*)(implicit wrt: Writes[T]) = {
+  def testToJsonValues[T](in: T)(fields: (String, JsValue)*)(using wrt: Writes[T]) = {
     Json.toJson(in) shouldBe JsObject(fields)
   }
 
-  def testFromJson[T](text: String)(expected: T)(implicit rdr: Reads[T]) =
+  def testFromJson[T](text: String)(expected: T)(using rdr: Reads[T]) =
     Json.parse(text).validate[T] match {
       case JsSuccess(found, _) if (found == expected) => succeed
       case JsSuccess(found, _)                        => fail(s"Did not get $expected (got $found instead)")
       case JsError(errors)                            => fail(s"Did not succeed ${errors}")
     }
 
-  def testFailJson[T](text: String)(implicit rdr: Reads[T]) =
+  def testFailJson[T](text: String)(using rdr: Reads[T]) =
     Json.parse(text).validate[T] match {
       case JsSuccess(_, _) => fail(s"Should have got a JsError)")
       case JsError(_)      => succeed

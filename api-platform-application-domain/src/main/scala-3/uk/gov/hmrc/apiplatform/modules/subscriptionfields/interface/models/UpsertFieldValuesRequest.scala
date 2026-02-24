@@ -23,5 +23,5 @@ import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.Fields
 final case class UpsertFieldValuesRequest(fields: Fields)
 
 object UpsertFieldValuesRequest {
-  implicit val formats: Format[UpsertFieldValuesRequest] = Json.format[UpsertFieldValuesRequest]
+  given Format[UpsertFieldValuesRequest] = Json.format[UpsertFieldValuesRequest]
 }

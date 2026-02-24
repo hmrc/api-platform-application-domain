@@ -22,7 +22,7 @@ case class PaginatedApplications(applications: List[ApplicationWithCollaborators
 
 object PaginatedApplications {
   import play.api.libs.json.{Json, OFormat}
-  implicit val format: OFormat[PaginatedApplications] = Json.format[PaginatedApplications]
+  given OFormat[PaginatedApplications] = Json.format[PaginatedApplications]
 
   def maxPage(totalResults: Int, pageSize: Int) = {
     if (pageSize == 0) 0

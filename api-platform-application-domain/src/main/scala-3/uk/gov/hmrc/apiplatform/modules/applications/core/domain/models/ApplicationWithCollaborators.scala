@@ -76,7 +76,7 @@ case class ApplicationWithCollaborators(
 object ApplicationWithCollaborators {
   import play.api.libs.json.*
 
-  implicit val nameOrdering: Ordering[ApplicationWithCollaborators] = Ordering.by[ApplicationWithCollaborators, ApplicationName](_.details.name)
+  given Ordering[ApplicationWithCollaborators] = Ordering.by[ApplicationWithCollaborators, ApplicationName](_.details.name)
 
-  implicit val format: Format[ApplicationWithCollaborators] = Json.format[ApplicationWithCollaborators]
+  given Format[ApplicationWithCollaborators] = Json.format[ApplicationWithCollaborators]
 }

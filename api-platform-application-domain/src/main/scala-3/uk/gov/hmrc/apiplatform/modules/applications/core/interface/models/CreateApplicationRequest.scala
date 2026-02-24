@@ -41,15 +41,15 @@ object CreateApplicationRequest {
   import play.api.libs.functional.syntax.*
   import play.api.libs.json.Reads
 
-  private val readsV1: Reads[CreateApplicationRequestV1] = CreateApplicationRequestV1.format1.reads _
-  private val readsV2: Reads[CreateApplicationRequestV2] = CreateApplicationRequestV2.format2.reads _
+  private val readsV1: Reads[CreateApplicationRequestV1] = summon[Reads[CreateApplicationRequestV1]]
+  private val readsV2: Reads[CreateApplicationRequestV2] = summon[Reads[CreateApplicationRequestV2]]
 
-  implicit val reads: Reads[CreateApplicationRequest] =
+  given Reads[CreateApplicationRequest] =
     readsV2.map(_.asInstanceOf[CreateApplicationRequest]) or readsV1.map(_.asInstanceOf[CreateApplicationRequest])
 
-  implicit val writes: Writes[CreateApplicationRequest] = (car: CreateApplicationRequest) =>
+  given Writes[CreateApplicationRequest] = (car: CreateApplicationRequest) =>
     car match {
-      case v1: CreateApplicationRequestV1 => CreateApplicationRequestV1.format1.writes(v1)
-      case v2: CreateApplicationRequestV2 => CreateApplicationRequestV2.format2.writes(v2)
+      case v1: CreateApplicationRequestV1 => summon[Writes[CreateApplicationRequestV1]].writes(v1)
+      case v2: CreateApplicationRequestV2 => summon[Writes[CreateApplicationRequestV2]].writes(v2)
     }
 }

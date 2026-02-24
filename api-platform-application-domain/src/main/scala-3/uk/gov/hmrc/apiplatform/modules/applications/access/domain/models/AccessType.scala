@@ -27,6 +27,6 @@ object AccessType {
   def unsafeApply(text: String): AccessType = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid Access Type"))
 
   import play.api.libs.json.Format
-  implicit val format: Format[AccessType] = SimpleEnumJsonFormatting.createEnumFormatFor[AccessType]("Access Type", apply)
+  given Format[AccessType] = SimpleEnumJsonFormatting.createEnumFormatFor[AccessType]("Access Type", apply)
 
 }

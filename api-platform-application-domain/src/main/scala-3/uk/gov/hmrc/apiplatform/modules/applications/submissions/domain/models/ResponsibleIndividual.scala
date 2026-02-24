@@ -27,5 +27,5 @@ object ResponsibleIndividual {
   def build(name: String, email: String): ResponsibleIndividual = ResponsibleIndividual(FullName(name), LaxEmailAddress(email))
 
   import play.api.libs.json.*
-  implicit val format: OFormat[ResponsibleIndividual] = Json.format[ResponsibleIndividual]
+  given OFormat[ResponsibleIndividual] = Json.format[ResponsibleIndividual]
 }

@@ -27,7 +27,7 @@ object DevhubAccessRequirement {
 
   import play.api.libs.json.*
 
-  implicit val formatDevhubAccessRequirement: Format[DevhubAccessRequirement] = new Format[DevhubAccessRequirement] {
+  given Format[DevhubAccessRequirement] = new Format[DevhubAccessRequirement] {
 
     override def writes(o: DevhubAccessRequirement): JsValue = JsString(o match {
       case AdminOnly => "adminOnly"

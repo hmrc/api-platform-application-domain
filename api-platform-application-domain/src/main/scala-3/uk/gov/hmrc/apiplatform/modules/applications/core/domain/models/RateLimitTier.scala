@@ -26,7 +26,7 @@ enum RateLimitTier(val orderIndex: Int):
   case Rhodium  extends RateLimitTier(1)
 
 object RateLimitTier {
-  implicit val ordering: Ordering[RateLimitTier] = Ordering.by(_.orderIndex)
+  given Ordering[RateLimitTier] = Ordering.by(_.orderIndex)
 
   def apply(text: String): Option[RateLimitTier] = {
     RateLimitTier.values.find(e => e.toString.equalsIgnoreCase(text))
@@ -36,9 +36,9 @@ object RateLimitTier {
 
   import play.api.libs.json.Reads.*
 
-  implicit val writesRateLimitTier: Writes[RateLimitTier] = implicitly[Writes[String]].contramap(_.toString.toUpperCase())
+  given Writes[RateLimitTier] = implicitly[Writes[String]].contramap(_.toString.toUpperCase())
 
-  implicit val readsRateLimitTier: Reads[RateLimitTier] = implicitly[Reads[String]].flatMapResult { x =>
+  given Reads[RateLimitTier] = implicitly[Reads[String]].flatMapResult { x =>
     apply(x) match {
       case Some(rlt: RateLimitTier) => JsSuccess(rlt)
       case None                     => JsError(s"Invalid Rate Limit Tier $x")

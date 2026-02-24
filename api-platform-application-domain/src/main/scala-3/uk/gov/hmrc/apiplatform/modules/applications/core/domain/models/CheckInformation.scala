@@ -44,5 +44,5 @@ object CheckInformation {
       ((JsPath \ "termsOfUseAgreements").read[List[TermsOfUseAgreement]] or Reads.pure(List.empty[TermsOfUseAgreement]))
   )(CheckInformation.apply _)
 
-  implicit val format: Format[CheckInformation] = Format(reads, Json.writes[CheckInformation])
+  given Format[CheckInformation] = Format(reads, Json.writes[CheckInformation])
 }

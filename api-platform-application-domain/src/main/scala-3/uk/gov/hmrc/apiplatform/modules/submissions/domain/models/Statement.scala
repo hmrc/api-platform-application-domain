@@ -47,8 +47,8 @@ object Statement {
   import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jsonFormatStatementText: OFormat[StatementText] = Json.format[StatementText]
-  implicit val jsonFormatStatementLink: OFormat[StatementLink] = Json.format[StatementLink]
+  given OFormat[StatementText] = Json.format[StatementText]
+  given OFormat[StatementLink] = Json.format[StatementLink]
 
   implicit lazy val readsStatementBullets: Reads[StatementBullets] = (
     (__ \ "bullets").read(nelReads[NonBulletStatementFragment])
@@ -96,5 +96,5 @@ object Statement {
     .andLazy[CompoundFragment]("compound", jsonFormatCompoundFragment)
     .format
 
-  implicit val jsonFormatStatement: OFormat[Statement] = Json.format[Statement]
+  given OFormat[Statement] = Json.format[Statement]
 }

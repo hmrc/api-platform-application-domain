@@ -23,5 +23,5 @@ case class GetAppsForAdminOrRIRequest(adminOrRespIndEmail: LaxEmailAddress)
 object GetAppsForAdminOrRIRequest {
   import play.api.libs.json.{Format, Json}
 
-  implicit val format: Format[GetAppsForAdminOrRIRequest] = Json.format[GetAppsForAdminOrRIRequest]
+  given Format[GetAppsForAdminOrRIRequest] = Json.format[GetAppsForAdminOrRIRequest]
 }

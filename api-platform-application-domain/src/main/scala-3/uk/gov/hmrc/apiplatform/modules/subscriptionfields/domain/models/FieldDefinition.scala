@@ -30,7 +30,7 @@ object FieldDefinition {
   import play.api.libs.functional.syntax.*
   import play.api.libs.json.*
 
-  implicit val readsFieldDefinition: Reads[FieldDefinition] = (
+  given Reads[FieldDefinition] = (
     (JsPath \ "name").read[FieldName] and
       (JsPath \ "description").read[String] and
       ((JsPath \ "hint").read[String] or Reads.pure("")) and
@@ -40,7 +40,7 @@ object FieldDefinition {
       ((JsPath \ "access").read[AccessRequirements] or Reads.pure(AccessRequirements.Default))
   )(FieldDefinition.apply _)
 
-  implicit val writesFieldDefinition: Writes[FieldDefinition] = new Writes[FieldDefinition] {
+  given Writes[FieldDefinition] = new Writes[FieldDefinition] {
 
     // This allows us to hide default AccessRequirements from JSON - as this is a rarely used field
     // but not one that business logic would want as an optional field and require getOrElse everywhere.

@@ -28,7 +28,7 @@ object MarkAnswer {
 
   protected def markMultiChoiceAnswer(question: Question.MultiChoiceQuestion, answer: ActualAnswer.MultipleChoiceAnswer): Mark = {
     import cats.Monoid
-    import Mark.*
+    import Mark.given
 
     Monoid.combineAll(
       answer.values

@@ -47,7 +47,7 @@ class ParamsCombinationValidatorSpec
   }
 
   "checWants" should {
-    val test: (List[Param[_]]) => ErrorsOr[Unit] = (ps) => ParamsCombinationValidator.validateParamCombinations(ps)
+    val test: (List[Param[_]]) => ErrorsOr[Unit] = (ps) => ParamsCombinationValidator.validateParamCombinations(using ps)
     "disallow wantSubscriptionFields with anything other than a single app query" in {
       test(List(WantSubscriptionFieldsQP, PageNbrQP(1))) should not be Pass
       test(List(WantSubscriptionFieldsQP, UserIdQP(userIdOne))) should not be Pass
@@ -225,7 +225,7 @@ class ParamsCombinationValidatorSpec
   }
 
   "checkLimit" should {
-    val test: (List[Param[_]]) => ErrorsOr[Unit] = (ps) => ParamsCombinationValidator.validateParamCombinations(ps)
+    val test: (List[Param[_]]) => ErrorsOr[Unit] = (ps) => ParamsCombinationValidator.validateParamCombinations(using ps)
     "pass when used with an open ended query" in {
       test(List(LimitQP(50), BlockedStateQP)) shouldBe Pass
     }

@@ -50,11 +50,11 @@ object Collaborator {
 
     private val convert: String => JsResult[Role] = (s) => Role(s).fold[JsResult[Role]](JsError(s"$s is not a role"))(role => JsSuccess(role))
 
-    implicit val reads: Reads[Role] = (JsPath.read[String]).flatMapResult(convert(_))
+    private val reads: Reads[Role] = (JsPath.read[String]).flatMapResult(convert(_))
 
-    implicit val writes: Writes[Role] = Writes[Role](role => JsString(role.toString.toUpperCase()))
+    private val writes: Writes[Role] = Writes[Role](role => JsString(role.toString.toUpperCase()))
 
-    implicit val format: Format[Role] = Format(reads, writes)
+    given Format[Role] = Format(reads, writes)
   }
 
   def apply(emailAddress: LaxEmailAddress, role: Role, userId: UserId): Collaborator = {
@@ -75,10 +75,10 @@ object Collaborator {
   import play.api.libs.json.OFormat
   import uk.gov.hmrc.play.json.Union
 
-  implicit val formatAdministrator: OFormat[Collaborators.Administrator] = Json.format[Collaborators.Administrator]
-  implicit val formatDeveloper: OFormat[Collaborators.Developer]         = Json.format[Collaborators.Developer]
+  given OFormat[Collaborators.Administrator] = Json.format[Collaborators.Administrator]
+  given OFormat[Collaborators.Developer]     = Json.format[Collaborators.Developer]
 
-  implicit val collaboratorJf: OFormat[Collaborator] = Union.from[Collaborator]("role")
+  given OFormat[Collaborator] = Union.from[Collaborator]("role")
     .and[Collaborators.Administrator](Role.Administrator.toString.toUpperCase)
     .and[Collaborators.Developer](Role.Developer.toString.toUpperCase)
     .format

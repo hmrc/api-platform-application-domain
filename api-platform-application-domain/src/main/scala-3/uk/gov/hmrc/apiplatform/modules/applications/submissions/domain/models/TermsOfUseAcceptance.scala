@@ -23,5 +23,5 @@ case class TermsOfUseAcceptance(responsibleIndividual: ResponsibleIndividual, da
 object TermsOfUseAcceptance {
   import play.api.libs.json.*
 
-  implicit val format: OFormat[TermsOfUseAcceptance] = Json.format[TermsOfUseAcceptance]
+  given OFormat[TermsOfUseAcceptance] = Json.format[TermsOfUseAcceptance]
 }

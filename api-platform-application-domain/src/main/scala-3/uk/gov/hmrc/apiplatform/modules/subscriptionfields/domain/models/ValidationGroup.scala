@@ -24,5 +24,5 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormat
 case class ValidationGroup(errorMessage: String, rules: NEL[ValidationRule])
 
 object ValidationGroup {
-  implicit val formatValidationGroup: OFormat[ValidationGroup] = Json.format[ValidationGroup]
+  given OFormat[ValidationGroup] = Json.format[ValidationGroup]
 }

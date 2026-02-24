@@ -29,5 +29,5 @@ case class UpliftRequest(
 object UpliftRequest {
   import play.api.libs.json.{Format, Json}
 
-  implicit val format: Format[UpliftRequest] = Json.format[UpliftRequest]
+  given Format[UpliftRequest] = Json.format[UpliftRequest]
 }

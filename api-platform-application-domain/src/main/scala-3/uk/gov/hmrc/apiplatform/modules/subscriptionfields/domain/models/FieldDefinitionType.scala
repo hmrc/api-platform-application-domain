@@ -41,5 +41,5 @@ object FieldDefinitionType {
     case PPNSField   => "PPNSField"
   }
 
-  implicit val format: Format[FieldDefinitionType] = SimpleEnumJsonFormatting.createFormatFor[FieldDefinitionType]("Field Definition Type", apply, label)
+  given Format[FieldDefinitionType] = SimpleEnumJsonFormatting.createFormatFor[FieldDefinitionType]("Field Definition Type", apply, label)
 }

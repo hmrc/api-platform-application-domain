@@ -27,7 +27,7 @@ import uk.gov.hmrc.apiplatform.modules.submissions.utils.SubmissionsTestData
 
 class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
-  import Submission.extendedSubmissionFormat
+  import Submission.given
 
   val submission         = partiallyAnsweredExtendedSubmission.submission.copy(
     id = SubmissionId.unsafeApply("123a1dd3-09cf-46a0-bc73-350a385de678"),

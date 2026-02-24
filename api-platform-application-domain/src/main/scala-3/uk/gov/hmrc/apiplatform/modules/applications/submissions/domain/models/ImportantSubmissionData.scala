@@ -27,5 +27,5 @@ case class ImportantSubmissionData(
 
 object ImportantSubmissionData {
   import play.api.libs.json.*
-  implicit val format: OFormat[ImportantSubmissionData] = Json.format[ImportantSubmissionData]
+  given OFormat[ImportantSubmissionData] = Json.format[ImportantSubmissionData]
 }

@@ -113,7 +113,7 @@ class ApiFieldDefnMapSpec extends BaseJsonFormattersSpec with ApiIdentifierFixtu
 
   "Parsing the subs fields output" should {
     "read json" in {
-      import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.Implicits.OverrideForBulkResponse.*
+      import uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models.Implicits.OverrideForBulkResponse.given
 
       val definitions: ApiFieldMap[FieldDefinition] = Json.parse(subsFieldsDefinitionResponseJsonText).as[ApiFieldMap[FieldDefinition]]
 

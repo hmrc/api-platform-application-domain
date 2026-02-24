@@ -25,7 +25,7 @@ import uk.gov.hmrc.apiplatform.modules.submissions.domain.models.*
 
 class ActualAnswerSpec extends HmrcSpec with TableDrivenPropertyChecks {
 
-  import ActualAnswer.*
+  // import ActualAnswer.*
 
   val table = Table(
     ("ActualAnswer", "Expected Json"),

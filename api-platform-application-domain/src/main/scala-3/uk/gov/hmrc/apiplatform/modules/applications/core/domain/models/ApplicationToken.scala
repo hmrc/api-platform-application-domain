@@ -30,5 +30,5 @@ case class ApplicationToken(
 object ApplicationToken {
   import play.api.libs.json.*
 
-  implicit val format: OFormat[ApplicationToken] = Json.format[ApplicationToken]
+  given OFormat[ApplicationToken] = Json.format[ApplicationToken]
 }

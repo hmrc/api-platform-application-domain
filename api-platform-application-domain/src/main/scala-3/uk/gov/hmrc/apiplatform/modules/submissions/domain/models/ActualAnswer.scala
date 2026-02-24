@@ -29,11 +29,11 @@ object ActualAnswer {
   import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jfTextAnswer: OFormat[TextAnswer]                     = Json.format[TextAnswer]
-  implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]     = Json.format[SingleChoiceAnswer]
-  implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer] = Json.format[MultipleChoiceAnswer]
+  given OFormat[TextAnswer]           = Json.format[TextAnswer]
+  given OFormat[SingleChoiceAnswer]   = Json.format[SingleChoiceAnswer]
+  given OFormat[MultipleChoiceAnswer] = Json.format[MultipleChoiceAnswer]
 
-  implicit val jfActualAnswer: OFormat[ActualAnswer] = Union.from[ActualAnswer]("answerType")
+  given OFormat[ActualAnswer] = Union.from[ActualAnswer]("answerType")
     .and[MultipleChoiceAnswer]("multipleChoice")
     .and[SingleChoiceAnswer]("singleChoice")
     .and[TextAnswer]("text")

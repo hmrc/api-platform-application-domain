@@ -29,5 +29,5 @@ case class ContactDetails(
 object ContactDetails {
   import play.api.libs.json.*
 
-  implicit val format: OFormat[ContactDetails] = Json.format[ContactDetails]
+  given OFormat[ContactDetails] = Json.format[ContactDetails]
 }

@@ -43,5 +43,5 @@ object ApplicationNameValidationRequest {
       case n: NewApplicationNameValidationRequest    => nrw.writes(n)
     }
 
-  implicit val format: Format[ApplicationNameValidationRequest] = Format(reads, writes)
+  given Format[ApplicationNameValidationRequest] = Format(reads, writes)
 }

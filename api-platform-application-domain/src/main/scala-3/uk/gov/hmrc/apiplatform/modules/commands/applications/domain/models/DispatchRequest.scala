@@ -24,10 +24,10 @@ object DispatchRequest {
   import play.api.libs.json.*
 
   private val readsExactDispatchRequest: Reads[DispatchRequest] = Json.reads[DispatchRequest]
-  private val readsExactCommand: Reads[DispatchRequest]         = ApplicationCommand.formatter.map(cmd => DispatchRequest(cmd, Set.empty))
+  private val readsExactCommand: Reads[DispatchRequest]         = summon[Reads[ApplicationCommand]].map(cmd => DispatchRequest(cmd, Set.empty))
 
-  implicit val readsDispatchRequest: Reads[DispatchRequest] = readsExactDispatchRequest orElse readsExactCommand
+  private val readsDispatchRequest: Reads[DispatchRequest]   = readsExactDispatchRequest orElse readsExactCommand
+  private val writesDispatchRequest: Writes[DispatchRequest] = Json.writes[DispatchRequest]
 
-  implicit val writesDispatchRequest: Writes[DispatchRequest] = Json.writes[DispatchRequest]
-  implicit val formatDispatchRequest: Format[DispatchRequest] = Format(readsDispatchRequest, writesDispatchRequest)
+  given Format[DispatchRequest] = Format(readsDispatchRequest, writesDispatchRequest)
 }

@@ -26,6 +26,6 @@ object DeleteRestrictionType {
 
   import play.api.libs.json.Format
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.SimpleEnumJsonFormatting
-  implicit val format: Format[DeleteRestrictionType] = SimpleEnumJsonFormatting.createEnumFormatFor[DeleteRestrictionType]("Delete Restriction Type", apply)
+  given Format[DeleteRestrictionType] = SimpleEnumJsonFormatting.createEnumFormatFor[DeleteRestrictionType]("Delete Restriction Type", apply)
 
 }

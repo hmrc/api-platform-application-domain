@@ -69,7 +69,7 @@ object CommandFailure {
   implicit private val formatDuplicateApplicationName: OFormat[DuplicateApplicationName] = Json.format[DuplicateApplicationName]
   implicit private val formatInvalidApplicationName: OFormat[InvalidApplicationName]     = Json.format[InvalidApplicationName]
 
-  implicit val format: Format[CommandFailure] = Union.from[CommandFailure]("failureType")
+  given Format[CommandFailure] = Union.from[CommandFailure]("failureType")
     .and[InsufficientPrivileges]("InsufficientPrivileges")
     .and[GenericFailure]("GenericFailure")
     .and[DuplicateApplicationName]("DuplicateApplicationName")

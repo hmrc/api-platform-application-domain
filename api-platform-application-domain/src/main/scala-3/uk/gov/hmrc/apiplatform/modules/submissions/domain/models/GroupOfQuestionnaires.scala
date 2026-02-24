@@ -29,6 +29,5 @@ case class GroupOfQuestionnaires(
 object GroupOfQuestionnaires {
   import NonEmptyListFormatters.given
 
-  import Questionnaire.*
-  implicit val groupOfQuestionnairesJsonFormat: OFormat[GroupOfQuestionnaires] = Json.format[GroupOfQuestionnaires]
+  given OFormat[GroupOfQuestionnaires] = Json.format[GroupOfQuestionnaires]
 }

@@ -28,5 +28,5 @@ object FieldDefinitionsRequest {
   import play.api.libs.json.*
   import NonEmptyListFormatters.given
 
-  implicit val FieldDefinitionsRequestJF: OFormat[FieldDefinitionsRequest] = Json.format[FieldDefinitionsRequest]
+  given OFormat[FieldDefinitionsRequest] = Json.format[FieldDefinitionsRequest]
 }

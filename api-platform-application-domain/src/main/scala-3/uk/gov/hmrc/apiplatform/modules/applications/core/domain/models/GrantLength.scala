@@ -77,9 +77,9 @@ object GrantLength {
     val period = Period.ofDays(36500)
   }
 
-  implicit val orderingPeriod: Ordering[Period] = Ordering.by(_.getDays)
+  given Ordering[Period] = Ordering.by(_.getDays)
 
-  implicit val ordering: Ordering[GrantLength] = Ordering.by(_.period)
+  given Ordering[GrantLength] = Ordering.by(_.period)
 
   val values = SortedSet[GrantLength](FOUR_HOURS, ONE_DAY, ONE_MONTH, THREE_MONTHS, SIX_MONTHS, ONE_YEAR, EIGHTEEN_MONTHS, THREE_YEARS, FIVE_YEARS, TEN_YEARS, ONE_HUNDRED_YEARS)
 
@@ -107,9 +107,9 @@ object GrantLength {
 
   import play.api.libs.json.Reads.*
 
-  implicit val writesGrantLength: Writes[GrantLength] = implicitly[Writes[Period]].contramap(x => x.period)
+  given Writes[GrantLength] = implicitly[Writes[Period]].contramap(x => x.period)
 
-  implicit val readsGrantLength: Reads[GrantLength] = {
+  given Reads[GrantLength] = {
 
     val errorMsg: String = "It should only be one of ('0 days, 1 day', '1 month', '3 months', '6 months', '1 year', '18 months', " +
       "'3 years', '5 years', '10 years', '100 years')"

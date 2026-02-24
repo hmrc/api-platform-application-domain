@@ -24,7 +24,7 @@ case class ClientSecret(id: ClientSecret.Id, name: String, createdOn: Instant, l
 object ClientSecret {
   import play.api.libs.json.*
 
-  implicit val format: OFormat[ClientSecret] = Json.format[ClientSecret]
+  given OFormat[ClientSecret] = Json.format[ClientSecret]
 
   case class Id(value: ju.UUID) extends AnyVal {
     override def toString(): String = value.toString()
@@ -35,6 +35,6 @@ object ClientSecret {
 
     def random = Id(ju.UUID.randomUUID())
 
-    implicit val format: Format[Id] = Json.valueFormat[Id]
+    given Format[Id] = Json.valueFormat[Id]
   }
 }

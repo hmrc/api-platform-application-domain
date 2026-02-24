@@ -220,7 +220,7 @@ object ApplicationCommand {
 
   implicit private val linkToOrganisationFormat: OFormat[LinkToOrganisation] = Json.format[LinkToOrganisation]
 
-  implicit val formatter: OFormat[ApplicationCommand] = Union.from[ApplicationCommand]("updateType")
+  given OFormat[ApplicationCommand] = Union.from[ApplicationCommand]("updateType")
     .and[AddCollaborator]("addCollaborator")
     .and[RemoveCollaborator]("removeCollaborator")
     .and[AddClientSecret]("addClientSecret")
