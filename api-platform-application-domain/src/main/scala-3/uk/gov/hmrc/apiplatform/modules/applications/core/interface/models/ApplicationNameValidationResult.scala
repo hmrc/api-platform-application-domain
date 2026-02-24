@@ -24,8 +24,8 @@ object ApplicationNameValidationResult {
   import uk.gov.hmrc.play.json.Union
 
   given OFormat[ApplicationNameValidationResult] = Union.from[ApplicationNameValidationResult]("validationResult")
-    .andType[Valid.type]("VALID", () => Valid)
-    .andType[Invalid.type]("INVALID", () => Invalid)
-    .andType[Duplicate.type]("DUPLICATE", () => Duplicate)
+    .andValue("VALID", Valid)
+    .andValue("INVALID", Invalid)
+    .andValue("DUPLICATE", Duplicate)
     .format
 }

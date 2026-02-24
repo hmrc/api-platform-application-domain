@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-opaque type LoginRedirectUri <: String = String
+opaque type LoginRedirectUri = String
 
 object LoginRedirectUri {
 
@@ -30,5 +30,7 @@ object LoginRedirectUri {
     apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
 
   import play.api.libs.json.*
-  given Format[LoginRedirectUri] = Format(Reads.StringReads, Writes.StringWrites)
+  private val convert: String => JsResult[LoginRedirectUri] = (s) => LoginRedirectUri(s).fold[JsResult[LoginRedirectUri]](JsError(s"$s is not a uri"))(u => JsSuccess(u))
+
+  given Format[LoginRedirectUri] = Format(Reads.StringReads.flatMapResult(convert), Writes.StringWrites)
 }

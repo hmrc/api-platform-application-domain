@@ -24,7 +24,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 class RateLimitTierSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
   "RateLimitTier" should {
     "toString should provide some text" in {
-      RateLimitTier.Bronze.toString() shouldBe "BRONZE"
+      RateLimitTier.Bronze.toString() shouldBe "Bronze"
 
       val values = Table(("tiers"), RateLimitTier.values.toSeq: _*)
       forAll(values) { (rateLimitTier) =>

@@ -22,7 +22,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.*
 class ChangeLoginRedirectUriSpec extends ApplicationCommandBaseSpec {
 
   "ChangeLoginRedirectUris" should {
-    val cmd = ApplicationCommands.ChangeLoginRedirectUri(Actors.AppCollaborator(anActorEmail), redirectUriToChange.value, redirectUri.value, aTimestamp)
+    val cmd = ApplicationCommands.ChangeLoginRedirectUri(Actors.AppCollaborator(anActorEmail), redirectUriToChange, redirectUri, aTimestamp)
 
     "write to json (as a command)" in {
 

@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.apiplatform.modules.crypto.services
 
-import scala.util.{Failure, Try}
-
 import org.mindrot.jbcrypt.BCrypt as B
 
 /** This file is almost entirely based on https://github.com/t3hnar/scala-bcrypt/tree/master with it's apache-2 license. We have adapted it here for Scala 3 as the project has not
@@ -53,11 +51,6 @@ package bcrypt {
       else doBcrypt(rounds)
     }
 
-    def bcryptSafeBounded: Try[String] = {
-      if (moreThanLength()) Failure(illegalArgumentException)
-      else Try(doBcrypt)
-    }
-
     private def doBcrypt(rounds: Int): String = B.hashpw(pswrd, BCrypt.gensalt(rounds))
 
     def bcrypt(salt: String): String = {
@@ -73,21 +66,6 @@ package bcrypt {
     }
 
     private def doIsBcrypted(hash: String): Boolean = B.checkpw(pswrd, hash)
-
-    def bcryptSafe(rounds: Int): Try[String] = {
-      if (moreThanLength()) Failure(illegalArgumentException)
-      else Try(doBcrypt(rounds))
-    }
-
-    def bcryptSafe(salt: String): Try[String] = {
-      if (moreThanLength()) Failure(illegalArgumentException)
-      else Try(doBcrypt(salt))
-    }
-
-    def isBcryptedSafe(hash: String): Try[Boolean] = {
-      if (moreThanLength()) Failure(illegalArgumentException)
-      else Try(doIsBcrypted(hash))
-    }
 
     private def illegalArgumentException = new IllegalArgumentException(s"$pswrd was more than 71 bytes long.")
 

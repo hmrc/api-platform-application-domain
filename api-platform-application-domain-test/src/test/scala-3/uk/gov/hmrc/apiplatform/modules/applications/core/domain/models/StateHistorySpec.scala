@@ -52,5 +52,5 @@ class StateHistorySpec extends BaseJsonFormattersSpec {
 object StateHistorySpec extends FixedClock {
   val id       = ApplicationId.random
   val example  = StateHistory(id, State.Production, Actors.Unknown, Some(State.PreProduction), None, instant)
-  val jsonText = s"""{"applicationId":"$id","state":"PRODUCTION","actor":{"actorType":"UNKNOWN"},"previousState":"State.PreProduction","changedAt":"2020-01-02T03:04:05.006Z"}"""
+  val jsonText = s"""{"applicationId":"$id","state":"PRODUCTION","actor":{"actorType":"UNKNOWN"},"previousState":"PRE_PRODUCTION","changedAt":"2020-01-02T03:04:05.006Z"}"""
 }

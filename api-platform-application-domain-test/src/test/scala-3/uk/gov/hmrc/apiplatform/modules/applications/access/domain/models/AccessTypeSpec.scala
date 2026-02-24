@@ -32,15 +32,9 @@ class AccessTypeSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChec
         (AccessType.Ropc, "ropc")
       )
 
-    "displayText correctly" in {
-      AccessType.Standard.displayText shouldBe "Standard"
-      AccessType.Privileged.displayText shouldBe "Privileged"
-      AccessType.Ropc.displayText shouldBe "Ropc"
-    }
-
     "convert to string correctly" in {
       forAll(values) { (s, t) =>
-        s.toString() shouldBe t.toUpperCase()
+        s.toString() shouldBe t.capitalize
       }
     }
 

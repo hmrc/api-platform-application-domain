@@ -90,6 +90,6 @@ object StandardAccessDataToCopySpec {
     postLogoutRedirectUris = List(PostLogoutRedirectUri.unsafeApply("https://abc.com/logout")),
     overrides = Set(OverrideFlag.PersistLogin)
   )
-  val jsonText    = """{"redirectUris":["https://abc.com/abc"],"postLogoutRedirectUris":["https://abc.com/logout"],"overrides":[{"overrideType":"PersistLoginAfterGrant"}]}"""
-  val oldJsonText = """{"redirectUris":["https://abc.com/abc"],"overrides":[{"overrideType":"PersistLoginAfterGrant"}]}"""
+  val jsonText    = """{"redirectUris":["https://abc.com/abc"],"postLogoutRedirectUris":["https://abc.com/logout"],"overrides":[{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}]}"""
+  val oldJsonText = """{"redirectUris":["https://abc.com/abc"],"overrides":[{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}]}"""
 }

@@ -21,14 +21,11 @@ import scala.collection.immutable.{ListMap, ListSet}
 import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.ListMapJsonFormatters.given
 
-sealed trait Mark
+enum Mark {
+  case Fail, Warn, Pass
+}
 
 object Mark {
-
-  case object Fail extends Mark
-  case object Warn extends Mark
-  case object Pass extends Mark
-
   import cats.Monoid
 
   implicit val markMonoid: Monoid[Mark] = new Monoid[Mark] {

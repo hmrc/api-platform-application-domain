@@ -19,6 +19,8 @@ package uk.gov.hmrc.apiplatform.modules.applications.query.domain.services
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.asScreamingSnakeCase
+
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.State
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.*
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.ApplicationQuery.*
@@ -61,7 +63,7 @@ object QueryParamsToQueryStringMap {
       case State.Testing                      => "CREATED"
       case State.PendingGatekeeperApproval    => "PENDING_GATEKEEPER_CHECK"
       case State.PendingRequesterVerification => "PENDING_SUBMITTER_VERIFICATION"
-      case s                                  => s.toString.toUpperCase()
+      case s                                  => s.asScreamingSnakeCase
     }
   }
 
@@ -121,14 +123,14 @@ object QueryParamsToQueryStringMap {
       //
       case NoSubscriptionsQP           => (ParamName.NoSubscriptions   -> Seq.empty).some
       case HasSubscriptionsQP          => (ParamName.HasSubscriptions  -> Seq.empty).some
-      case ApiContextQP(value)         => (ParamName.ApiContext        -> Seq(value.toString())).some
-      case ApiVersionNbrQP(value)      => (ParamName.ApiVersionNbr     -> Seq(value.toString())).some
+      case ApiContextQP(value)         => (ParamName.ApiContext        -> Seq(value.toString)).some
+      case ApiVersionNbrQP(value)      => (ParamName.ApiVersionNbr     -> Seq(value.toString)).some
       case LastUsedAfterQP(value)      => (ParamName.LastUsedAfter     -> Seq(paramValueForInstant(value))).some
       case LastUsedBeforeQP(value)     => (ParamName.LastUsedBefore    -> Seq(paramValueForInstant(value))).some
-      case UserIdQP(value)             => (ParamName.UserId            -> Seq(value.toString())).some
-      case AdminUserIdQP(value)        => (ParamName.AdminUserId       -> Seq(value.toString())).some
+      case UserIdQP(value)             => (ParamName.UserId            -> Seq(value.toString)).some
+      case AdminUserIdQP(value)        => (ParamName.AdminUserId       -> Seq(value.toString)).some
       case UserIdsQP(list)             => (ParamName.UserIds           -> Seq(list.mkString(","))).some
-      case EnvironmentQP(value)        => (ParamName.Environment       -> Seq(value.toString())).some
+      case EnvironmentQP(value)        => (ParamName.Environment       -> Seq(value.toString.toUpperCase)).some
       case IncludeDeletedQP            => (ParamName.IncludeDeleted    -> Seq.empty).some
       case NoRestrictionQP             => (ParamName.DeleteRestriction -> Seq("NO_RESTRICTION")).some
       case DoNotDeleteQP               => (ParamName.DeleteRestriction -> Seq("DO_NOT_DELETE")).some
@@ -142,8 +144,8 @@ object QueryParamsToQueryStringMap {
       case SearchTextQP(value)         => (ParamName.Search            -> Seq(value)).some
       case NameQP(value)               => (ParamName.Name              -> Seq(value)).some
       case VerificationCodeQP(value)   => (ParamName.VerificationCode  -> Seq(value)).some
-      case OrganisationIdQP(value)     => (ParamName.OrganisationId    -> Seq(value.toString())).some
-      case MatchAccessTypeQP(value)    => (ParamName.AccessType        -> Seq(value.toString)).some
+      case OrganisationIdQP(value)     => (ParamName.OrganisationId    -> Seq(value.toString)).some
+      case MatchAccessTypeQP(value)    => (ParamName.AccessType        -> Seq(value.asScreamingSnakeCase)).some
       case AnyAccessTypeQP             => (ParamName.AccessType        -> Seq("ANY")).some
     }).collect {
       case Some(x) => x

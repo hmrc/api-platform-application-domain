@@ -19,7 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 import java.util.UUID
 import scala.util.control.Exception.*
 
-opaque type SubmissionId <: UUID = UUID
+opaque type SubmissionId = UUID
 
 object SubmissionId {
 

@@ -43,8 +43,8 @@ object StandardAccessDataToCopy {
       (JsPath \ "overrides").read[Set[OverrideFlag]]
   )(StandardAccessDataToCopy.apply)
 
-  import LoginRedirectUri.given
-  import PostLogoutRedirectUri.given
+  // import LoginRedirectUri.given
+  // import PostLogoutRedirectUri.given
 
   private val writes: OWrites[StandardAccessDataToCopy] = Json.writes[StandardAccessDataToCopy]
   given OFormat[StandardAccessDataToCopy]               = OFormat(reads, writes)

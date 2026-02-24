@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.applications
+package uk.gov.hmrc.apiplatform.modules.applications.query
 
 import cats.data.{Validated, ValidatedNel}
 
-package object query {
-  type ErrorMessage = String
-  type ErrorsOr[A]  = ValidatedNel[ErrorMessage, A]
-  type ErrorOr[A]   = Validated[ErrorMessage, A]
-}
+type ErrorMessage = String
+type ErrorsOr[A]  = ValidatedNel[ErrorMessage, A]
+type ErrorOr[A]   = Validated[ErrorMessage, A]

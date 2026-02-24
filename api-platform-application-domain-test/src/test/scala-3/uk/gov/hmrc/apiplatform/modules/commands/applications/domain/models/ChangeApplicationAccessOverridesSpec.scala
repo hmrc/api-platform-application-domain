@@ -38,7 +38,7 @@ class ChangeApplicationAccessOverridesSpec extends ApplicationCommandBaseSpec {
 
     "read from json" in {
       val jsonText =
-        s""" {"gatekeeperUser":"${aGatekeeperUser}","overrides":[{"overrideType":"OriginOverride","origin":"origin1"},{"overrideType":"SuppressIvForAgents","scopes":["scope01", "scope02"]}],"timestamp":"$nowAsText","updateType":"changeApplicationAccessOverrides"} """
+        s""" {"gatekeeperUser":"${aGatekeeperUser}","overrides":[{"overrideType":"ORIGIN_OVERRIDE","origin":"origin1"},{"overrideType":"SUPPRESS_IV_FOR_AGENTS","scopes":["scope01", "scope02"]}],"timestamp":"$nowAsText","updateType":"changeApplicationAccessOverrides"} """
 
       Json.parse(jsonText).as[ApplicationCommand] shouldBe cmd
     }

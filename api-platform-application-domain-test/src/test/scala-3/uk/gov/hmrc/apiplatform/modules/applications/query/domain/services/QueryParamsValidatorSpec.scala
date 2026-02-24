@@ -176,10 +176,10 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
       }
 
       "extract valid params - multiple states" in {
-        test(Map("status" -> Seq("PRODUCTION", "State.PreProduction"))) shouldBe List(
+        test(Map("status" -> Seq("PRODUCTION", "PRE_PRODUCTION"))) shouldBe List(
           MatchManyStatesQP(NonEmptyList.of(State.Production, State.PreProduction))
         ).validNel
-        test(Map("status" -> Seq("PRODUCTION,State.PreProduction"))) shouldBe List(MatchManyStatesQP(NonEmptyList.of(State.Production, State.PreProduction))).validNel
+        test(Map("status" -> Seq("PRODUCTION,PRE_PRODUCTION"))) shouldBe List(MatchManyStatesQP(NonEmptyList.of(State.Production, State.PreProduction))).validNel
       }
 
       "extract valid params - sort filter" in {
@@ -257,7 +257,7 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
 
       "error on param with invalid applicationId value" in {
         inside(test(Map("applicationId" -> Seq("123"))).toEither) {
-          case Left(nel) => nel should (new ErrorIncludes("123 is not a valid application id"))
+          case Left(nel) => nel should (new ErrorIncludes("123 is not a valid applicationId"))
         }
       }
 
@@ -276,7 +276,7 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
 
       "error on param with invalid userId value" in {
         inside(test(Map("userId" -> Seq("123"))).toEither) {
-          case Left(nel) => nel should (new ErrorIncludes("123 is not a valid user id"))
+          case Left(nel) => nel should (new ErrorIncludes("123 is not a valid userId"))
         }
       }
 
@@ -295,7 +295,7 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
 
       "error on param with invalid admin userId value" in {
         inside(test(Map("adminUserId" -> Seq("123"))).toEither) {
-          case Left(nel) => nel should (new ErrorIncludes("123 is not a valid user id"))
+          case Left(nel) => nel should (new ErrorIncludes("123 is not a valid adminUserId"))
         }
       }
 
@@ -345,14 +345,14 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
     }
 
     "multiple errors stack" in {
-      test(Map("environment" -> Seq("BLAH BLAH"), "userId" -> Seq("ABC"))) shouldBe Invalid(NonEmptyList.of("BLAH BLAH is not a valid environment", "ABC is not a valid user id"))
+      test(Map("environment" -> Seq("BLAH BLAH"), "userId" -> Seq("ABC"))) shouldBe Invalid(NonEmptyList.of("BLAH BLAH is not a valid environment", "ABC is not a valid userId"))
     }
 
     "extract valid multi params - userids" in {
       test(Map("userids" -> Seq(userIdOne.toString, userIdTwo.toString))) shouldBe List(UserIdsQP(List(userIdOne, userIdTwo))).validNel
 
       inside(test(Map("userIds" -> Seq(userIdOne.toString, "BANG"))).toEither) {
-        case Left(nel) => nel should (new ErrorIncludes("BANG is not a valid user id"))
+        case Left(nel) => nel should (new ErrorIncludes("BANG is not a valid userId"))
       }
     }
   }

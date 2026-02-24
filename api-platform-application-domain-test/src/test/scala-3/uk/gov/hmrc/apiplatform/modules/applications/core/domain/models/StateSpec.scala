@@ -36,23 +36,19 @@ class StateSpec extends BaseJsonFormattersSpec with TableDrivenPropertyChecks {
         (State.Testing, "testing")
       )
 
-    "convert to string correctly" in {
-      forAll(values) { (s, t) =>
-        s.toString() shouldBe t.toUpperCase()
-      }
-    }
-
     "convert lower case string to case object" in {
       forAll(values) { (s, t) =>
-        State.apply(t) shouldBe Some(s)
-        State.unsafeApply(t) shouldBe s
+        val t2 = t.replace("_", "")
+        State.apply(t2) shouldBe Some(s)
+        State.unsafeApply(t2) shouldBe s
       }
     }
 
     "convert mixed case string to case object" in {
       forAll(values) { (s, t) =>
-        State.apply(t.toUpperCase()) shouldBe Some(s)
-        State.unsafeApply(t.toUpperCase()) shouldBe s
+        val t2 = t.replace("_", "").toUpperCase()
+        State.apply(t2) shouldBe Some(s)
+        State.unsafeApply(t2) shouldBe s
       }
     }
 

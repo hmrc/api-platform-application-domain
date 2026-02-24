@@ -39,13 +39,12 @@ class OverrideFlagSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
         case (overrideFlag, overrideType) => OverrideFlag.asOverrideType(overrideFlag) shouldBe overrideType
       }
     }
-
-    val persistLogin         = """{"overrideType":"PersistLoginAfterGrant"}"""
-    val emptyGWC             = """{"scopes":[],"overrideType":"GrantWithoutTaxpayerConsent"}"""
-    val emptyAgents          = """{"scopes":[],"overrideType":"SuppressIvForAgents"}"""
-    val emptyIndividuals     = """{"scopes":[],"overrideType":"SuppressIvForIndividuals"}"""
-    val emptyOrganisations   = """{"scopes":[],"overrideType":"SuppressIvForOrganisations"}"""
-    val simpleOriginOverride = """{"origin":"an origin","overrideType":"OriginOverride"}"""
+    val persistLogin         = """{"overrideType":"PERSIST_LOGIN_AFTER_GRANT"}"""
+    val emptyGWC             = """{"scopes":[],"overrideType":"GRANT_WITHOUT_TAXPAYER_CONSENT"}"""
+    val emptyAgents          = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_AGENTS"}"""
+    val emptyIndividuals     = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_INDIVIDUALS"}"""
+    val emptyOrganisations   = """{"scopes":[],"overrideType":"SUPPRESS_IV_FOR_ORGANISATIONS"}"""
+    val simpleOriginOverride = """{"origin":"an origin","overrideType":"ORIGIN_OVERRIDE"}"""
 
     val values = Table(
       ("OverrideFlag", "Expected Json"),

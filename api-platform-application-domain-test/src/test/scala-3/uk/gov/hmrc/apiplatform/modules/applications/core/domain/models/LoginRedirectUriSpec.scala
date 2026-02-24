@@ -20,7 +20,7 @@ import org.scalatest.{AppendedClues, OptionValues}
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
-class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with AppendedClues {
+class LoginRedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with AppendedClues {
 
   "redirectUri validation" should {
     val invalidCases = Map(
@@ -53,7 +53,7 @@ class RedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with Appe
 
     for ((k, v) <- validCases) {
       s"accept redirect uri for $k" in {
-        LoginRedirectUri.unsafeApply(v).uri shouldBe v withClue (s"$k: $v should be Valid")
+        LoginRedirectUri.apply(v).value.uri shouldBe v withClue (s"$k: $v should be Valid")
       }
     }
 

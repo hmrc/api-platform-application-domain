@@ -22,10 +22,9 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.*
 class AddRedirectUriSpec extends ApplicationCommandBaseSpec {
 
   "AddLoginRedirectUris" should {
-    val cmd = ApplicationCommands.AddLoginRedirectUri(Actors.AppCollaborator(anActorEmail), redirectUri.value, aTimestamp)
+    val cmd = ApplicationCommands.AddLoginRedirectUri(Actors.AppCollaborator(anActorEmail), redirectUri, aTimestamp)
 
     "write to json (as a command)" in {
-
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
         "actor"            -> Json.obj(
           "email"     -> "bob@example.com",

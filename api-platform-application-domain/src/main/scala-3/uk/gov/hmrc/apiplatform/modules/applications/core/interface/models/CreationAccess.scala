@@ -17,7 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.*
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.SimpleEnumJsonFormatting
+import uk.gov.hmrc.play.json.Union
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.AccessType
 
@@ -28,5 +28,8 @@ enum CreationAccess(val accessType: AccessType):
 object CreationAccess {
   def apply(text: String): Option[CreationAccess] = CreationAccess.values.find(_.toString().equalsIgnoreCase(text))
 
-  given Format[CreationAccess] = SimpleEnumJsonFormatting.createEnumFormatFor[CreationAccess]("accessType", apply)
+  given OFormat[CreationAccess] = Union.from[CreationAccess]("accessType")
+    .andValue("STANDARD", CreationAccess.Standard)
+    .andValue("PRIVILEGED", CreationAccess.Privileged)
+    .format
 }

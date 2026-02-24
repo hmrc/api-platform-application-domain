@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-opaque type PostLogoutRedirectUri <: String = String
+opaque type PostLogoutRedirectUri = String
 
 object PostLogoutRedirectUri {
 

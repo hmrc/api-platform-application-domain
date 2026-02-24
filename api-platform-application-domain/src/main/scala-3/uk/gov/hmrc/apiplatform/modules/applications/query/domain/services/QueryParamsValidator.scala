@@ -27,6 +27,7 @@ import cats.data.{NonEmptyList, ValidatedNel}
 import cats.syntax.all.*
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.*
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.fromScreamingSnakeCase
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.AccessType
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.*
@@ -45,7 +46,7 @@ object QueryParamsValidator {
     def apply(paramName: ParamName)(values: Seq[String]): ErrorsOr[Unit] =
       values.toList match {
         case Nil => ().validNel
-        case _   => s"No query value is allowed for $paramName".invalidNel
+        case _   => s"No query value is allowed for ${paramName.text}".invalidNel
       }
   }
 
@@ -53,9 +54,9 @@ object QueryParamsValidator {
 
     def apply(paramName: ParamName)(values: Seq[String]): ErrorsOr[String] =
       values.toList match {
-        case Nil           => s"$paramName requires a single value".invalidNel
+        case Nil           => s"${paramName.text} requires a single value".invalidNel
         case single :: Nil => single.validNel
-        case _             => s"Multiple $paramName query parameters are not permitted".invalidNel
+        case _             => s"Multiple ${paramName.text} query parameters are not permitted".invalidNel
       }
   }
 
@@ -63,7 +64,7 @@ object QueryParamsValidator {
 
     def apply(paramName: ParamName)(values: Seq[String]): ErrorsOr[Seq[String]] =
       values.toList match {
-        case Nil => s"$paramName requires at least one value".invalidNel
+        case Nil => s"${paramName.text} requires at least one value".invalidNel
         case _   => values.validNel
       }
   }
@@ -74,22 +75,22 @@ object QueryParamsValidator {
       values.toList match {
         case Nil           => None.validNel
         case single :: Nil => single.some.validNel
-        case _             => s"Multiple $paramName query parameters are not permitted".invalidNel
+        case _             => s"Multiple ${paramName.text} query parameters are not permitted".invalidNel
       }
   }
 
   object BooleanValueExpected {
-    def apply(paramName: ParamName)(value: String): ErrorsOr[Boolean] = value.toBooleanOption.toValidNel(s"$paramName must be true or false")
+    def apply(paramName: ParamName)(value: String): ErrorsOr[Boolean] = value.toBooleanOption.toValidNel(s"${paramName.text} must be true or false")
   }
 
   object IntValueExpected {
-    def apply(paramName: ParamName)(value: String): ErrorsOr[Int] = value.toIntOption.toValidNel(s"$paramName must be an integer value")
+    def apply(paramName: ParamName)(value: String): ErrorsOr[Int] = value.toIntOption.toValidNel(s"${paramName.text} must be an integer value")
   }
 
   object PositiveIntValueExpected {
 
     def apply(paramName: ParamName)(value: String): ErrorsOr[Int] = IntValueExpected(paramName)(value) andThen { i =>
-      i.some.filter(_ > 0).toValidNel(s"$paramName must be an positive integer value")
+      i.some.filter(_ > 0).toValidNel(s"${paramName.text} must be an positive integer value")
     }
   }
 
@@ -98,12 +99,12 @@ object QueryParamsValidator {
     def apply(paramName: ParamName)(value: String): ErrorsOr[Instant] = {
       Try(Instant.from(DateTimeFormatter.ISO_INSTANT.parse(value)))
         .toOption
-        .fold[ErrorsOr[Instant]](s"$paramName of $value must be a valid date".invalidNel)(d => d.validNel)
+        .fold[ErrorsOr[Instant]](s"${paramName.text} of $value must be a valid date".invalidNel)(d => d.validNel)
     }
   }
 
   object ApplicationIdExpected {
-    def apply(paramName: ParamName)(value: String): ErrorsOr[ApplicationId] = ApplicationId(value).toValidNel(s"$value is not a valid $paramName")
+    def apply(paramName: ParamName)(value: String): ErrorsOr[ApplicationId] = ApplicationId(value).toValidNel(s"$value is not a valid ${paramName.text}")
   }
 
   object ApplicationIdValidator extends QueryParamsValidator {
@@ -201,7 +202,7 @@ object QueryParamsValidator {
       case "CREATED"                        => State.Testing.some
       case "PENDING_GATEKEEPER_CHECK"       => State.PendingGatekeeperApproval.some
       case "PENDING_SUBMITTER_VERIFICATION" => State.PendingRequesterVerification.some
-      case text                             => State(text)
+      case text                             => State(fromScreamingSnakeCase(text))
     }
 
     def applyOne(value: String): Option[AppStateParam[_]] =
@@ -255,7 +256,7 @@ object QueryParamsValidator {
   }
 
   private object UserIdExpected {
-    def apply(paramName: ParamName)(value: String): ErrorsOr[UserId] = UserId.apply(value).toValidNel(s"$value is not a valid $paramName")
+    def apply(paramName: ParamName)(value: String): ErrorsOr[UserId] = UserId.apply(value).toValidNel(s"$value is not a valid ${paramName.text}")
   }
 
   object UserIdValidator extends QueryParamsValidator {
@@ -292,7 +293,7 @@ object QueryParamsValidator {
   private object OrganisationIdExpected {
 
     def apply(paramName: ParamName)(value: String): ErrorsOr[OrganisationId] =
-      allCatch.opt(OrganisationId(ju.UUID.fromString(value))).toValidNel(s"$value is not a valid $paramName")
+      allCatch.opt(OrganisationId(ju.UUID.fromString(value))).toValidNel(s"$value is not a valid ${paramName.text}")
   }
 
   object OrganisationIdValidator extends QueryParamsValidator {
@@ -304,6 +305,7 @@ object QueryParamsValidator {
   }
 
   object AccessTypeValidator extends QueryParamsValidator {
+    val paramName = ParamName.AccessType
 
     def parseText(value: String): ErrorsOr[Option[AccessType]] = {
       value match {
@@ -315,7 +317,6 @@ object QueryParamsValidator {
           )
       }
     }
-    val paramName                                              = ParamName.AccessType
 
     def validate(values: Seq[String]): ErrorsOr[AccessTypeParam[_]] = {
       SingleValueExpected(paramName)(values) andThen parseText map { ot => ot.fold[AccessTypeParam[_]](AnyAccessTypeQP)(accessType => MatchAccessTypeQP(accessType)) }
@@ -355,12 +356,12 @@ object QueryParamsValidator {
         case Some(text) =>
           text.toBooleanOption
             .fold[ErrorsOr[IncludeDeletedQP.type]](
-              s"$paramName must be true or blank".invalidNel
+              s"${paramName.text} must be true or blank".invalidNel
             )(bool =>
               if (bool)
                 IncludeDeletedQP.validNel
               else
-                s"$paramName cannot be specified as false".invalidNel
+                s"${paramName.text} cannot be specified as false".invalidNel
             )
       }
     }

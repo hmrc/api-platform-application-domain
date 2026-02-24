@@ -26,8 +26,8 @@ class DeleteTypeRestrictionSpec extends BaseJsonFormattersSpec with TableDrivenP
   val values =
     Table(
       ("Type", "text"),
-      (DeleteRestrictionType.NoRestriction, "no_restriction"),
-      (DeleteRestrictionType.DoNotDelete, "do_not_delete")
+      (DeleteRestrictionType.NoRestriction, "norestriction"),
+      (DeleteRestrictionType.DoNotDelete, "donotdelete")
     )
 
   "convert lower case string to case object" in {
@@ -67,9 +67,16 @@ class DeleteTypeRestrictionSpec extends BaseJsonFormattersSpec with TableDrivenP
     }.getMessage() should include("Cannot parse Delete Restriction Type from '123'")
   }
 
+  val jsonValues =
+    Table(
+      ("Type", "text"),
+      (DeleteRestrictionType.NoRestriction, "NO_RESTRICTION"),
+      (DeleteRestrictionType.DoNotDelete, "DO_NOT_DELETE")
+    )
+
   "write to Json" in {
-    forAll(values) { (s, t) =>
-      Json.toJson[DeleteRestrictionType](s) shouldBe JsString(t.toUpperCase())
+    forAll(jsonValues) { (s, t) =>
+      Json.toJson[DeleteRestrictionType](s) shouldBe JsString(t)
     }
   }
 }

@@ -35,7 +35,6 @@ lazy val scala3Options = sharedScalacOptions ++
   Seq("-explain")
 
 lazy val commonSettings = Seq(
-  excludeFilter.in(headerSources) := HiddenFileFilter || "**/bcrypt.scala",
 
   scalafixConfig := {
     val base = (ThisBuild / baseDirectory).value

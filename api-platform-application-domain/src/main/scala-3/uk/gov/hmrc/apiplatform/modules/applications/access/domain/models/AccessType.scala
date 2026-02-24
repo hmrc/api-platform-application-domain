@@ -22,11 +22,6 @@ enum AccessType:
   case Standard, Privileged, Ropc
 
 object AccessType {
-
-  extension (a: AccessType) {
-    def displayText: String = a.toString()
-  }
-
   def apply(text: String): Option[AccessType] = AccessType.values.find(_.toString().equalsIgnoreCase(text))
 
   def unsafeApply(text: String): AccessType = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid Access Type"))

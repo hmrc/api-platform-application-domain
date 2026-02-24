@@ -37,7 +37,7 @@ class OverrideTypeSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
 
     "convert to string correctly" in {
       forAll(values) { (overrideType, text) =>
-        overrideType.toString shouldBe text.toUpperCase()
+        overrideType.toString shouldBe text
       }
     }
 
@@ -94,9 +94,20 @@ class OverrideTypeSpec extends BaseJsonFormattersSpec with TableDrivenPropertyCh
       }.getMessage() should include("Cannot parse Override Type from '123'")
     }
 
+    val jsonValues =
+      Table(
+        ("Type", "text"),
+        (OverrideType.GrantWithoutTaxpayerConsent, "GRANT_WITHOUT_TAXPAYER_CONSENT"),
+        (OverrideType.PersistLoginAfterGrant, "PERSIST_LOGIN_AFTER_GRANT"),
+        (OverrideType.SuppressIvForAgents, "SUPPRESS_IV_FOR_AGENTS"),
+        (OverrideType.SuppressIvForIndividuals, "SUPPRESS_IV_FOR_INDIVIDUALS"),
+        (OverrideType.SuppressIvForOrganisations, "SUPPRESS_IV_FOR_ORGANISATIONS"),
+        (OverrideType.OriginOverride, "ORIGIN_OVERRIDE")
+      )
+
     "write to Json" in {
-      forAll(values) { (s, t) =>
-        Json.toJson[OverrideType](s) shouldBe JsString(t.toUpperCase())
+      forAll(jsonValues) { (s, t) =>
+        Json.toJson[OverrideType](s) shouldBe JsString(t)
       }
     }
   }

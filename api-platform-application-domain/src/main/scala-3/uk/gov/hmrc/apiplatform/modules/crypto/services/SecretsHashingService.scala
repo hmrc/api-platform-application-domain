@@ -17,7 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.crypto.services
 
 import java.util.UUID
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 import uk.gov.hmrc.apiplatform.modules.crypto.services.bcrypt.*
 
@@ -32,7 +32,7 @@ abstract class SecretsHashingService() {
   final def hashSecret(secret: String): String = secret.bcrypt(workFactor)
 
   final def checkAgainstHash(secret: String, hashedSecret: String): Boolean = {
-    secret.isBcryptedSafe(hashedSecret) match {
+    Try(secret.isBcrypted(hashedSecret)) match {
       case Success(result) => result
       case Failure(_)      => false
     }

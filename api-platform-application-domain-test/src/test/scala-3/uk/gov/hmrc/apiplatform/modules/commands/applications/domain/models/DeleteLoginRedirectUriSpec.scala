@@ -22,7 +22,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.*
 class DeleteLoginRedirectUriSpec extends ApplicationCommandBaseSpec {
 
   "DeleteRedirectUris" should {
-    val cmd = ApplicationCommands.DeleteLoginRedirectUri(Actors.AppCollaborator(anActorEmail), redirectUri.value, aTimestamp)
+    val cmd = ApplicationCommands.DeleteLoginRedirectUri(Actors.AppCollaborator(anActorEmail), redirectUri, aTimestamp)
 
     "write to json (as a command)" in {
 

@@ -236,7 +236,7 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
           )
         ),
         Map(
-          ParamName.Status -> Seq("State.PreProduction", "PRODUCTION", "PENDING_GATEKEEPER_CHECK")
+          ParamName.Status -> Seq("PRE_PRODUCTION", "PRODUCTION", "PENDING_GATEKEEPER_CHECK")
         )
       )
     }

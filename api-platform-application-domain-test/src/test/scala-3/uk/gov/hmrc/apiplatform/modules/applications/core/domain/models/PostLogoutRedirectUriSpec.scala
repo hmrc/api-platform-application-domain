@@ -53,7 +53,7 @@ class PostLogoutRedirectUriSpec extends BaseJsonFormattersSpec with OptionValues
 
     for ((k, v) <- validCases) {
       s"accept redirect uri for $k" in {
-        PostLogoutRedirectUri(v).value shouldBe v withClue (s"$k: $v should be Valid")
+        PostLogoutRedirectUri(v).value.uri shouldBe v withClue (s"$k: $v should be Valid")
       }
     }
 

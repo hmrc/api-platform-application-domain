@@ -72,8 +72,8 @@ object Access {
   }
 
   object Standard {
-    import LoginRedirectUri.given
-    import PostLogoutRedirectUri.given
+    // import LoginRedirectUri.given
+    // import PostLogoutRedirectUri.given
     given OFormat[Standard] = Json.format[Standard]
   }
 
@@ -85,7 +85,7 @@ object Access {
   case class Ropc(scopes: Set[String] = Set.empty) extends Access
 
   import uk.gov.hmrc.play.json.Union
-  import PostLogoutRedirectUri.given
+  // import PostLogoutRedirectUri.given
 
   private implicit val formatPrivileged: OFormat[Privileged] = Json.format[Privileged]
   private implicit val formatRopc: OFormat[Ropc]             = Json.format[Ropc]

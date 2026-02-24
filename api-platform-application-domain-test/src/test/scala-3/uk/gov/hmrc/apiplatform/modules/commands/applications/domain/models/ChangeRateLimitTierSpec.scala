@@ -28,11 +28,16 @@ class ChangeRateLimitTierSpec extends ApplicationCommandBaseSpec {
     val cmd = ApplicationCommands.ChangeRateLimitTier(aGatekeeperUser, aTimestamp, aRateLimitTier)
 
     "write to json (as a command)" in {
+      /*
+       * ChangeRateLimitTier should write to json (as a command) -
+       * {"gatekeeperUser":"Bob in SDST","timestamp":"2020-01-02T03:04:05.006Z","rateLimitTier":"PLATINUM","updateType":"changeRateLimitTier"} was not equal to
+       * {"gatekeeperUser":"Bob in SDST","timestamp":"2020-01-02T03:04:05.006Z","rateLimitTier":"Platinum","updateType":"changeRateLimitTier"}
 
+       */
       Json.toJson[ApplicationCommand](cmd) shouldBe Json.obj(
         "gatekeeperUser" -> s"${aGatekeeperUser}",
         "timestamp"      -> s"$nowAsText",
-        "rateLimitTier"  -> s"$aRateLimitTier",
+        "rateLimitTier"  -> s"${aRateLimitTier.toString.toUpperCase}",
         "updateType"     -> s"$updateType"
       )
     }

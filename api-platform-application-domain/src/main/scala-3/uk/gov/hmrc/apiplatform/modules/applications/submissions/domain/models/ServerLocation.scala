@@ -16,23 +16,24 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models
 
-import play.api.libs.json.OFormat
-import uk.gov.hmrc.play.json.Union
-
 enum ServerLocation:
   case InUK, InEEA, OutsideEEAWithAdequacy, OutsideEEAWithoutAdequacy
 
 object ServerLocation {
-  def apply(text: String): Option[ServerLocation] = ServerLocation.values.find(_.toString.toUpperCase == text.toUpperCase())
+  def apply(text: String): Option[ServerLocation] = ServerLocation.values.find(_.toString.equalsIgnoreCase(text))
 
   def unsafeApply(text: String): ServerLocation = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid Server Location"))
 
   // We cannot use SealedTraitJsonFormatting because this was never stored as an Enumeration or Enum originally but rather as an object
   //
-  implicit val format: OFormat[ServerLocation] = Union.from[ServerLocation]("serverLocation")
-    .andType("inUK", () => InUK)
-    .andType("inEEA", () => InEEA)
-    .andType("outsideEEAWithAdequacy", () => OutsideEEAWithAdequacy)
-    .andType("outsideEEAWithoutAdequacy", () => OutsideEEAWithoutAdequacy)
+
+  import play.api.libs.json.*
+  import uk.gov.hmrc.play.json.Union
+
+  given OFormat[ServerLocation] = Union.from[ServerLocation]("serverLocation")
+    .andValue("inUK", ServerLocation.InUK)
+    .andValue("inEEA", ServerLocation.InEEA)
+    .andValue("outsideEEAWithAdequacy", ServerLocation.OutsideEEAWithAdequacy)
+    .andValue("outsideEEAWithoutAdequacy", ServerLocation.OutsideEEAWithoutAdequacy)
     .format
 }

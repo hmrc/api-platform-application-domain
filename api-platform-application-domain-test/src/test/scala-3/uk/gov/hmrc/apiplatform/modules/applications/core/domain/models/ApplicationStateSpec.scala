@@ -49,11 +49,11 @@ class ApplicationStateSpec extends BaseJsonFormattersSpec with FixedClock with T
       }
     }
 
-    "transition to State.PreProduction" in {
+    "transition to PRE_PRODUCTION" in {
       ApplicationState(State.PendingRequesterVerification, updatedOn = instant).toPreProduction(instant)
     }
 
-    "fail transistion to State.PreProduction" in {
+    "fail transistion to PRE_PRODUCTION" in {
       for (state <- State.values.filterNot(_ == State.PendingRequesterVerification)) {
         intercept[RuntimeException] {
           ApplicationState(state, updatedOn = instant).toPreProduction(instant)

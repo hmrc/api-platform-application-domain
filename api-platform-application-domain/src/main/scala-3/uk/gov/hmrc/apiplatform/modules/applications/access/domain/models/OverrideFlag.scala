@@ -58,11 +58,11 @@ object OverrideFlag {
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.asScreamingSnakeCase
 
   given OFormat[OverrideFlag] = Union.from[OverrideFlag]("overrideType")
-    .and[GrantWithoutConsent](OverrideType.GrantWithoutTaxpayerConsent.asScreamingSnakeCase)
-    .andType(OverrideType.PersistLoginAfterGrant.asScreamingSnakeCase, () => PersistLogin)
-    .and[SuppressIvForAgents](OverrideType.SuppressIvForAgents.asScreamingSnakeCase)
-    .and[SuppressIvForOrganisations](OverrideType.SuppressIvForOrganisations.asScreamingSnakeCase)
-    .and[SuppressIvForIndividuals](OverrideType.SuppressIvForIndividuals.asScreamingSnakeCase)
-    .and[OriginOverride](OverrideType.OriginOverride.asScreamingSnakeCase)
+    .and[OverrideFlag.GrantWithoutConsent](OverrideType.GrantWithoutTaxpayerConsent.asScreamingSnakeCase)
+    .andType[OverrideFlag.PersistLogin.type](OverrideType.PersistLoginAfterGrant.asScreamingSnakeCase, () => PersistLogin)
+    .and[OverrideFlag.SuppressIvForAgents](OverrideType.SuppressIvForAgents.asScreamingSnakeCase)
+    .and[OverrideFlag.SuppressIvForOrganisations](OverrideType.SuppressIvForOrganisations.asScreamingSnakeCase)
+    .and[OverrideFlag.SuppressIvForIndividuals](OverrideType.SuppressIvForIndividuals.asScreamingSnakeCase)
+    .and[OverrideFlag.OriginOverride](OverrideType.OriginOverride.asScreamingSnakeCase)
     .format
 }
