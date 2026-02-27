@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.access.domain.models
 
-opaque type SellResellOrDistribute <: String = String
+opaque type SellResellOrDistribute = String
 
 object SellResellOrDistribute {
 

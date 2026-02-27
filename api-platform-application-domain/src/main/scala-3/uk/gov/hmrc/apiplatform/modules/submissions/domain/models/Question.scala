@@ -203,7 +203,7 @@ object Question {
 
   given Reads[ListMap[PossibleAnswer, Mark]] = listMapReads[PossibleAnswer, Mark]
 
-  import Statement.*
+  import uk.gov.hmrc.apiplatform.modules.submissions.domain.models.Statement.given
 
   given Format[PossibleAnswer]       = Json.valueFormat[PossibleAnswer]
   given OFormat[TextQuestion]        = Json.format[TextQuestion]

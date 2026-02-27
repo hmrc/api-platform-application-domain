@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sbt pre-commit
+./run_sbt.sh pre-commit both

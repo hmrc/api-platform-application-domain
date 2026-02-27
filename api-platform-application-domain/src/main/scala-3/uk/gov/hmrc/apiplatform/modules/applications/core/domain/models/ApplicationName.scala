@@ -68,11 +68,6 @@ object ValidatedApplicationName {
 opaque type ApplicationName <: String = String
 
 object ApplicationName {
-  // extension  (a: ApplicationName) {
-  //   def equalsIgnoreCase(other: ApplicationName): Boolean = a.equalsIgnoreCase(other)
-
-  // }
-
   def apply(value: String): ApplicationName = new ApplicationName(value.trim())
 
   given Format[ApplicationName] = Format(Reads.StringReads, Writes.StringWrites)

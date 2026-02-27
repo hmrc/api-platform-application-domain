@@ -18,12 +18,14 @@ package uk.gov.hmrc.apiplatform.modules.subscriptionfields.domain.models
 
 import scala.util.Random
 
-opaque type FieldValue <: String = String
+opaque type FieldValue = String
 
 object FieldValue {
 
   extension (fv: FieldValue) {
     def validateAgainstRule(rule: ValidationRule): Boolean = rule.validateAgainstRule(fv)
+
+    def isEmpty = fv.isEmpty()
   }
 
   def apply(raw: String): FieldValue = if (raw.isEmpty()) empty else raw

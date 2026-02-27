@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 
-opaque type CidrBlock <: String = String
+opaque type CidrBlock = String
 
 /** This should also do validation of the CidrBlock as already happens in TPDFE. We should add this later.
   */

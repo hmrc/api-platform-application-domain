@@ -50,46 +50,46 @@ object Statement {
   given OFormat[StatementText] = Json.format[StatementText]
   given OFormat[StatementLink] = Json.format[StatementLink]
 
-  implicit lazy val readsStatementBullets: Reads[StatementBullets] = (
+  given readsStatementBullets: Reads[StatementBullets] = (
     (__ \ "bullets").read(nelReads[NonBulletStatementFragment])
   )
     .map(StatementBullets(_))
 
-  implicit lazy val writesStatementBullets: OWrites[StatementBullets] = (
+  given writesStatementBullets: OWrites[StatementBullets] = (
     (
       (__ \ "bullets").write(nelWrites[NonBulletStatementFragment])
     )
       .contramap(sb => sb.bullets)
   )
 
-  implicit lazy val jsonFormatStatementBullets: OFormat[StatementBullets] = OFormat(readsStatementBullets, writesStatementBullets)
+  given jsonFormatStatementBullets: OFormat[StatementBullets] = OFormat(readsStatementBullets, writesStatementBullets)
 
-  implicit lazy val readsCompoundFragment: Reads[CompoundFragment] = (
+  given readsCompoundFragment: Reads[CompoundFragment] = (
     (__ \ "fragments").read(nelReads[SimpleStatementFragment])
   )
     .map(CompoundFragment(_))
 
-  implicit lazy val writesCompoundFragment: OWrites[CompoundFragment] = (
+  given writesCompoundFragment: OWrites[CompoundFragment] = (
     (
       (__ \ "fragments").write(nelWrites[SimpleStatementFragment])
     )
       .contramap(cf => cf.fragments)
   )
 
-  implicit lazy val jsonFormatCompoundFragment: OFormat[CompoundFragment] = OFormat(readsCompoundFragment, writesCompoundFragment)
+  given jsonFormatCompoundFragment: OFormat[CompoundFragment] = OFormat(readsCompoundFragment, writesCompoundFragment)
 
-  implicit lazy val jsonFormatSimpleStatementFragment: Format[SimpleStatementFragment] = Union.from[SimpleStatementFragment]("statementType")
+  given jsonFormatSimpleStatementFragment: Format[SimpleStatementFragment] = Union.from[SimpleStatementFragment]("statementType")
     .and[StatementText]("text")
     .and[StatementLink]("link")
     .format
 
-  implicit lazy val jsonFormatNonBulletStatementFragment: Format[NonBulletStatementFragment] = Union.from[NonBulletStatementFragment]("statementType")
+  given jsonFormatNonBulletStatementFragment: Format[NonBulletStatementFragment] = Union.from[NonBulletStatementFragment]("statementType")
     .and[StatementText]("text")
     .and[StatementLink]("link")
     .andLazy[CompoundFragment]("compound", jsonFormatCompoundFragment)
     .format
 
-  implicit lazy val jsonFormatStatementFragment: Format[StatementFragment] = Union.from[StatementFragment]("statementType")
+  given jsonFormatStatementFragment: Format[StatementFragment] = Union.from[StatementFragment]("statementType")
     .and[StatementText]("text")
     .and[StatementLink]("link")
     .andLazy[StatementBullets]("bullets", jsonFormatStatementBullets)

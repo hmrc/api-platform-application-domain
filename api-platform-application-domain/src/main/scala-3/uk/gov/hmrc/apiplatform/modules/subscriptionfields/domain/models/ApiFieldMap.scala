@@ -44,6 +44,13 @@ object FieldErrorMap {
   val empty = Map.empty[FieldName, FieldErrorMessage]
 }
 
+private case class SubscriptionFieldsId(value: ju.UUID) extends AnyVal
+private case class SubscriptionFields(clientId: ClientId, apiContext: ApiContext, apiVersion: ApiVersionNbr, fieldsId: SubscriptionFieldsId, fields: Fields)
+private case class BulkSubscriptionFieldsResponse(subscriptions: List[SubscriptionFields])
+
+private case class ApiFieldDefinitions(apiContext: ApiContext, apiVersion: ApiVersionNbr, fieldDefinitions: List[FieldDefinition])
+private case class BulkApiFieldDefinitionsResponse(apis: List[ApiFieldDefinitions])
+
 private def toApiFieldDefnMap(response: BulkApiFieldDefinitionsResponse): ApiFieldMap[FieldDefinition] = {
   import cats.*
   import cats.implicits.*
@@ -94,10 +101,3 @@ object Implicits {
     given readsDefn: Reads[ApiFieldMap[FieldDefinition]] = readsApiFieldMapDefnsFromBulk
   }
 }
-
-private case class SubscriptionFieldsId(value: ju.UUID) extends AnyVal
-private case class SubscriptionFields(clientId: ClientId, apiContext: ApiContext, apiVersion: ApiVersionNbr, fieldsId: SubscriptionFieldsId, fields: Fields)
-private case class BulkSubscriptionFieldsResponse(subscriptions: List[SubscriptionFields])
-
-private case class ApiFieldDefinitions(apiContext: ApiContext, apiVersion: ApiVersionNbr, fieldDefinitions: List[FieldDefinition])
-private case class BulkApiFieldDefinitionsResponse(apis: List[ApiFieldDefinitions])

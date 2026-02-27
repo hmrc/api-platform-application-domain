@@ -18,7 +18,7 @@ scala3 () {
 }
 
 # Check for nothing in $1 and show usage
-[ "$#" -eq 2 ] || die "usage: run [sbt-cmd] [version]"
+[ "$#" -eq 2 ] || die "usage: run_sbt [sbt-cmd] [version]"
 
 case $2 in
   2) scala2 $1
