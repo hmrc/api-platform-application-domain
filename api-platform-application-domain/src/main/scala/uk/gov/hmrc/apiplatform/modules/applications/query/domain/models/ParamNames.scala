@@ -40,6 +40,7 @@ object ParamNames {
   //
   val LastUsedAfter          = "lastUsedAfter"
   val LastUsedBefore         = "lastUsedBefore"
+  val NeverUsed              = "neverUsed"
   //
   val UserId                 = "userId"
   val AdminUserId            = "adminUserId"

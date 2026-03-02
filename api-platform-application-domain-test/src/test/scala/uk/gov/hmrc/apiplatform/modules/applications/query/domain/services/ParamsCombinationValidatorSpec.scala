@@ -105,6 +105,7 @@ class ParamsCombinationValidatorSpec
       test(List(admin, users)) shouldBe error
     }
   }
+
   "checkSubscriptionsParamsCombinations" should {
     val test: List[NonUniqueFilterParam[_]] => ErrorsOr[Unit] = (ps) => ParamsCombinationValidator.checkSubscriptionsParamsCombinations(ps)
     val Context                                               = ApiContextQP(apiContextOne)

@@ -165,7 +165,7 @@ object ApplicationQuery {
     def attemptToConstructMultiResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): MultipleApplicationQuery = {
 
       val sorting = first[SortQP](validParams, implicitly).map(_.value).getOrElse(Sorting.NoSorting)
-      val limit = first[LimitQP](validParams, implicitly).map(_.value)
+      val limit   = first[LimitQP](validParams, implicitly).map(_.value)
 
       identifyAnyPagination(validParams)
         .fold[MultipleApplicationQuery]({
