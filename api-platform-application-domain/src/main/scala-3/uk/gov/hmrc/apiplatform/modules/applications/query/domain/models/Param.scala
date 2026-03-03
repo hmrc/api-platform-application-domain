@@ -68,6 +68,7 @@ object Param {
   //
   case class LastUsedAfterQP(value: Instant)                extends NonUniqueFilterParam[Instant]
   case class LastUsedBeforeQP(value: Instant)               extends NonUniqueFilterParam[Instant]
+  case object NeverUsedQP                                   extends NonUniqueFilterParam[Unit]
   //
   case class UserIdQP(value: UserId)                        extends NonUniqueFilterParam[UserId]
   case class AdminUserIdQP(value: UserId)                   extends NonUniqueFilterParam[UserId]
@@ -121,6 +122,7 @@ object Param {
     case ApiVersionNbrQP(value: ApiVersionNbr)          => s"ApiVersionNbrQP($value)"
     case LastUsedAfterQP(value: Instant)                => s"LastUsedAfterQP($value)"
     case LastUsedBeforeQP(value: Instant)               => s"LastUsedBeforeQP($value)"
+    case NeverUsedQP                                    => "NeverUsedQP"
     case UserIdQP(value: UserId)                        => "UserIdQP(???)"
     case AdminUserIdQP(value: UserId)                   => "AdminUserIdQP(???)"
     case UserIdsQP(values: List[UserId])                => "UserIdsQP(???,...)"

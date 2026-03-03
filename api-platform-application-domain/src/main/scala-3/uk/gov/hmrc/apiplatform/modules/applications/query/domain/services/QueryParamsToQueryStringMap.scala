@@ -127,6 +127,7 @@ object QueryParamsToQueryStringMap {
       case ApiVersionNbrQP(value)      => (ParamName.ApiVersionNbr     -> Seq(value.toString)).some
       case LastUsedAfterQP(value)      => (ParamName.LastUsedAfter     -> Seq(paramValueForInstant(value))).some
       case LastUsedBeforeQP(value)     => (ParamName.LastUsedBefore    -> Seq(paramValueForInstant(value))).some
+      case NeverUsedQP                 => (ParamName.NeverUsed         -> Seq.empty).some
       case UserIdQP(value)             => (ParamName.UserId            -> Seq(value.toString)).some
       case AdminUserIdQP(value)        => (ParamName.AdminUserId       -> Seq(value.toString)).some
       case UserIdsQP(list)             => (ParamName.UserIds           -> Seq(list.mkString(","))).some

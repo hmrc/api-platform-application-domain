@@ -332,6 +332,9 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
     "convert LastUsedBeforeQP to query" in {
       testGOEAQ(List(LastUsedBeforeQP(instant)))(ParamName.LastUsedBefore -> nowAsText)
     }
+    "convert NeverUsedQP to query" in {
+      testGOEAQOfNoValue(List(NeverUsedQP))(ParamName.NeverUsed)
+    }
     "convert UserIdQP to query" in {
       testGOEAQ(List(UserIdQP(userIdOne)))(ParamName.UserId -> s"$userIdOne")
     }

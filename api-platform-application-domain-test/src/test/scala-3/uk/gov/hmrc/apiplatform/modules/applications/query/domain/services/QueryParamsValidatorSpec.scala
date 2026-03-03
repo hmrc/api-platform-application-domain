@@ -225,6 +225,10 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
         test(Map("lastUsedAfter" -> Seq(nowAsText))) shouldBe List(LastUsedAfterQP(instant)).validNel
       }
 
+      "extract valid params - never used filter" in {
+        test(Map("neverUsed" -> Seq())) shouldBe List(NeverUsedQP).validNel
+      }
+
       "extract valid params - status used before filter" in {
         test(Map("statusDate" -> Seq(nowAsText))) shouldBe List(AppStateBeforeDateQP(instant)).validNel
       }

@@ -39,6 +39,7 @@ enum ParamName(val text: String) {
   //
   case LastUsedAfter          extends ParamName("lastUsedAfter")
   case LastUsedBefore         extends ParamName("lastUsedBefore")
+  case NeverUsed              extends ParamName("neverUsed")
   //
   case UserId                 extends ParamName("userId")
   case AdminUserId            extends ParamName("adminUserId")

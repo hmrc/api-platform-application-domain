@@ -409,6 +409,14 @@ object QueryParamsValidator {
     }
   }
 
+  object NeverUsedValidator extends QueryParamsValidator {
+    val paramName = ParamName.NeverUsed
+
+    def validate(values: Seq[String]): ErrorsOr[NeverUsedQP.type] = {
+      NoValueExpected(paramName)(values) map { _ => NeverUsedQP }
+    }
+  }
+
   object LimitValidator extends QueryParamsValidator {
     val paramName = ParamName.Limit
 
@@ -429,6 +437,7 @@ object QueryParamsValidator {
     QueryParamsValidator.IncludeDeletedValidator,
     QueryParamsValidator.LastUseBeforeValidator,
     QueryParamsValidator.LastUseAfterValidator,
+    QueryParamsValidator.NeverUsedValidator,
     QueryParamsValidator.NameValidator,
     QueryParamsValidator.NoSubscriptionsValidator,
     QueryParamsValidator.PageSizeValidator,
