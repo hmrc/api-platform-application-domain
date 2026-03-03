@@ -332,6 +332,9 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
     "convert LastUsedBeforeQP to query" in {
       testGOEAQ(List(LastUsedBeforeQP(instant)))(ParamNames.LastUsedBefore -> nowAsText)
     }
+    "convert NeverUsedQP to query" in {
+      testGOEAQOfNoValue(List(NeverUsedQP))(ParamNames.NeverUsed)
+    }
     "convert UserIdQP to query" in {
       testGOEAQ(List(UserIdQP(userIdOne)))(ParamNames.UserId -> s"$userIdOne")
     }
@@ -409,7 +412,7 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
       testGOEAQ(Nil, limit = None)()
     }
   }
-  
+
   "paramForSorting" should {
     "convert to blank on no sort" in {
       QueryParamsToQueryStringMap.paramForSorting(Sorting.NoSorting) shouldBe Map.empty
