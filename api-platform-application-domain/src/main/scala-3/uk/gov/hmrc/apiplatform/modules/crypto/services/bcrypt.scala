@@ -20,7 +20,7 @@ import org.mindrot.jbcrypt.BCrypt as B
 
 /** This file is almost entirely based on https://github.com/t3hnar/scala-bcrypt/tree/master with it's apache-2 license. We have adapted it here for Scala 3 as the project has not
   * yet published a Scala 3 version and looks to be a dead project. We have chosen to remove the old deprecated methods and rename the bounded methods as the old ones - we have
-  * complete control over the users of this code (at least where we provice any certainty to them).
+  * complete control over the users of this code (at least where we provide any certainty to them).
   *
   * @author
   *   Yaroslav Klymko
