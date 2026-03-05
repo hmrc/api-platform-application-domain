@@ -71,12 +71,6 @@ object Access {
         .getOrElse(TermsAndConditionsLocation.NoneProvided)
   }
 
-  object Standard {
-    // import LoginRedirectUri.given
-    // import PostLogoutRedirectUri.given
-    given OFormat[Standard] = Json.format[Standard]
-  }
-
   case class Privileged(
       totpIds: Option[TotpId] = None,
       scopes: Set[String] = Set.empty
@@ -85,8 +79,8 @@ object Access {
   case class Ropc(scopes: Set[String] = Set.empty) extends Access
 
   import uk.gov.hmrc.play.json.Union
-  // import PostLogoutRedirectUri.given
 
+  private given OFormat[Standard]   = Json.format[Standard]
   private given OFormat[Privileged] = Json.format[Privileged]
   private given OFormat[Ropc]       = Json.format[Ropc]
 

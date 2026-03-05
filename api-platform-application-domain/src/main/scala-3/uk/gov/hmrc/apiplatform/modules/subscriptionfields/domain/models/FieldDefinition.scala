@@ -57,13 +57,6 @@ object FieldDefinition {
       (hideDefaultAccess)((fd: FieldDefinition) =>
         (fd.name, fd.description, fd.hint, fd.`type`, fd.shortDescription, fd.validation, Option(fd.access).filterNot(_ == AccessRequirements.Default))
       ).writes(o)
-
-      // def dropTail[A, B, C, D, E, F, G](t: Tuple7[A, B, C, D, E, F, G]): Tuple6[A, B, C, D, E, F] = (t._1, t._2, t._3, t._4, t._5, t._6)
-
-      //    (common)( (fd:FieldDefinition) => (fd.name, fd.description, fd.hint, fd.`type`, fd.shortDescription, fd.validation))
-      //  } else {
-      //    (common and (JsPath \ "access").write[AccessRequirements])((fd:FieldDefinition) => (fd.name, fd.description, fd.hint, fd.`type`, fd.shortDescription, fd.validation, fd.access))
-      //  }).writes(o)
     }
   }
 

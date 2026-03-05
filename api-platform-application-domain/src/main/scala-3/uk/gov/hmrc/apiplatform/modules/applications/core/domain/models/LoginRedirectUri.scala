@@ -30,7 +30,7 @@ object LoginRedirectUri {
     apply(uri).fold(throw new IllegalArgumentException(s"Bad format for URI `$uri`"))(identity)
 
   import play.api.libs.json.*
-  private val convert: String => JsResult[LoginRedirectUri] = (s) => LoginRedirectUri(s).fold[JsResult[LoginRedirectUri]](JsError(s"$s is not a uri"))(u => JsSuccess(u))
 
-  given Format[LoginRedirectUri] = Format(Reads.StringReads.flatMapResult(convert), Writes.StringWrites)
+  // This reads without validation as we might have bad records from before validation was clearly defined
+  given Format[LoginRedirectUri] = Format(Reads.StringReads, Writes.StringWrites)
 }

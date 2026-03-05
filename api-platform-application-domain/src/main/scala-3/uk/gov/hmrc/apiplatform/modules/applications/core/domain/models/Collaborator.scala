@@ -64,11 +64,6 @@ object Collaborator {
     }
   }
 
-  // def role(me: Collaborator): Collaborator.Role = me match {
-  //   case a: Collaborators.Administrator => Collaborator.Role.Administrator
-  //   case d: Collaborators.Developer     => Collaborator.Role.Developer
-  // }
-
   def describeRole(me: Collaborator): String = me.role.toString.toUpperCase()
 
   import play.api.libs.json.Json

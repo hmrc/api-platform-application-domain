@@ -80,6 +80,7 @@ class LoginRedirectUriSpec extends BaseJsonFormattersSpec with OptionValues with
 
     "read from json" in {
       testFromJson[LoginRedirectUri](""" "https://abc.com/a" """)(validLoginUri)
+      Json.fromJson[LoginRedirectUri](JsString("broken")).asOpt.map(_.uri) shouldBe Some("broken")
     }
 
     "supports toString" in {

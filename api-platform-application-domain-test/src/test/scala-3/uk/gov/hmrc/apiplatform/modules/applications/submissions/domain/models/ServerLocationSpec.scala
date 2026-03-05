@@ -77,7 +77,6 @@ class ServerLocationSpec extends BaseJsonFormattersSpec with TableDrivenProperty
 
     "write to Json" in {
       forAll(values) { (s, t) =>
-        println(s.toString + "  =>  " + t)
         testToJson[ServerLocation](s)("serverLocation" -> t)
       }
     }
