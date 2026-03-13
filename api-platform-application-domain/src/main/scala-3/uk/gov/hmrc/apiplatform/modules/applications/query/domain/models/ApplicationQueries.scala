@@ -1,0 +1,94 @@
+/*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.apiplatform.modules.applications.query.domain.models
+
+import java.time.Instant
+
+import cats.data.NonEmptyList
+
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ClientId, Environment, UserId, *}
+
+import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.*
+import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.*
+import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.*
+import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.*
+
+object ApplicationQueries {
+
+  def allApplications(excludeDeleted: Boolean = true) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = if (excludeDeleted) ExcludeDeletedQP :: Nil else Nil
+  )
+
+  def applicationByClientId(clientId: ClientId) =
+    ApplicationQuery.ByClientId(clientId, recordUsage = false, List(ExcludeDeletedQP))
+
+  def applicationByServerToken(serverToken: String) =
+    ApplicationQuery.ByServerToken(serverToken, recordUsage = false, List(ExcludeDeletedQP))
+
+  lazy val standardNonTestingApps = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = List(
+      MatchAccessTypeQP(AccessType.Standard),
+      MatchManyStatesQP(NonEmptyList.fromListUnsafe((State.values.toSet - State.Testing - State.Deleted).toList))
+    ),
+    sorting = Sorting.NoSorting,
+    wantSubscriptions = false
+  )
+
+  def applicationsByName(name: String) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = List(
+      NameQP(name),
+      EnvironmentQP(Environment.Production),
+      ExcludeDeletedQP
+    ),
+    sorting = Sorting.NoSorting,
+    wantSubscriptions = false
+  )
+
+  def applicationsByVerifiableUplift(verificationCode: String) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = List(
+      VerificationCodeQP(verificationCode),
+      ExcludeDeletedQP
+    )
+  )
+
+  def applicationsByUserId(userId: UserId, includeDeleted: Boolean = false, wantSubscriptions: Boolean = false) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = UserIdQP(userId) :: List(ExcludeDeletedQP).filterNot(_ => includeDeleted),
+    wantSubscriptions = wantSubscriptions
+  )
+
+  def applicationsByUserIdAndEnvironment(userId: UserId, environment: Environment, wantSubscriptions: Boolean = true) =
+    ApplicationQuery.GeneralOpenEndedApplicationQuery(
+      params = UserIdQP(userId) :: ExcludeDeletedQP :: EnvironmentQP(environment) :: Nil,
+      wantSubscriptions = wantSubscriptions
+    )
+
+  def applicationsByStateAndDate(state: State, beforeDate: Instant) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = MatchOneStateQP(state) :: AppStateBeforeDateQP(beforeDate) :: Nil
+  )
+
+  def applicationsByApiContext(apiContext: ApiContext) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = ApiContextQP(apiContext) :: Nil
+  )
+
+  def applicationsByApiIdentifier(apiIdentifier: ApiIdentifier) = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = ApiContextQP(apiIdentifier.context) :: ApiVersionNbrQP(apiIdentifier.versionNbr) :: Nil
+  )
+
+  val applicationsByNoSubscriptions = ApplicationQuery.GeneralOpenEndedApplicationQuery(
+    params = NoSubscriptionsQP :: Nil
+  )
+}
