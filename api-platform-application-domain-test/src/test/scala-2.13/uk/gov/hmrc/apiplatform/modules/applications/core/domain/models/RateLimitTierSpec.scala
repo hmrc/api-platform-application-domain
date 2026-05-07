@@ -59,11 +59,13 @@ class RateLimitTierSpec extends BaseJsonFormattersSpec with TableDrivenPropertyC
     }
 
     "convert to json" in {
+      Json.toJson[RateLimitTier](RateLimitTier.COPPER) shouldBe JsString("COPPER")
       Json.toJson[RateLimitTier](RateLimitTier.RHODIUM) shouldBe JsString("RHODIUM")
       Json.toJson[RateLimitTier](RateLimitTier.SILVER) shouldBe JsString("SILVER")
     }
 
     "read from json" in {
+      testFromJson[RateLimitTier]("\"COPPER\"")(RateLimitTier.COPPER)
       testFromJson[RateLimitTier]("\"RHODIUM\"")(RateLimitTier.RHODIUM)
       testFromJson[RateLimitTier]("\"Bronze\"")(RateLimitTier.BRONZE)
     }
@@ -76,13 +78,13 @@ class RateLimitTierSpec extends BaseJsonFormattersSpec with TableDrivenPropertyC
     }
 
     "order for display should be correct" in {
-      RateLimitTier.orderedForDisplay.head shouldBe RateLimitTier.BRONZE
+      RateLimitTier.orderedForDisplay.head shouldBe RateLimitTier.COPPER
       RateLimitTier.orderedForDisplay.last shouldBe RateLimitTier.RHODIUM
     }
 
     "order of values should be correct" in {
       RateLimitTier.values.head shouldBe RateLimitTier.RHODIUM
-      RateLimitTier.values.last shouldBe RateLimitTier.BRONZE
+      RateLimitTier.values.last shouldBe RateLimitTier.COPPER
     }
   }
 }

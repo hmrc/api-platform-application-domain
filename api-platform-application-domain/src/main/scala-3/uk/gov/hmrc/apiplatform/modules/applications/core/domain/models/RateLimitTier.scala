@@ -19,11 +19,13 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
 
 enum RateLimitTier(val orderIndex: Int):
-  case Bronze   extends RateLimitTier(5)
-  case Silver   extends RateLimitTier(4)
-  case Gold     extends RateLimitTier(3)
-  case Platinum extends RateLimitTier(2)
-  case Rhodium  extends RateLimitTier(1)
+  case Copper    extends RateLimitTier(7)
+  case Bronze    extends RateLimitTier(6)
+  case Silver    extends RateLimitTier(5)
+  case Gold      extends RateLimitTier(4)
+  case Palladium extends RateLimitTier(3)
+  case Platinum  extends RateLimitTier(2)
+  case Rhodium   extends RateLimitTier(1)
 
 object RateLimitTier {
   given Ordering[RateLimitTier] = Ordering.by(_.orderIndex)

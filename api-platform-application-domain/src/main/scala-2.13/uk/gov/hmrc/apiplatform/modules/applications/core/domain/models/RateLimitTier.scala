@@ -28,15 +28,17 @@ sealed trait RateLimitTier {
 
 object RateLimitTier {
 
-  case object BRONZE   extends RateLimitTier { override protected val orderIndex = 5 }
-  case object SILVER   extends RateLimitTier { override protected val orderIndex = 4 }
-  case object GOLD     extends RateLimitTier { override protected val orderIndex = 3 }
-  case object PLATINUM extends RateLimitTier { override protected val orderIndex = 2 }
-  case object RHODIUM  extends RateLimitTier { override protected val orderIndex = 1 }
+  case object COPPER    extends RateLimitTier { override protected val orderIndex = 7 }
+  case object BRONZE    extends RateLimitTier { override protected val orderIndex = 6 }
+  case object SILVER    extends RateLimitTier { override protected val orderIndex = 5 }
+  case object GOLD      extends RateLimitTier { override protected val orderIndex = 4 }
+  case object PALLADIUM extends RateLimitTier { override protected val orderIndex = 3 }
+  case object PLATINUM  extends RateLimitTier { override protected val orderIndex = 2 }
+  case object RHODIUM   extends RateLimitTier { override protected val orderIndex = 1 }
 
   implicit val ordering: Ordering[RateLimitTier] = Ordering.by(_.orderIndex)
 
-  val values: SortedSet[RateLimitTier] = SortedSet[RateLimitTier](RHODIUM, PLATINUM, GOLD, SILVER, BRONZE)
+  val values: SortedSet[RateLimitTier] = SortedSet[RateLimitTier](RHODIUM, PLATINUM, PALLADIUM, GOLD, SILVER, BRONZE, COPPER)
 
   val orderedForDisplay: Seq[RateLimitTier] = values.toSeq.reverse
 
