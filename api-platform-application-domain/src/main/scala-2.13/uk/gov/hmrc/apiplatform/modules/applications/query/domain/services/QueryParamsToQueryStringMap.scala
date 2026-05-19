@@ -49,11 +49,13 @@ object QueryParamsToQueryStringMap {
   }
 
   private def toQuery(qry: GeneralOpenEndedApplicationQuery): Map[String, Seq[String]] = {
-    paramsFor(qry.params) ++ paramForSorting(qry.sorting) ++ paramForWantSubs(qry.wantSubscriptions) ++ paramForWantStateHistory(qry.wantStateHistory) ++ paramForLimit(qry.limit)
+    paramsFor(qry.params) ++ paramForSorting(qry.sorting) ++ paramForWantSubs(qry.wantSubscriptions) ++ paramForWantStateHistory(qry.wantStateHistory) ++ paramForLimit(
+      qry.limit
+    ) ++ paramForStreamed(qry.streamed)
   }
 
   private def toQuery(qry: PaginatedApplicationQuery): Map[String, Seq[String]] = {
-    paramsFor(qry.params) ++ paramForSorting(qry.sorting) ++ paramsForPagination(qry.pagination)
+    paramsFor(qry.params) ++ paramForSorting(qry.sorting) ++ paramsForPagination(qry.pagination) ++ paramForStreamed(qry.streamed)
   }
 
   private def paramValueForState(state: State): String = {
@@ -88,6 +90,13 @@ object QueryParamsToQueryStringMap {
 
   def paramForLimit(limit: Option[Int]): Map[String, Seq[String]] = {
     limit.fold[Map[String, Seq[String]]](Map.empty)(value => Map(ParamNames.Limit -> Seq(value.toString())))
+  }
+
+  def paramForStreamed(streamed: Boolean): Map[String, Seq[String]] = {
+    if (streamed)
+      Map(ParamNames.Streamed -> Seq.empty)
+    else
+      Map.empty
   }
 
   def paramForSorting(sort: Sorting): Map[String, Seq[String]] = {

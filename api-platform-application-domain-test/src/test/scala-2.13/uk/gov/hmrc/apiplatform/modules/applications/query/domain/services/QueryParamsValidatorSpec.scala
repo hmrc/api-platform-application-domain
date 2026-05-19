@@ -319,17 +319,26 @@ class QueryParamsValidatorSpec extends HmrcSpec with ApplicationWithCollaborator
     "fail wantSubscription with a value" in {
       shouldFail(test(Map("wantSubscriptions" -> Seq("1"))))
     }
+
     "extract valid params - wantSubscriptionFields" in {
       test(Map("wantSubscriptionFields" -> Seq())) shouldBe List(WantSubscriptionFieldsQP).validNel
     }
     "fail wantSubscriptionFields with a value" in {
       shouldFail(test(Map("wantSubscriptionFields" -> Seq("1"))))
     }
+
     "extract valid params - wantStateHistory" in {
       test(Map("wantStateHistory" -> Seq())) shouldBe List(WantStateHistoryQP).validNel
     }
     "fail wantStateHistory with a value" in {
       shouldFail(test(Map("wantStateHistory" -> Seq("1"))))
+    }
+
+    "extract valid params - streamed" in {
+      test(Map("streamed" -> Seq())) shouldBe List(StreamedQP).validNel
+    }
+    "fail streamed with a value" in {
+      shouldFail(test(Map("streamed" -> Seq("1"))))
     }
 
     // -----

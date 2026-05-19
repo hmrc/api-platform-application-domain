@@ -50,6 +50,8 @@ sealed trait SingleApplicationQuery extends ApplicationQuery {
 sealed trait MultipleApplicationQuery extends ApplicationQuery {
   def sorting: Sorting
   def params: List[FilterParam[_]]
+  def streamed: Boolean
+
   lazy val hasAnySubscriptionFilter: Boolean      = ApplicationQuery.hasAnySubscriptionFilter(params)
   lazy val hasSpecificSubscriptionFilter: Boolean = ApplicationQuery.hasSpecificSubscriptionFilter(params)
 }
@@ -109,22 +111,29 @@ object ApplicationQuery {
       sorting: Sorting = Sorting.NoSorting,
       wantSubscriptions: Boolean = false,
       wantStateHistory: Boolean = false,
-      limit: Option[Int] = None
+      limit: Option[Int] = None,
+      streamed: Boolean = false
     ) extends MultipleApplicationQuery {
 
     def asLogText: String = {
-      s"GeneralOpenEndedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=$sorting${if (wantSubscriptions) ", wantSubscriptions" else ""}${
-          if (wantStateHistory) ", wantStateHistory"
-          else ""
-        })"
+      val wst  = if (wantSubscriptions) ", wantSubscriptions" else ""
+      val wsht = if (wantStateHistory) ", wantStateHistory" else ""
+      val st   = if (streamed) ", streamed" else ""
+
+      s"GeneralOpenEndedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=${sorting}${wst}${wsht}${st})"
     }
   }
 
-  case class PaginatedApplicationQuery /*protected*/ (params: List[NonUniqueFilterParam[_]], sorting: Sorting = Sorting.NoSorting, pagination: Pagination = Pagination())
-      extends MultipleApplicationQuery {
+  case class PaginatedApplicationQuery /*protected*/ (
+      params: List[NonUniqueFilterParam[_]],
+      sorting: Sorting = Sorting.NoSorting,
+      pagination: Pagination = Pagination(),
+      streamed: Boolean = false
+    ) extends MultipleApplicationQuery {
 
     def asLogText: String = {
-      s"PaginatedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=$sorting, pageNbr=${pagination.pageNbr}, pageSize=${pagination.pageSize})"
+      val st = if (streamed) ", streamed" else ""
+      s"PaginatedApplicationQuery(${params.map(Param.asLogText(_)).mkString(",")}, sort=$sorting, pageNbr=${pagination.pageNbr}, pageSize=${pagination.pageSize}${st})"
     }
   }
 
@@ -146,6 +155,7 @@ object ApplicationQuery {
     val wantSubscriptions      = first[Param.WantSubscriptionsQP.type](using validParams).isDefined
     val wantSubscriptionFields = first[Param.WantSubscriptionFieldsQP.type](using validParams).isDefined
     val wantStateHistory       = first[Param.WantStateHistoryQP.type](using validParams).isDefined
+    val streamed               = first[Param.StreamedQP.type](using validParams).isDefined
 
     def attemptToConstructSingleResultQuery(nonUniqueFilterParam: List[NonUniqueFilterParam[_]]): Option[SingleApplicationQuery] = {
       val hasApiGatewayUserAgent = validParams.find(_ match {
@@ -173,9 +183,9 @@ object ApplicationQuery {
 
       identifyAnyPagination(validParams)
         .fold[MultipleApplicationQuery]({
-          ApplicationQuery.GeneralOpenEndedApplicationQuery(nonUniqueFilterParam, sorting, wantSubscriptions, wantStateHistory, limit)
+          ApplicationQuery.GeneralOpenEndedApplicationQuery(nonUniqueFilterParam, sorting, wantSubscriptions, wantStateHistory, limit, streamed)
         })(pagination => {
-          ApplicationQuery.PaginatedApplicationQuery(nonUniqueFilterParam, sorting, pagination)
+          ApplicationQuery.PaginatedApplicationQuery(nonUniqueFilterParam, sorting, pagination, streamed)
         })
     }
 

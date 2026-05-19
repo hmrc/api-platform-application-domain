@@ -179,6 +179,14 @@ object QueryParamsValidator {
     }
   }
 
+  object StreamedValidator extends QueryParamsValidator {
+    val paramName = ParamName.Streamed
+
+    def validate(values: Seq[String]): ErrorsOr[StreamedQP.type] = {
+      NoValueExpected(paramName)(values) map { _ => StreamedQP }
+    }
+  }
+
   object PageSizeValidator extends QueryParamsValidator {
     val paramName = ParamName.PageSize
 
@@ -454,7 +462,8 @@ object QueryParamsValidator {
     QueryParamsValidator.WantSubscriptionsValidator,
     QueryParamsValidator.WantSubscriptionFieldsValidator,
     QueryParamsValidator.WantStateHistoryValidator,
-    QueryParamsValidator.LimitValidator
+    QueryParamsValidator.LimitValidator,
+    QueryParamsValidator.StreamedValidator
   )
 
   private val validatorLookup: Map[String, QueryParamsValidator] = paramValidators.map(pv => pv.paramName.text.toLowerCase -> pv).toMap

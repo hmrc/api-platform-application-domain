@@ -45,6 +45,8 @@ object Param {
   case object WantSubscriptionFieldsQP                      extends FilterParam[Unit]
   case object WantStateHistoryQP                            extends FilterParam[Unit]
   //
+  case object StreamedQP                                    extends FilterParam[Unit]
+  //
   case class LimitQP(value: Int)                            extends FilterParam[Unit]
   //
   sealed trait UserAgentParam[T]                            extends NonUniqueFilterParam[T]
@@ -107,6 +109,7 @@ object Param {
     case WantSubscriptionsQP                            => "WantSubscriptionsQP"
     case WantSubscriptionFieldsQP                       => "WantSubscriptionFieldsQP"
     case WantStateHistoryQP                             => "WantStateHistoryQP"
+    case StreamedQP                                     => "StreamedQP"
     case GenericUserAgentQP(value)                      => s"GenericUserAgentQP($value)"
     case ApiGatewayUserAgentQP                          => "ApiGatewayUserAgentQP"
     case ServerTokenQP(_)                               => "ServerTokenQP(???)"

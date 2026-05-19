@@ -41,9 +41,12 @@ sealed trait PaginationParam[+P] extends Param[P] { def order: Int }
 sealed trait SortingParam[+P] extends Param[P]
 
 object Param {
-  case object WantSubscriptionsQP                           extends FilterParam[Unit]
-  case object WantSubscriptionFieldsQP                      extends FilterParam[Unit]
-  case object WantStateHistoryQP                            extends FilterParam[Unit]
+  case object WantSubscriptionsQP      extends FilterParam[Unit]
+  case object WantSubscriptionFieldsQP extends FilterParam[Unit]
+  case object WantStateHistoryQP       extends FilterParam[Unit]
+  //
+  case object StreamedQP               extends FilterParam[Unit]
+
   //
   case class LimitQP(value: Int)                            extends FilterParam[Unit]
   //
@@ -107,6 +110,7 @@ object Param {
     case WantSubscriptionsQP                            => "WantSubscriptionsQP"
     case WantSubscriptionFieldsQP                       => "WantSubscriptionFieldsQP"
     case WantStateHistoryQP                             => "WantStateHistoryQP"
+    case StreamedQP                                     => "StreamedQP"
     case GenericUserAgentQP(value)                      => s"GenericUserAgentQP($value)"
     case ApiGatewayUserAgentQP                          => "ApiGatewayUserAgentQP"
     case ServerTokenQP(_)                               => "ServerTokenQP(???)"

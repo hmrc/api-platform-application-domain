@@ -169,6 +169,7 @@ class ApplicationQuerySpec extends HmrcSpec with ApplicationWithCollaboratorsFix
         "SingleApplicationQuery(ApplicationIdQP(???),GenericUserAgentQP(XYZ))"
       )
     }
+
     "work when given sorting and userId" in {
       test(
         List(UserIdQP(userIdOne), SortQP(Sorting.NameAscending))
@@ -176,6 +177,16 @@ class ApplicationQuerySpec extends HmrcSpec with ApplicationWithCollaboratorsFix
         GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NameAscending)
       )(
         "GeneralOpenEndedApplicationQuery(UserIdQP(???), sort=NameAscending)"
+      )
+    }
+
+    "work when given streamed and open ended query" in {
+      test(
+        List(UserIdQP(userIdOne), SortQP(Sorting.NameAscending), StreamedQP)
+      )(
+        GeneralOpenEndedApplicationQuery(List(UserIdQP(userIdOne)), Sorting.NameAscending, streamed = true)
+      )(
+        "GeneralOpenEndedApplicationQuery(UserIdQP(???), sort=NameAscending, streamed)"
       )
     }
 
@@ -220,6 +231,21 @@ class ApplicationQuerySpec extends HmrcSpec with ApplicationWithCollaboratorsFix
         )
       )(
         "PaginatedApplicationQuery(UserIdQP(???), sort=NameAscending, pageNbr=2, pageSize=10)"
+      )
+    }
+
+    "work when given pagination, sorting and userId and streamed" in {
+      test(
+        List(UserIdQP(userIdOne), PageNbrQP(2), PageSizeQP(10), SortQP(Sorting.NameAscending), StreamedQP)
+      )(
+        PaginatedApplicationQuery(
+          List(UserIdQP(userIdOne)),
+          Sorting.NameAscending,
+          Pagination(10, 2),
+          streamed = true
+        )
+      )(
+        "PaginatedApplicationQuery(UserIdQP(???), sort=NameAscending, pageNbr=2, pageSize=10, streamed)"
       )
     }
 

@@ -22,6 +22,8 @@ object ParamNames {
   val WantSubscriptionFields = "wantSubscriptionFields"
   val WantStateHistory       = "wantStateHistory"
   //
+  val Streamed               = "streamed"
+  //
   val Limit                  = "limit"
   //
   val ServerToken            = "serverToken"

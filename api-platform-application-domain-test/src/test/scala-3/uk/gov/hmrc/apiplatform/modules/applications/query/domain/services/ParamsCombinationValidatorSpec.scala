@@ -55,6 +55,14 @@ class ParamsCombinationValidatorSpec
       test(List(WantSubscriptionFieldsQP, ClientIdQP(clientIdOne))) shouldBe Pass
       test(List(WantSubscriptionFieldsQP, ServerTokenQP("abc"))) shouldBe Pass
     }
+    "disallow streamed with a single app query" in {
+      test(List(StreamedQP, PageNbrQP(1))) shouldBe Pass
+      test(List(StreamedQP, UserIdQP(userIdOne))) shouldBe Pass
+      test(List(StreamedQP, ApplicationIdQP(applicationIdOne))) should not be Pass
+      test(List(StreamedQP, ClientIdQP(clientIdOne))) should not be Pass
+      test(List(StreamedQP, ServerTokenQP("abc"))) should not be Pass
+    }
+
   }
 
   "checkLastUsedParamsCombinations" should {

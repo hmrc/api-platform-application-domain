@@ -49,22 +49,24 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
       params: List[NonUniqueFilterParam[_]],
       sorting: Sorting = Sorting.NoSorting,
       wantSubscriptions: Boolean = false,
-      limit: Option[Int] = None
+      limit: Option[Int] = None,
+      streamed: Boolean = false
     )(
       pairs: (ParamName, String)*
     ): Unit = {
-    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions, limit = limit), pairs: _*)
+    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions, limit = limit, streamed = streamed), pairs: _*)
   }
 
   def testGOEAQMap(
       params: List[NonUniqueFilterParam[_]],
       sorting: Sorting = Sorting.NoSorting,
       wantSubscriptions: Boolean = false,
-      limit: Option[Int] = None
+      limit: Option[Int] = None,
+      streamed: Boolean = false
     )(
       map: Map[ParamName, Seq[String]]
     ): Unit = {
-    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions, limit = limit), map)
+    test(GeneralOpenEndedApplicationQuery(params, sorting, wantSubscriptions, limit = limit, streamed = streamed), map)
   }
 
   def testOfNoValue(qry: ApplicationQuery, param: ParamName): Unit = {
@@ -137,6 +139,28 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
         Map(
           ParamName.UserId           -> Seq(userIdOne.toString()),
           ParamName.WantStateHistory -> Seq.empty
+        )
+      )
+    }
+  }
+
+  "streamed" should {
+    "convert for general query" in {
+      test(
+        GeneralOpenEndedApplicationQuery(List(AdminUserIdQP(userIdOne)), streamed = true),
+        Map(
+          ParamName.AdminUserId -> Seq(userIdOne.toString()),
+          ParamName.Streamed    -> Seq.empty
+        )
+      )
+    }
+    "convert for paginated query" in {
+      test(
+        PaginatedApplicationQuery(List(AdminUserIdQP(userIdOne)), streamed = true),
+        Map(
+          ParamName.AdminUserId -> Seq(userIdOne.toString()),
+          ParamName.PageNbr     -> Seq("1"),
+          ParamName.Streamed    -> Seq.empty
         )
       )
     }

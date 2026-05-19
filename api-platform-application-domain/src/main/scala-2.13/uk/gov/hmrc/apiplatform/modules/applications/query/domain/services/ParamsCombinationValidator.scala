@@ -91,6 +91,13 @@ object ParamsCombinationValidator {
     }
   }
 
+  def checkStreamed(streamed: Boolean, resultInSingleApp: Boolean): ErrorsOr[Unit] =
+    if ((streamed && resultInSingleApp)) {
+      "Cannot return streamed results with single application queries".invalidNel
+    } else {
+      ().validNel
+    }
+
   def checkWants(wantSubcriptions: Boolean, wantSubscriptionFields: Boolean, wantStateHistory: Boolean, resultInPagination: Boolean, resultInSingleApp: Boolean): ErrorsOr[Unit] =
     if ((wantSubscriptionFields && !resultInSingleApp)) {
       "Cannot return subscription fields with any query other than single application queries".invalidNel
@@ -133,6 +140,7 @@ object ParamsCombinationValidator {
     val wantSubcriptions      = first[WantSubscriptionsQP.type].headOption.isDefined
     val wantSubcriptionFields = first[WantSubscriptionFieldsQP.type].headOption.isDefined
     val wantStateHistory      = first[WantStateHistoryQP.type].headOption.isDefined
+    val streamed              = first[StreamedQP.type].headOption.isDefined
     val limitRequested        = first[LimitQP].headOption.isDefined
 
     val otherFilterParams  = allParams.collect {
@@ -162,6 +170,7 @@ object ParamsCombinationValidator {
       .combine(checkLastUsedParamsCombinations(otherFilterParams))
       .combine(checkVerificationCodeUsesDeleteExclusion(otherFilterParams))
       .combine(checkUserCombinations(otherFilterParams))
+      .combine(checkStreamed(streamed, resultInSingleApp))
       .combine(checkWants(wantSubcriptions, wantSubcriptionFields, wantStateHistory, resultInPagination, resultInSingleApp))
       .combine(checkLimit(resultInPagination, resultInSingleApp, limitRequested))
       .combine(checkAppStateFilters(otherFilterParams))

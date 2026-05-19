@@ -21,6 +21,8 @@ enum ParamName(val text: String) {
   case WantSubscriptionFields extends ParamName("wantSubscriptionFields")
   case WantStateHistory       extends ParamName("wantStateHistory")
   //
+  case Streamed               extends ParamName("streamed")
+  //
   case Limit                  extends ParamName("limit")
   //
   case ServerToken            extends ParamName("serverToken")
