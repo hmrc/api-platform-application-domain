@@ -28,6 +28,12 @@ import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.Param.*
 
 object QueryParamsToQueryStringMap {
 
+  def toHttpQueryString(qry: ApplicationQuery): Map[String, String] = {
+    toQuery(qry).map {
+      case (paramName, values) => paramName.text -> values.mkString("%2C")
+    }
+  }
+
   def toQuery(qry: ApplicationQuery): Map[ParamName, Seq[String]] = {
     qry match {
       case s: SingleApplicationQuery           => toQuery(s)
