@@ -52,3 +52,8 @@ trait CommandHandlerTypes[S] {
     }
   }
 }
+
+object CommandHandlerTypes {
+
+  def make[S]: CommandHandlerTypes[S] = new CommandHandlerTypes[S] {}
+}

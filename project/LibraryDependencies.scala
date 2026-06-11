@@ -3,7 +3,7 @@ import sbt._
 object LibraryDependencies {
   def apply(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion)
 
-  val commonDomainVersion = "1.0.0"
+  val commonDomainVersion = "1.1.0"
   val monocleVersion = "3.1.0"
 
   def applicationDomain(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion).map(_ % "test")
@@ -24,14 +24,8 @@ object LibraryDependencies {
     )
 
   def testDependencies(scalaVersion: String) = Seq(
-    "org.scalactic"           %% "scalactic"                            % "3.2.14",
-    "com.vladsch.flexmark"     % "flexmark-all"                         % "0.62.2",
+    "com.vladsch.flexmark"     % "flexmark-all"                         % "0.64.8",
     "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures"  % commonDomainVersion,
-    "org.scalatest"           %% "scalatest"                            % "3.2.19",
-    ) ++ (
-      CrossVersion.partialVersion(scalaVersion) match {
-        case Some((2,_)) => Seq("org.mockito" %% "mockito-scala-scalatest" % "2.0.0")
-        case _           => Seq("org.scalatestplus" %% "mockito-5-18" % "3.2.19.0")
-      }
+    "org.scalatest"           %% "scalatest"                            % "3.2.19"
     )
 }

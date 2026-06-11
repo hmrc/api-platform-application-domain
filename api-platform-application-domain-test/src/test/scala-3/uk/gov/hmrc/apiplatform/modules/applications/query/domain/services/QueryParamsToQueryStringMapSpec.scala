@@ -240,6 +240,20 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
         )
       )
     }
+    "convert to http query" in {
+      def testHttp(qry: ApplicationQuery, pairs: (String, String)*): Unit = {
+        QueryParamsToQueryStringMap.toHttpQueryString(qry) shouldBe pairs.toMap
+      }
+
+      testHttp(
+        GeneralOpenEndedApplicationQuery(
+          List(
+            MatchManyStatesQP(NonEmptyList.one(State.PreProduction) ++ List(State.Production, State.PendingGatekeeperApproval))
+          )
+        ),
+        "status" -> "PRE_PRODUCTION%2CPRODUCTION%2CPENDING_GATEKEEPER_CHECK"
+      )
+    }
   }
 
   "applicationsByApiContext" should {
