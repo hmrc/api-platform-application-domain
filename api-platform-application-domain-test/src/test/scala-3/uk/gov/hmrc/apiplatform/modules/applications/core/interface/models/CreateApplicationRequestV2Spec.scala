@@ -46,7 +46,8 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
         collaborators = Set(admin),
         upliftRequest = upliftRequest,
         requestedBy = "bob",
-        sandboxApplicationId = sandboxApplicationId
+        sandboxApplicationId = sandboxApplicationId,
+        organisationId = None
       )
 
     val jsonText =

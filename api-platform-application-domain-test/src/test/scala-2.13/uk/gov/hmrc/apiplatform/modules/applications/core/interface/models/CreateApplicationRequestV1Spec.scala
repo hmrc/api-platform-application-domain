@@ -37,7 +37,8 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
         description = None,
         environment = Environment.PRODUCTION,
         collaborators = Set(admin),
-        subscriptions = None
+        subscriptions = None,
+        organisationId = None
       )
 
     val jsonText =
@@ -68,7 +69,8 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
         description = None,
         environment = Environment.PRODUCTION,
         collaborators = Set(admin),
-        subscriptions = None
+        subscriptions = None,
+        organisationId = None
       )
     }
 
@@ -80,7 +82,8 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
           description = None,
           environment = Environment.PRODUCTION,
           collaborators = Set(developer),
-          subscriptions = None
+          subscriptions = None,
+          organisationId = None
         )
       }
 
@@ -95,7 +98,8 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
           description = None,
           environment = Environment.PRODUCTION,
           collaborators = Set(admin, "Jim@Example.com".toLaxEmail.asAdministrator(), developer, "Jim@Example.com".toLaxEmail.asDeveloper()),
-          subscriptions = None
+          subscriptions = None,
+          organisationId = None
         )
       }
 
@@ -110,7 +114,8 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
           description = None,
           environment = Environment.PRODUCTION,
           collaborators = Set(admin, "Jim@Example.com".toLaxEmail.asAdministrator(), developer, "Jim@Example.com".toLaxEmail.asDeveloper()),
-          subscriptions = None
+          subscriptions = None,
+          organisationId = None
         )
       }
 
