@@ -34,7 +34,8 @@ case class CreateApplicationRequestV2(
     collaborators: Set[Collaborator],
     upliftRequest: UpliftRequest,
     requestedBy: String,
-    sandboxApplicationId: ApplicationId
+    sandboxApplicationId: ApplicationId,
+    organisationId: Option[OrganisationId]
   ) extends CreateApplicationRequest {
 
   validate()

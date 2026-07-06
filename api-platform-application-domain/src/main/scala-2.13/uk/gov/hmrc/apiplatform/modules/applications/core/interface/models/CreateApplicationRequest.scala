@@ -30,6 +30,7 @@ trait CreateApplicationRequest {
   def anySubscriptions: Set[ApiIdentifier]
 
   def accessType: AccessType
+  def organisationId: Option[OrganisationId]
 
   def validate(in: CreateApplicationRequest): Unit = {
     require(in.collaborators.exists(_.isAdministrator), "at least one ADMINISTRATOR collaborator is required")

@@ -28,7 +28,8 @@ case class CreateApplicationRequestV1(
     description: Option[String],
     environment: Environment,
     collaborators: Set[Collaborator],
-    subscriptions: Option[Set[ApiIdentifier]]
+    subscriptions: Option[Set[ApiIdentifier]],
+    organisationId: Option[OrganisationId]
   ) extends CreateApplicationRequest {
 
   super.validate(this)
