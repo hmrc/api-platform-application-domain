@@ -18,8 +18,8 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.utils.CollaboratorsSyntax
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.Environment
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax.toLaxEmail
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{Environment, OrganisationId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.core.domain.models.ApplicationName
@@ -29,6 +29,7 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
   "CreateApplicationRequestV1" should {
     val admin     = "jim@example.com".toLaxEmail.asAdministrator()
     val developer = "jim@example.com".toLaxEmail.asDeveloper().copy(userId = admin.userId)
+    val orgId     = OrganisationId.random
 
     val request =
       CreateApplicationRequestV1(
@@ -38,11 +39,11 @@ class CreateApplicationRequestV1Spec extends BaseJsonFormattersSpec with Collabo
         environment = Environment.Production,
         collaborators = Set(admin),
         subscriptions = None,
-        organisationId = None
+        organisationId = Some(orgId)
       )
 
     val jsonText =
-      s""" {"name":"an application","access":{"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}]} """
+      s""" {"name":"an application","access":{"accessType":"STANDARD"},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}],"organisationId":"${orgId}"} """
 
     "write to json" in {
       Json.toJson(request) shouldBe Json.parse(jsonText)

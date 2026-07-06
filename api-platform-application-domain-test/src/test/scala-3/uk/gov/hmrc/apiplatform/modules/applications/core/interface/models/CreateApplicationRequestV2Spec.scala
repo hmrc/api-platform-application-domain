@@ -18,8 +18,8 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.interface.models
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.utils.CollaboratorsSyntax
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.*
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.LaxEmailAddress.StringSyntax.toLaxEmail
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{ApiContext, ApiIdentifier, ApiVersionNbr, ApplicationId, Environment}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.SellResellOrDistributeSpec
@@ -30,6 +30,7 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
   "CreateApplicationRequestV2" should {
     val admin                = "jim@example.com".toLaxEmail.asAdministrator()
     val sandboxApplicationId = ApplicationId.random
+    val orgId                = OrganisationId.random
 
     val upliftRequest = UpliftRequest(
       sellResellOrDistribute = SellResellOrDistributeSpec.example,
@@ -47,11 +48,11 @@ class CreateApplicationRequestV2Spec extends BaseJsonFormattersSpec with Collabo
         upliftRequest = upliftRequest,
         requestedBy = "bob",
         sandboxApplicationId = sandboxApplicationId,
-        organisationId = None
+        organisationId = Some(orgId)
       )
 
     val jsonText =
-      s"""{"name":"an application","access":{"redirectUris":[],"postLogoutRedirectUris":[],"overrides":[]},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}],"upliftRequest":{"sellResellOrDistribute":"miscblah","subscriptions":[{"context":"context","version":"version"}],"requestedBy":"bob"},"requestedBy":"bob","sandboxApplicationId":"$sandboxApplicationId"}"""
+      s"""{"name":"an application","access":{"redirectUris":[],"postLogoutRedirectUris":[],"overrides":[]},"environment":"PRODUCTION","collaborators":[{"userId":"${admin.userId}","emailAddress":"jim@example.com","role":"ADMINISTRATOR"}],"upliftRequest":{"sellResellOrDistribute":"miscblah","subscriptions":[{"context":"context","version":"version"}],"requestedBy":"bob"},"requestedBy":"bob","sandboxApplicationId":"$sandboxApplicationId","organisationId":"${orgId}"}"""
 
     "write to json" in {
       Json.toJson(request) shouldBe Json.parse(jsonText)
