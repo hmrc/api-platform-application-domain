@@ -3,7 +3,7 @@ import sbt._
 object LibraryDependencies {
   def apply(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion)
 
-  val commonDomainVersion = "1.1.0"
+  val commonDomainVersion = "1.2.0"
   val monocleVersion = "3.1.0"
 
   def applicationDomain(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion).map(_ % "test")

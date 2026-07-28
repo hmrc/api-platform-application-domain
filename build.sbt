@@ -1,11 +1,8 @@
 import scoverage.ScoverageKeys
 import sbt._
 import sbt.Keys._
-import uk.gov.hmrc.DefaultBuildSettings.targetJvm
-import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-import bloop.integrations.sbt.BloopDefaults
-  
+
 Global / bloopAggregateSourceDependencies := true
 Global / bloopExportJarClassifiers := Some(Set("sources"))
 
