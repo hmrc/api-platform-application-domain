@@ -55,5 +55,5 @@ object State {
 
   import play.api.libs.json.Format
   import uk.gov.hmrc.apiplatform.modules.common.domain.services.SimpleEnumJsonFormatting
-  given Format[State] = SimpleEnumJsonFormatting.createEnumFormatFor[State]("State", apply)
+  given Format[State] = SimpleEnumJsonFormatting.screamingSnakeCaseFormatFor[State]("State", apply)
 }

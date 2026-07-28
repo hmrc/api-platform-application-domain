@@ -27,7 +27,7 @@ import cats.data.{NonEmptyList, ValidatedNel}
 import cats.syntax.all.*
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.*
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.fromScreamingSnakeCase
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.fromSnakeCase
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models.AccessType
 import uk.gov.hmrc.apiplatform.modules.applications.query.domain.models.*
@@ -202,7 +202,7 @@ object QueryParamsValidator {
       case "CREATED"                        => State.Testing.some
       case "PENDING_GATEKEEPER_CHECK"       => State.PendingGatekeeperApproval.some
       case "PENDING_SUBMITTER_VERIFICATION" => State.PendingRequesterVerification.some
-      case text                             => State(fromScreamingSnakeCase(text))
+      case text                             => State(fromSnakeCase(text))
     }
 
     def applyOne(value: String): Option[AppStateParam[_]] =
