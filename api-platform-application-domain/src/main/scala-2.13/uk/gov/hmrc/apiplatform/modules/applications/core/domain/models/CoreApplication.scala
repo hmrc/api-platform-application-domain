@@ -19,6 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.applications.core.domain.models
 import java.time.Instant
 
 import uk.gov.hmrc.apiplatform.modules.common.domain.models._
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.DateFormatter
 
 import uk.gov.hmrc.apiplatform.modules.applications.access.domain.models._
 import uk.gov.hmrc.apiplatform.modules.applications.submissions.domain.models.{PrivacyPolicyLocation, TermsAndConditionsLocation}
@@ -30,7 +31,7 @@ trait HasEnvironment {
   def isSandbox    = deployedTo.isSandbox
 }
 
-trait HasAccess {
+trait HasAccess      {
   self: { def access: Access } =>
 
   def isStandard   = access.isStandard
@@ -92,7 +93,6 @@ trait AppLocking {
 case class CoreApplication(
     id: ApplicationId,
     token: ApplicationToken,
-    gatewayId: String,
     name: ApplicationName,
     deployedTo: Environment,
     description: Option[String],
@@ -117,6 +117,10 @@ case class CoreApplication(
   def modifyStdAccess(fn: Access.Standard => Access.Standard) = this.access match {
     case std: Access.Standard => this.copy(access = fn(std))
     case _                    => this
+  }
+
+  def visuallyDescribeLastAccess: String = {
+    lastAccess.fold("No API called")(DateFormatter.standardFormatter.format)
   }
 }
 
