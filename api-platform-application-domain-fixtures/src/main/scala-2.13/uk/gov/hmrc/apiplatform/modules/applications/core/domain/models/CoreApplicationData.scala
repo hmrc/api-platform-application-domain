@@ -30,7 +30,6 @@ object CoreApplicationData extends FixedClock {
     val one = CoreApplication(
       id = ApplicationIdData.one,
       token = ApplicationTokenData.one,
-      gatewayId = "abc123",
       name = ApplicationNameData.one,
       deployedTo = Environment.PRODUCTION,
       description = Some(appDescription),
@@ -66,7 +65,6 @@ object CoreApplicationData extends FixedClock {
     val one = CoreApplication(
       id = ApplicationIdData.two,
       token = ApplicationTokenData.priv,
-      gatewayId = "def567",
       name = ApplicationNameData.two,
       deployedTo = Environment.PRODUCTION,
       description = None,
@@ -90,7 +88,6 @@ object CoreApplicationData extends FixedClock {
     val one = CoreApplication(
       id = ApplicationIdData.three,
       token = ApplicationTokenData.ropc,
-      gatewayId = "def890",
       name = ApplicationNameData.three,
       deployedTo = Environment.PRODUCTION,
       description = None,
