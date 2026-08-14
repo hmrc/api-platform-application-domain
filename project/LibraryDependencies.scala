@@ -4,9 +4,20 @@ object LibraryDependencies {
   val commonDomainVersion = "1.3.0"
   val monocleVersion = "3.1.0"
 
-  def appDomainDeps(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion)
+  def domain(scalaVersion: String) = 
+    compileDependencies(scalaVersion) ++
+    fixturesDependencies.map(_ % "provided") ++ 
+    commonTestDependencies(scalaVersion)
 
-  def fixturesAndTestDeps(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion, true)
+  def fixtures(scalaVersion: String) =
+    compileDependencies(scalaVersion) ++
+    fixturesDependencies.map(_ % "provided") ++ 
+    commonTestDependencies(scalaVersion)
+
+  def tests(scalaVersion: String) = 
+    compileDependencies(scalaVersion) ++
+    fixturesDependencies.map(_ % "test") ++ 
+    commonTestDependencies(scalaVersion)
   
   private def compileDependencies(scalaVersion: String) = Seq(
     "uk.gov.hmrc"             %% "api-platform-common-domain"     % commonDomainVersion % "provided",
@@ -21,13 +32,12 @@ object LibraryDependencies {
       }
     )
 
-  private def testDependencies(scalaVersion: String, provided: Boolean = false) = Seq(
+  private def fixturesDependencies = Seq(
+    "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures" % commonDomainVersion
+  )
+
+  private def commonTestDependencies(scalaVersion: String) = Seq(
     "com.vladsch.flexmark"     % "flexmark-all"                         % "0.64.8",
     "org.scalatest"           %% "scalatest"                            % "3.2.19"
-  ) .map(_ % "test") ++ Seq(
-    if(provided)
-      "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures"  % commonDomainVersion % "provided"
-    else 
-      "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures"  % commonDomainVersion % "test"
-  )
+  ) .map(_ % "test") 
 }

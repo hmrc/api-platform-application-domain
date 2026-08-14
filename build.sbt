@@ -76,7 +76,7 @@ lazy val library = Project(s"$libName-root", file("."))
 lazy val apiPlatformApplicationDomain = Project(libName, file(libName))
   .settings(
     commonSettings,
-    libraryDependencies ++= LibraryDependencies.appDomainDeps(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.domain(scalaVersion.value),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
   .disablePlugins(JUnitXmlReportPlugin)
@@ -88,7 +88,7 @@ lazy val apiPlatformApplicationDomainFixtures = Project(s"$libName-fixtures", fi
   )
   .settings(
     commonSettings,
-    libraryDependencies ++= LibraryDependencies.fixturesAndTestDeps(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.fixtures(scalaVersion.value),
     ScoverageKeys.coverageEnabled := false,
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
@@ -103,7 +103,7 @@ lazy val apiPlatformApplicationDomainTest = Project(s"$libName-test", file(s"$li
   .settings(
     commonSettings,
     publish / skip := true,
-    libraryDependencies ++= LibraryDependencies.fixturesAndTestDeps(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.tests(scalaVersion.value),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT")
   )
   .disablePlugins(JUnitXmlReportPlugin)
