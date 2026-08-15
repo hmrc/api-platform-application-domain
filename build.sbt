@@ -84,7 +84,7 @@ lazy val apiPlatformApplicationDomain = Project(libName, file(libName))
 
 lazy val apiPlatformApplicationDomainFixtures = Project(s"$libName-fixtures", file(s"$libName-fixtures"))
   .dependsOn(
-    apiPlatformApplicationDomain % "compile"
+    apiPlatformApplicationDomain
   )
   .settings(
     commonSettings,

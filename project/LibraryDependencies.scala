@@ -6,18 +6,16 @@ object LibraryDependencies {
 
   def domain(scalaVersion: String) = 
     compileDependencies(scalaVersion) ++
-    fixturesDependencies.map(_ % "provided") ++ 
-    commonTestDependencies(scalaVersion)
+    fixturesDependencies.map(_ % "provided")
 
   def fixtures(scalaVersion: String) =
     compileDependencies(scalaVersion) ++
-    fixturesDependencies.map(_ % "provided") ++ 
-    commonTestDependencies(scalaVersion)
+    fixturesDependencies.map(_ % "provided")
 
   def tests(scalaVersion: String) = 
     compileDependencies(scalaVersion) ++
     fixturesDependencies.map(_ % "test") ++ 
-    commonTestDependencies(scalaVersion)
+    testDependencies
   
   private def compileDependencies(scalaVersion: String) = Seq(
     "uk.gov.hmrc"             %% "api-platform-common-domain"     % commonDomainVersion % "provided",
@@ -36,8 +34,6 @@ object LibraryDependencies {
     "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures" % commonDomainVersion
   )
 
-  private def commonTestDependencies(scalaVersion: String) = Seq(
-    "com.vladsch.flexmark"     % "flexmark-all"                         % "0.64.8",
-    "org.scalatest"           %% "scalatest"                            % "3.2.19"
-  ) .map(_ % "test") 
+  private def testDependencies = Seq.empty[ModuleID]
+    .map(_ % "test") 
 }
