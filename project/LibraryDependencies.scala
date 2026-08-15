@@ -1,12 +1,11 @@
 import sbt._
 
 object LibraryDependencies {
-  val commonDomainVersion = "1.3.0"
+  val commonDomainVersion = "1.4.0"
   val monocleVersion = "3.1.0"
 
   def domain(scalaVersion: String) = 
-    compileDependencies(scalaVersion) ++
-    fixturesDependencies.map(_ % "provided")
+    compileDependencies(scalaVersion)
 
   def fixtures(scalaVersion: String) =
     compileDependencies(scalaVersion) ++
