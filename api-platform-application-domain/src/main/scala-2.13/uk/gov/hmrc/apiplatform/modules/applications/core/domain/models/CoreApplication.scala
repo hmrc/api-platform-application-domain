@@ -31,7 +31,7 @@ trait HasEnvironment {
   def isSandbox    = deployedTo.isSandbox
 }
 
-trait HasAccess      {
+trait HasAccess {
   self: { def access: Access } =>
 
   def isStandard   = access.isStandard
