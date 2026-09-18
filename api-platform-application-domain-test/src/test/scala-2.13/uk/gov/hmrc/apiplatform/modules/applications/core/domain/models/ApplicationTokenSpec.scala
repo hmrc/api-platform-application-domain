@@ -30,7 +30,6 @@ class ApplicationTokenSpec extends BaseJsonFormattersSpec with FixedClock with C
       val inner = Json.toJson(ClientSecretSpec.example)
       testToJsonValues(example)(
         "clientId"             -> JsString(clientIdOne.value),
-        "accessToken"          -> JsString(anAccessToken),
         "clientSecrets"        -> JsArray(Seq(inner)),
         "lastAccessTokenUsage" -> JsString(nowAsText)
       )
@@ -40,7 +39,6 @@ class ApplicationTokenSpec extends BaseJsonFormattersSpec with FixedClock with C
       val inner = Json.toJson(ClientSecretSpec.example)
       testToJsonValues(NoLastAccess.example)(
         "clientId"      -> JsString(clientIdOne.value),
-        "accessToken"   -> JsString(anAccessToken),
         "clientSecrets" -> JsArray(Seq(inner))
       )
     }
@@ -58,12 +56,12 @@ class ApplicationTokenSpec extends BaseJsonFormattersSpec with FixedClock with C
 object ApplicationTokenSpec extends FixedClock with ClientIdFixtures {
   val anAccessToken = "blahblahblah"
 
-  val example = ApplicationToken(clientIdOne, anAccessToken, List(ClientSecretSpec.example), Some(instant))
+  val example = ApplicationToken(clientIdOne, List(ClientSecretSpec.example), Some(instant))
 
-  val jsonText = s"""{"clientId":"$clientIdOne","accessToken":"$anAccessToken","clientSecrets":[${ClientSecretSpec.jsonText}],"lastAccessTokenUsage":"$nowAsText"}"""
+  val jsonText = s"""{"clientId":"$clientIdOne","clientSecrets":[${ClientSecretSpec.jsonText}],"lastAccessTokenUsage":"$nowAsText"}"""
 
   object NoLastAccess {
-    val example  = ApplicationToken(clientIdOne, anAccessToken, List(ClientSecretSpec.example), None)
-    val jsonText = s"""{"clientId":"$clientIdOne","accessToken":"$anAccessToken","clientSecrets":[${ClientSecretSpec.jsonText}]}"""
+    val example  = ApplicationToken(clientIdOne, List(ClientSecretSpec.example), None)
+    val jsonText = s"""{"clientId":"$clientIdOne","clientSecrets":[${ClientSecretSpec.jsonText}]}"""
   }
 }

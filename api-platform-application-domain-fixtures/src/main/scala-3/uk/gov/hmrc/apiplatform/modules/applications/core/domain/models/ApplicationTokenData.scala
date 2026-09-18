@@ -21,14 +21,14 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
 object ApplicationTokenData extends FixedClock {
 
-  val one   = ApplicationToken(ClientIdData.one, "FAKETOKENONE", List(ClientSecretData.one), ClientSecretData.one.lastAccess)
-  val two   = ApplicationToken(ClientIdData.two, "FAKETOKENTWO", List(ClientSecretData.two), ClientSecretData.two.lastAccess)
-  val three = ApplicationToken(ClientIdData.three, "FAKETOKENTHREE", List(ClientSecretData.three), ClientSecretData.three.lastAccess)
+  val one   = ApplicationToken(ClientIdData.one, List(ClientSecretData.one), ClientSecretData.one.lastAccess)
+  val two   = ApplicationToken(ClientIdData.two, List(ClientSecretData.two), ClientSecretData.two.lastAccess)
+  val three = ApplicationToken(ClientIdData.three, List(ClientSecretData.three), ClientSecretData.three.lastAccess)
 
   val privId = ClientId.random
   val ropcId = ClientId.random
-  val priv   = ApplicationToken(privId, "FAKETOKENPRIV", List(ClientSecretData.priv), ClientSecretData.priv.lastAccess)
-  val ropc   = ApplicationToken(ropcId, "FAKETOKENROPC", List(ClientSecretData.ropc), ClientSecretData.ropc.lastAccess)
+  val priv   = ApplicationToken(privId, List(ClientSecretData.priv), ClientSecretData.priv.lastAccess)
+  val ropc   = ApplicationToken(ropcId, List(ClientSecretData.ropc), ClientSecretData.ropc.lastAccess)
 }
 
 trait ApplicationTokenFixtures extends ClientSecretFixtures {
