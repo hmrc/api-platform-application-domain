@@ -91,17 +91,6 @@ object ApplicationQuery {
     lazy val specificParam = ClientIdQP(clientId)
   }
 
-  case class ByServerToken protected (
-      serverToken: String,
-      recordUsage: Boolean,
-      otherParams: List[NonUniqueFilterParam[_]],
-      wantSubscriptions: Boolean = false,
-      wantSubscriptionFields: Boolean = false,
-      wantStateHistory: Boolean = false
-    ) extends SingleApplicationQuery {
-    lazy val specificParam = ServerTokenQP(serverToken)
-  }
-
   case class GeneralOpenEndedApplicationQuery protected (
       params: List[NonUniqueFilterParam[_]],
       sorting: Sorting = Sorting.NoSorting,
@@ -154,8 +143,6 @@ object ApplicationQuery {
       }
         .headOption // There can only be one
         .flatMap {
-          case ServerTokenQP(serverToken)     =>
-            ApplicationQuery.ByServerToken(serverToken, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
           case ClientIdQP(clientId)           =>
             ApplicationQuery.ByClientId(clientId, hasApiGatewayUserAgent, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some
           case ApplicationIdQP(applicationId) => ApplicationQuery.ById(applicationId, nonUniqueFilterParam, wantSubscriptions, wantSubscriptionFields, wantStateHistory).some

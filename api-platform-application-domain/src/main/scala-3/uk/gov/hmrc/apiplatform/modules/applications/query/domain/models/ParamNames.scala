@@ -23,7 +23,6 @@ enum ParamName(val text: String) {
   //
   case Limit                  extends ParamName("limit")
   //
-  case ServerToken            extends ParamName("serverToken")
   case ClientId               extends ParamName("clientId")
   case ApplicationId          extends ParamName("applicationId")
   //

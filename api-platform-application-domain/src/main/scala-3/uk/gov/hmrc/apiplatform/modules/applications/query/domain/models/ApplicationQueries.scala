@@ -36,9 +36,6 @@ object ApplicationQueries {
   def applicationByClientId(clientId: ClientId) =
     ApplicationQuery.ByClientId(clientId, recordUsage = false, List(ExcludeDeletedQP))
 
-  def applicationByServerToken(serverToken: String) =
-    ApplicationQuery.ByServerToken(serverToken, recordUsage = false, List(ExcludeDeletedQP))
-
   lazy val standardNonTestingApps = ApplicationQuery.GeneralOpenEndedApplicationQuery(
     params = List(
       MatchAccessTypeQP(AccessType.Standard),

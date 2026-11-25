@@ -42,9 +42,6 @@ object QueryParamsToQueryStringMap {
       case ByClientId(clientId, _, other, wantSubscriptions, wantSubscriptionFields, wantStateHistory) =>
         Map(ParamNames.ClientId -> Seq(clientId.value)) ++
           paramForWantSubs(wantSubscriptions) ++ paramForWantSubsFields(wantSubscriptionFields) ++ paramForWantStateHistory(wantStateHistory)
-      case ByServerToken(token, _, other, wantSubscriptions, wantSubscriptionFields, wantStateHistory) =>
-        Map(ParamNames.ServerToken -> Seq(token)) ++
-          paramForWantSubs(wantSubscriptions) ++ paramForWantSubsFields(wantSubscriptionFields) ++ paramForWantStateHistory(wantStateHistory)
     }
   }
 

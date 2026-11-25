@@ -51,7 +51,6 @@ object Param {
   case class GenericUserAgentQP(value: String)              extends UserAgentParam[String]
   case object ApiGatewayUserAgentQP                         extends UserAgentParam[Unit]
   //
-  case class ServerTokenQP(value: String)                   extends UniqueFilterParam[String]
   case class ClientIdQP(value: ClientId)                    extends UniqueFilterParam[ClientId]
   case class ApplicationIdQP(value: ApplicationId)          extends UniqueFilterParam[ApplicationId]
   //
@@ -109,7 +108,6 @@ object Param {
     case WantStateHistoryQP                             => "WantStateHistoryQP"
     case GenericUserAgentQP(value)                      => s"GenericUserAgentQP($value)"
     case ApiGatewayUserAgentQP                          => "ApiGatewayUserAgentQP"
-    case ServerTokenQP(_)                               => "ServerTokenQP(???)"
     case ClientIdQP(_)                                  => "ClientIdQP(???)"
     case ApplicationIdQP(_)                             => "ApplicationIdQP(???)"
     case PageSizeQP(value: Int)                         => s"PageSizeQP($value)"
