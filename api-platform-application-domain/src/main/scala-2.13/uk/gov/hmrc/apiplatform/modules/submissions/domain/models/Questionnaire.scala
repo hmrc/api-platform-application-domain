@@ -44,6 +44,9 @@ object AskWhen {
       val VAT_OR_ITSA             = "VAT_OR_ITSA"
       val IN_HOUSE_SOFTWARE       = "IN_HOUSE_SOFTWARE"       // Stored on Application
       val NEW_TERMS_OF_USE_UPLIFT = "NEW_TERMS_OF_USE_UPLIFT" // Application already in production, rather than a production credentials request
+      val ITSA_END_TO_END         = "ITSA_END_TO_END"
+      val ITSA_IN_YEAR            = "ITSA_IN_YEAR"
+      val ITSA_END_OF_YEAR        = "ITSA_END_OF_YEAR"
     }
   }
 
