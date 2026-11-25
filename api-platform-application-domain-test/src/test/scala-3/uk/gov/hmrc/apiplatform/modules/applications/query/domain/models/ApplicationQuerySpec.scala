@@ -92,16 +92,6 @@ class ApplicationQuerySpec extends HmrcSpec with ApplicationWithCollaboratorsFix
       )
     }
 
-    "work when given a server token" in {
-      test(
-        List(ServerTokenQP("bob"))
-      )(
-        ApplicationQuery.ByServerToken("bob", false, List.empty)
-      )(
-        "SingleApplicationQuery(ServerTokenQP(???))"
-      )
-    }
-
     "work when given a correct clientId and User Agent" in {
       test(List(ClientIdQP(clientIdOne), ApiGatewayUserAgentQP))(ApplicationQuery.ByClientId(
         clientIdOne,
@@ -119,41 +109,6 @@ class ApplicationQuerySpec extends HmrcSpec with ApplicationWithCollaboratorsFix
         ApplicationQuery.ByClientId(clientIdOne, false, List(GenericUserAgentQP("Bob")))
       )(
         "SingleApplicationQuery(ClientIdQP(???),GenericUserAgentQP(Bob))"
-      )
-    }
-
-    "work when given a correct serverToken" in {
-      test(
-        List(ServerTokenQP("abc"))
-      )(
-        ApplicationQuery.ByServerToken("abc", false, List.empty)
-      )(
-        "SingleApplicationQuery(ServerTokenQP(???))"
-      )
-    }
-
-    "work when given a correct serverToken and User Agent" in {
-      test(
-        List(ServerTokenQP("abc"), ApiGatewayUserAgentQP)
-      )(
-        ApplicationQuery.ByServerToken(
-          "abc",
-          true,
-          List(ApiGatewayUserAgentQP)
-        )
-      )(
-        "SingleApplicationQuery(ServerTokenQP(???),ApiGatewayUserAgentQP)"
-      )
-      test(
-        List(ServerTokenQP("abc"), GenericUserAgentQP("Bob"))
-      )(
-        ApplicationQuery.ByServerToken(
-          "abc",
-          false,
-          List(GenericUserAgentQP("Bob"))
-        )
-      )(
-        "SingleApplicationQuery(ServerTokenQP(???),GenericUserAgentQP(Bob))"
       )
     }
 

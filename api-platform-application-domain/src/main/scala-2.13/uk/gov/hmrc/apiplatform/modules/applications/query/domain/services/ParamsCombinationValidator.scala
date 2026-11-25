@@ -79,7 +79,7 @@ object ParamsCombinationValidator {
 
     (uniqueFilterParams.head, uniqueFilterParams.tail.isEmpty) match {
       case (head, true) => onlyHasAllowableOtherParams
-      case _            => "Cannot mix one or more unique query params (serverToken, clientId and applicationId)".invalidNel
+      case _            => "Cannot mix one or more unique query params (clientId and applicationId)".invalidNel
     }
   }
 

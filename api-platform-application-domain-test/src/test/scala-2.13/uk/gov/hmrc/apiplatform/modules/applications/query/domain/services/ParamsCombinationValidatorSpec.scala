@@ -53,7 +53,6 @@ class ParamsCombinationValidatorSpec
       test(List(WantSubscriptionFieldsQP, UserIdQP(userIdOne))) should not be Pass
       test(List(WantSubscriptionFieldsQP, ApplicationIdQP(applicationIdOne))) shouldBe Pass
       test(List(WantSubscriptionFieldsQP, ClientIdQP(clientIdOne))) shouldBe Pass
-      test(List(WantSubscriptionFieldsQP, ServerTokenQP("abc"))) shouldBe Pass
     }
   }
 
@@ -145,18 +144,9 @@ class ParamsCombinationValidatorSpec
       testGoodCombo(NonEmptyList.of(ClientIdQP(clientIdOne)), List.empty)
     }
 
-    "pass when given a correct serverToken" in {
-      testGoodCombo(NonEmptyList.of(ServerTokenQP("abc")), List.empty)
-    }
-
     "pass when given a correct clientId and User Agent" in {
       testGoodCombo(NonEmptyList.of(ClientIdQP(clientIdOne)), List(ApiGatewayUserAgentQP))
       testGoodCombo(NonEmptyList.of(ClientIdQP(clientIdOne)), List(GenericUserAgentQP("Bob")))
-    }
-
-    "pass when given a correct serverToken and User Agent" in {
-      testGoodCombo(NonEmptyList.of(ServerTokenQP("abc")), List(ApiGatewayUserAgentQP))
-      testGoodCombo(NonEmptyList.of(ServerTokenQP("abc")), List(GenericUserAgentQP("Bob")))
     }
 
     "pass when given a correct applicationId and some irrelevant header" in {
@@ -165,8 +155,6 @@ class ParamsCombinationValidatorSpec
 
     "fail when mixing two ids" in {
       testBadCombo(NonEmptyList.of(ApplicationIdQP(applicationIdOne), ClientIdQP(clientIdOne)), List.empty)
-      testBadCombo(NonEmptyList.of(ApplicationIdQP(applicationIdOne), ServerTokenQP("ABC")), List.empty)
-      testBadCombo(NonEmptyList.of(ClientIdQP(clientIdOne), ServerTokenQP("ABC")), List.empty)
     }
 
     "pass when mixing unique and appropriate non unqiue params" in {

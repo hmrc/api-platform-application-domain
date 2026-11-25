@@ -24,7 +24,6 @@ object ParamNames {
   //
   val Limit                  = "limit"
   //
-  val ServerToken            = "serverToken"
   val ClientId               = "clientId"
   val ApplicationId          = "applicationId"
   //

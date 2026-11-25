@@ -298,18 +298,6 @@ class QueryParamsToQueryStringMapSpec extends HmrcSpec
         )
       )
     }
-    "convert ServerToken to query" should {
-      test(ApplicationQuery.ByServerToken("bob", false, Nil, false, false, false), ParamNames.ServerToken -> "bob")
-      test(
-        ApplicationQuery.ByServerToken("bob", false, Nil, true, true, true),
-        Map(
-          ParamNames.ServerToken            -> Seq("bob"),
-          ParamNames.WantSubscriptions      -> Seq.empty,
-          ParamNames.WantSubscriptionFields -> Seq.empty,
-          ParamNames.WantStateHistory       -> Seq.empty
-        )
-      )
-    }
 
     "convert GenericUserAgentQP to query" in {
       testGOEAQ(List(GenericUserAgentQP("bob")))()
